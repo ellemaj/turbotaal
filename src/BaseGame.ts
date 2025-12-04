@@ -1,5 +1,5 @@
 import Game from './Game.js';
-
+import Car from './Car.js';
 import CanvasRenderer from './CanvasRenderer.js';
 import KeyListener from './KeyListener.js';
 import MouseListener from './MouseListener.js';
@@ -11,6 +11,8 @@ export default class BaseGame extends Game {
 
   private mouseListener: MouseListener;
 
+  private car: Car;
+
   public constructor(canvas: HTMLCanvasElement) {
     super();
     this.canvas = canvas;
@@ -18,13 +20,29 @@ export default class BaseGame extends Game {
     this.canvas.width = window.innerWidth;
     this.keyListener = new KeyListener();
     this.mouseListener = new MouseListener(canvas);
+    this.car = new Car(this.canvas.width, this.canvas.height);
   }
 
   /**
    * Process all input. Called from the GameLoop.
    */
   public processInput(): void {
-
+    if(this.keyListener.isKeyDown(KeyListener.KEY_LEFT)) {
+      this.car.moveLeft();
+      this.car.update(10);
+    }
+    if(this.keyListener.isKeyDown(KeyListener.KEY_RIGHT)) {
+      this.car.moveRight();
+      this.car.update(10);
+    }
+    if(this.keyListener.isKeyDown(KeyListener.KEY_UP)) {
+      this.car.moveUp();
+      this.car.update(10);
+    }
+    if(this.keyListener.isKeyDown(KeyListener.KEY_DOWN)) {
+      this.car.moveDown();
+      this.car.update(10);
+    }
   }
 
   /**
@@ -34,6 +52,7 @@ export default class BaseGame extends Game {
    * @returns true if the game should continue
    */
   public update(delta: number): boolean {
+    this.car.update(delta);
     return false;
   }
 
@@ -41,6 +60,8 @@ export default class BaseGame extends Game {
    * Render all the elements in the screen.
    */
   public render(): void {
-
+    // Clear the canvas
+    CanvasRenderer.clearCanvas(this.canvas);
+    this.car.render(this.canvas);
   }
 }
