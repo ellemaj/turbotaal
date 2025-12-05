@@ -15,13 +15,10 @@ export default class StartScreen {
     this.canvas = canvas;
     this.mouseListener = new MouseListener(canvas, true);
     this.keyListener = new KeyListener;
-    this.startButton = CanvasRenderer.loadNewImage('C:/Users/luukm/oop-team02/assets/start.png');
+    this.startButton = CanvasRenderer.loadNewImage('./assets/start.png');
   }
 
   public draw(): void{
-    CanvasRenderer.clearCanvas(this.canvas);
-  if (this.startButton.complete){
     CanvasRenderer.drawImage(this.canvas, this.startButton, 200, 200);
   }
-}
 }
