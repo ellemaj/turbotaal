@@ -33,15 +33,19 @@ export default class BaseGame extends Game {
   public processInput(): void {
     if(this.keyListener.isKeyDown(KeyListener.KEY_LEFT)) {
       this.car.moveLeft();
+      this.car.update(10);
     }
     if(this.keyListener.isKeyDown(KeyListener.KEY_RIGHT)) {
       this.car.moveRight();
+      this.car.update(10);
     }
     if(this.keyListener.isKeyDown(KeyListener.KEY_UP)) {
       this.car.moveUp();
+      this.car.update(10);
     }
     if(this.keyListener.isKeyDown(KeyListener.KEY_DOWN)) {
       this.car.moveDown();
+      this.car.update(10);
     }
   }
 
@@ -52,8 +56,8 @@ export default class BaseGame extends Game {
    * @returns true if the game should continue
    */
   public update(delta: number): boolean {
-    this.car.update(delta, this.canvas);
-    return true;
+    this.car.update(delta);
+    return false;
   }
 
   /**
