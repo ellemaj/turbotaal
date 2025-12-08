@@ -3,7 +3,8 @@ import Car from './Car.js';
 import CanvasRenderer from './CanvasRenderer.js';
 import KeyListener from './KeyListener.js';
 import MouseListener from './MouseListener.js';
-import Vector2 from './Vector2.js';
+import StartScreen from './StartScreen.js';
+
 export default class BaseGame extends Game {
   private canvas: HTMLCanvasElement;
 
@@ -13,8 +14,11 @@ export default class BaseGame extends Game {
 
   private car: Car;
 
+  private startScreen: StartScreen;
+
   public constructor(canvas: HTMLCanvasElement) {
     super();
+    this.startScreen = new StartScreen(canvas);
     this.canvas = canvas;
     this.canvas.height = window.innerHeight;
     this.canvas.width = window.innerWidth;
@@ -59,5 +63,7 @@ export default class BaseGame extends Game {
     // Clear the canvas
     CanvasRenderer.clearCanvas(this.canvas);
     this.car.render(this.canvas);
+    this.startScreen.render(this.canvas);
+
   }
 }
