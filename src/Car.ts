@@ -1,4 +1,5 @@
 import CanvasRenderer from './CanvasRenderer.js';
+import Vector2 from './Vector2.js';
 
 export default class Car {
   private image: HTMLImageElement;
@@ -7,9 +8,11 @@ export default class Car {
 
   private posY: number;
 
-  private maxX: number;
+  private turnSpeed: number = 3;
 
-  private speed: number = 2;
+  private rotation: number = 0;
+
+  private maxSpeed: number = 2;
 
   private movingLeft: boolean = false;
 
@@ -19,11 +22,15 @@ export default class Car {
 
   private movingDown: boolean = false;
 
-  public constructor (maxX: number, maxY: number) {
-    this.image = CanvasRenderer.loadNewImage('./assets/car1.png');
-    this.maxX = maxX;
+  private speed: number = 1;
+
+  private pivot: Vector2;
+
+  public constructor(maxX: number, maxY: number) {
+    this.image = CanvasRenderer.loadNewImage('./assets/car2.png');
     this.posX = (maxX / 2) - (this.image.width / 2);
     this.posY = maxY - this.image.height;
+    this.pivot = new Vector2(this.image.width / 2, this.image.height / 2);
   }
 
   public moveLeft(): void {
@@ -42,28 +49,31 @@ export default class Car {
     this.movingDown = true;
   }
 
-  public update(delta: number): void {
-    if(this.movingLeft) {
-      this.posX -= delta * 0.5 * this.speed;
+  public update(delta: number, canvas: HTMLCanvasElement): void {
+    if (this.movingLeft) {
+      this.rotation -= (Math.PI * (delta / 10) / 180);
       this.movingLeft = false;
     }
-    if(this.movingRight) {
-      this.posX += delta * 0.5 * this.speed;
+    if (this.movingRight) {
+      this.rotation += (Math.PI * (delta / 10) / 180);
       this.movingRight = false;
     }
-    if(this.movingUp) {
-      this.posY += delta * 0.5 * this.speed;
-      this.movingRight = false;
+    if (this.movingUp) {
+      const speed: number = delta * 0.5 * this.maxSpeed;
+      this.posX -= Math.cos(this.rotation + Math.PI / 2) * speed;
+      this.posY -= Math.sin(this.rotation + Math.PI / 2) * speed;
+      this.movingUp = false;
     }
-    if(this.movingDown) {
-      this.posY -= delta * 0.5 * this.speed;
-      this.movingRight = false;
+    if (this.movingDown) {
+      const speed: number = delta * 0.5 * this.maxSpeed;
+      this.posX += Math.cos(this.rotation + Math.PI / 2) * speed;
+      this.posY += Math.sin(this.rotation + Math.PI / 2) * speed;
+      this.movingDown = false;
     }
-
   }
 
   public render(canvas: HTMLCanvasElement): void {
-    CanvasRenderer.drawImage(canvas, this.image, this.posX, this.posY);
+    CanvasRenderer.drawImage(canvas, this.image, this.posX, this.posY, this.rotation);
   }
 
   public getPosX(): number {
