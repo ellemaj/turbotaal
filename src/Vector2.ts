@@ -82,4 +82,22 @@ export default class Vector2 {
     const angle: number = Math.random() * 2 * Math.PI;
     return new Vector2(Math.cos(angle), Math.sin(angle));
   }
+
+  public rotate(angleRad: number): Vector2 {
+    const cos: number = Math.cos(angleRad);
+    const sin: number = Math.sin(angleRad);
+    const newX: number = this.x * cos - this.y * sin;
+    const newY: number = this.x * sin + this.y * cos;
+    return new Vector2(newX, newY);
+  }
+
+  // Rotate around an arbitrary pivot point
+  public rotateAround(pivot: Vector2, angleRad: number): Vector2 {
+    //Translate to pivot
+    const translated: Vector2 = new Vector2(this.x - pivot.x, this.y - pivot.y);
+    //Rotate
+    const rotated: Vector2 = translated.rotate(angleRad);
+    //Translate back
+    return new Vector2(rotated.x + pivot.x, rotated.y + pivot.y);
+  }
 }
