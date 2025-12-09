@@ -12,19 +12,19 @@ export default class Car {
 
   private rotation: number = 0;
 
-  private maxSpeed: number = 2;
+  private maxSpeed: number = 20;
 
   private movingLeft: boolean = false;
 
   private movingRight: boolean = false;
 
-  private movingUp: boolean = false;
+  public movingUp: boolean = false;
 
   private movingDown: boolean = false;
 
-  private speed: number = 1;
-
   private pivot: Vector2;
+
+  private speed: number = 0;
 
   public constructor(maxX: number, maxY: number) {
     this.image = CanvasRenderer.loadNewImage('./assets/car2.png');
@@ -55,25 +55,30 @@ export default class Car {
       this.movingLeft = false;
     }
     if (this.movingRight) {
-      this.rotation += (Math.PI * (delta / 10) / 180);
+      this.rotation += (Math.PI * (delta / this.speed) / 180);
       this.movingRight = false;
     }
     if (this.movingUp) {
-      const speed: number = delta * 0.5 * this.maxSpeed;
-      this.posX -= Math.cos(this.rotation + Math.PI / 2) * speed;
-      this.posY -= Math.sin(this.rotation + Math.PI / 2) * speed;
-      this.movingUp = false;
+      this.speed += 0.005 * delta;
+      this.posX -= Math.cos(this.rotation + Math.PI / 2) * this.speed;
+      this.posY -= Math.sin(this.rotation + Math.PI / 2) * this.speed;
+    } else {
+      
     }
     if (this.movingDown) {
-      const speed: number = delta * 0.5 * this.maxSpeed;
-      this.posX += Math.cos(this.rotation + Math.PI / 2) * speed;
-      this.posY += Math.sin(this.rotation + Math.PI / 2) * speed;
+      this.speed = 0.1 * delta;
+      this.posX += Math.cos(this.rotation + Math.PI / 2) * this.speed;
+      this.posY += Math.sin(this.rotation + Math.PI / 2) * this.speed;
       this.movingDown = false;
+    }
+
+    if (this.speed > this.maxSpeed) {
+      this.speed = this.maxSpeed;
     }
   }
 
   public render(canvas: HTMLCanvasElement): void {
-    CanvasRenderer.drawImage(canvas, this.image, this.posX, this.posY);
+    CanvasRenderer.drawImage(canvas, this.image, this.posX, this.posY, this.rotation);
   }
 
   public getPosX(): number {
