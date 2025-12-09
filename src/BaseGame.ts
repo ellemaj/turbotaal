@@ -43,6 +43,8 @@ export default class BaseGame extends Game {
     if(this.keyListener.isKeyDown(KeyListener.KEY_DOWN)) {
       this.car.moveDown();
     }
+    if (this.mouseListener.isButtonDown(MouseListener.BUTTON_LEFT)){
+}
   }
 
   /**
@@ -52,6 +54,8 @@ export default class BaseGame extends Game {
    * @returns true if the game should continue
    */
   public update(delta: number): boolean {
+    this.processInput();
+    this.startScreen.update();
     this.car.update(delta, this.canvas);
     return true;
   }
@@ -64,6 +68,5 @@ export default class BaseGame extends Game {
     CanvasRenderer.clearCanvas(this.canvas);
     this.car.render(this.canvas);
     this.startScreen.render(this.canvas);
-
   }
 }
