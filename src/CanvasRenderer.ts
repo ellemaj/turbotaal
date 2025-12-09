@@ -76,11 +76,8 @@ export default class CanvasRenderer {
     ctx.drawImage(image, -image.width / 2, -image.height / 2);
 
     ctx.restore();
-
-    //const ctx: CanvasRenderingContext2D = CanvasRenderer.getCanvasContext(canvas);
-    //ctx.rotate(rotation);     // rotate canvas
-    //ctx.drawImage(image, dx, dy);
   }
+
 
   /**
    * Clear the canvas, preparing for drawing

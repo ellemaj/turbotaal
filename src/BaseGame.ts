@@ -38,7 +38,9 @@ export default class BaseGame extends Game {
       this.car.moveRight();
     }
     if(this.keyListener.isKeyDown(KeyListener.KEY_UP)) {
-      this.car.moveUp();
+      this.car.movingUp = true;
+    } else {
+      this.car.movingUp = false;
     }
     if(this.keyListener.isKeyDown(KeyListener.KEY_DOWN)) {
       this.car.moveDown();

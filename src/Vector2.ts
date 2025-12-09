@@ -93,13 +93,11 @@ export default class Vector2 {
 
   // Rotate around an arbitrary pivot point
   public rotateAround(pivot: Vector2, angleRad: number): Vector2 {
-    // Translate to pivot
+    //Translate to pivot
     const translated: Vector2 = new Vector2(this.x - pivot.x, this.y - pivot.y);
-    // Rotate
+    //Rotate
     const rotated: Vector2 = translated.rotate(angleRad);
-    // Translate back
+    //Translate back
     return new Vector2(rotated.x + pivot.x, rotated.y + pivot.y);
   }
-
-
 }
