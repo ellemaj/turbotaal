@@ -60,10 +60,24 @@ export default class CanvasRenderer {
     image: HTMLImageElement,
     dx: number,
     dy: number,
+    rotation: number = 0,
   ): void {
     const ctx: CanvasRenderingContext2D = CanvasRenderer.getCanvasContext(canvas);
-    ctx.drawImage(image, dx, dy);
+
+    ctx.save();
+
+    // move origin to car position
+    ctx.translate(dx, dy);
+
+    // rotate around origin
+    ctx.rotate(rotation);
+
+    // draw image centered
+    ctx.drawImage(image, -image.width / 2, -image.height / 2);
+
+    ctx.restore();
   }
+
 
   /**
    * Clear the canvas, preparing for drawing
