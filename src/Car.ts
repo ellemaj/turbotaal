@@ -12,15 +12,15 @@ export default class Car {
 
   private rotation: number = 0;
 
-  private maxSpeed: number = 20;
+  private maxSpeed: number = 40;
 
-  private movingLeft: boolean = false;
+  public movingLeft: boolean = false;
 
-  private movingRight: boolean = false;
+  public movingRight: boolean = false;
 
   public movingUp: boolean = false;
 
-  private movingDown: boolean = false;
+  public movingDown: boolean = false;
 
   private pivot: Vector2;
 
@@ -33,48 +33,36 @@ export default class Car {
     this.pivot = new Vector2(this.image.width / 2, this.image.height / 2);
   }
 
-  public moveLeft(): void {
-    this.movingLeft = true;
-  }
-
-  public moveRight(): void {
-    this.movingRight = true;
-  }
-
-  public moveUp(): void {
-    this.movingUp = true;
-  }
-
-  public moveDown(): void {
-    this.movingDown = true;
-  }
-
   public update(delta: number, canvas: HTMLCanvasElement): void {
-    if (this.movingLeft) {
+    if (this.movingLeft && (this.movingUp || this.movingDown)) {
       this.rotation -= (Math.PI * (delta / 10) / 180);
       this.movingLeft = false;
     }
-    if (this.movingRight) {
-      this.rotation += (Math.PI * (delta / this.speed) / 180);
+    if (this.movingRight && (this.movingUp || this.movingDown)) {
+      this.rotation += (Math.PI * (delta / 10) / 180);
       this.movingRight = false;
     }
-    if (this.movingUp) {
+    if (this.movingUp && !this.movingDown) {
       this.speed += 0.005 * delta;
-      this.posX -= Math.cos(this.rotation + Math.PI / 2) * this.speed;
-      this.posY -= Math.sin(this.rotation + Math.PI / 2) * this.speed;
     } else {
-      
+      this.speed -= 0.01 * delta;
+      if (this.speed < 0) {
+        this.speed = 0;
+      }
     }
     if (this.movingDown) {
-      this.speed = 0.1 * delta;
-      this.posX += Math.cos(this.rotation + Math.PI / 2) * this.speed;
-      this.posY += Math.sin(this.rotation + Math.PI / 2) * this.speed;
-      this.movingDown = false;
+      if (this.speed <= 0) {
+        this.speed -= 0.1 * delta;
+      } else {
+        this.speed -= 0.01 * delta;
+      }
     }
 
     if (this.speed > this.maxSpeed) {
       this.speed = this.maxSpeed;
     }
+    this.posX -= Math.cos(this.rotation + Math.PI / 2) * this.speed;
+    this.posY -= Math.sin(this.rotation + Math.PI / 2) * this.speed;
   }
 
   public render(canvas: HTMLCanvasElement): void {
