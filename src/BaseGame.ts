@@ -58,6 +58,9 @@ export default class BaseGame extends Game {
   public update(delta: number): boolean {
     this.processInput();
     this.startScreen.update();
+    if (this.startScreen.isActive()){
+      return true;
+    }
     this.car.update(delta, this.canvas);
     return true;
   }
@@ -68,7 +71,10 @@ export default class BaseGame extends Game {
   public render(): void {
     // Clear the canvas
     CanvasRenderer.clearCanvas(this.canvas);
+    if (this.startScreen.isActive()){
+      this.startScreen.render(this.canvas);
+      return;
+    }
     this.car.render(this.canvas);
-    this.startScreen.render(this.canvas);
   }
 }

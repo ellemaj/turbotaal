@@ -18,11 +18,16 @@ export default class StartScreen {
 
   private canvas: HTMLCanvasElement;
 
+  private background: HTMLImageElement;
+
+  private active: boolean = true;
+
   public constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
     this.mouseListener = new MouseListener(canvas, true);
     this.keyListener = new KeyListener;
     this.startButton = CanvasRenderer.loadNewImage('./assets/start.png');
+    this.background = CanvasRenderer.loadNewImage('./assets/background.png');
     this.posX = (canvas.width - this.startButton.width) / 2;
     this.posY = (canvas.height - this.startButton.height) / 2;
   }
@@ -35,6 +40,7 @@ export default class StartScreen {
     if (!ctx) {
       return;
     }
+    ctx.drawImage(this.background, 0, 0, canvas.width, canvas.height);
 
     ctx.drawImage(
       this.startButton,
@@ -59,6 +65,8 @@ export default class StartScreen {
 
     if (isButtonClicked && this.mouseListener.buttonPressed(MouseListener.BUTTON_LEFT)) {
       console.log('lesgoooooooo');
+      console.log(this.background.src);
+      this.active = false;
       return true;
     }
     return false;
@@ -68,7 +76,12 @@ export default class StartScreen {
    *updatej
    */
   public update(): void {
+    if (!this.active) return;
     this.isStartButtonClicked();
+  }
+
+  public isActive(): boolean{
+    return this.active;
   }
 
   public getPosX(): number {
