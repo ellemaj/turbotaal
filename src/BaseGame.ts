@@ -44,10 +44,21 @@ export default class BaseGame extends Game {
 
     // Only let the car move in the racetrack-scenes
     if (this.currentScene instanceof RacetrackScene) {
-      this.car.movingLeft = this.keyListener.isKeyDown(KeyListener.KEY_LEFT);
-      this.car.movingRight = this.keyListener.isKeyDown(KeyListener.KEY_RIGHT);
-      this.car.movingUp = this.keyListener.isKeyDown(KeyListener.KEY_UP);
-      this.car.movingDown = this.keyListener.isKeyDown(KeyListener.KEY_DOWN);
+      this.car.movingLeft =
+      this.keyListener.isKeyDown(KeyListener.KEY_LEFT) ||
+      this.keyListener.isKeyDown(KeyListener.KEY_A);
+
+      this.car.movingRight =
+      this.keyListener.isKeyDown(KeyListener.KEY_RIGHT) ||
+      this.keyListener.isKeyDown(KeyListener.KEY_D);
+
+      this.car.movingUp =
+      this.keyListener.isKeyDown(KeyListener.KEY_UP) ||
+      this.keyListener.isKeyDown(KeyListener.KEY_W);
+
+      this.car.movingDown =
+      this.keyListener.isKeyDown(KeyListener.KEY_DOWN) ||
+      this.keyListener.isKeyDown(KeyListener.KEY_S);
     } else {
       this.car.movingLeft = false;
       this.car.movingRight = false;
