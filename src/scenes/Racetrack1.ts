@@ -1,16 +1,18 @@
 import CanvasRenderer from '../CanvasRenderer.js';
-import KeyListener from '../KeyListener.js';
 import Vector2 from '../Vector2.js';
-import SceneTrackSelection from './SceneTrackSelection.js';
+// import MouseListener from '../MouseListener.js';
+import KeyListener from '../KeyListener.js';
 import Scene from './Scene.js';
+import RacetrackScene from './RacetrackScene.js';
+import SceneTrackSelection from './SceneTrackSelection.js';
 
-export default class Racetrack1 extends Scene {
+export default class Racetrack1 extends RacetrackScene {
   private goBack: boolean;
 
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
     super(boardSize, canvas);
     this.goBack = false;
-    this.background = CanvasRenderer.loadNewImage('./assets/racebaan.jng');
+    this.background = CanvasRenderer.loadNewImage('./assets/background.png'); //verander in de goede filename!
   }
 
   /**

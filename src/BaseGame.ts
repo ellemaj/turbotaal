@@ -1,5 +1,6 @@
 import Game from './Game.js';
 import Scene from './scenes/Scene.js';
+import RacetrackScene from './scenes/RacetrackScene.js';
 import SceneStart from './scenes/SceneStart.js';
 import SceneTrackSelection from './scenes/SceneTrackSelection.js';
 import SceneShop from './scenes/SceneShop.js';
@@ -8,6 +9,12 @@ import KeyListener from './KeyListener.js';
 import MouseListener from './MouseListener.js';
 import CanvasRenderer from './CanvasRenderer.js';
 import Car from './Car.js';
+
+// import Racetrack1 from './scenes/Racetrack1.js';
+// import Racetrack4 from './scenes/Racetrack4.js';
+// import Racetrack2 from './scenes/Racetrack2.js';
+// import Racetrack3 from './scenes/Racetrack3.js';
+// import Racetrack4 from './scenes/Racetrack4.js';
 
 export default class BaseGame extends Game {
   private canvas: HTMLCanvasElement;
@@ -40,30 +47,21 @@ export default class BaseGame extends Game {
    * Process all input. Called from the GameLoop.
    */
   public processInput(): void {
+    // Let the current scene process the input
     this.currentScene.processInput(this.keyListener, this.mouseListener);
 
-    if (this.keyListener.isKeyDown(KeyListener.KEY_LEFT)) {
-      this.car.movingLeft = true;
+    // Only let the car move in the racetrack-scenes
+    if (this.currentScene instanceof RacetrackScene) {
+      this.car.movingLeft = this.keyListener.isKeyDown(KeyListener.KEY_LEFT);
+      this.car.movingRight = this.keyListener.isKeyDown(KeyListener.KEY_RIGHT);
+      this.car.movingUp = this.keyListener.isKeyDown(KeyListener.KEY_UP);
+      this.car.movingDown = this.keyListener.isKeyDown(KeyListener.KEY_DOWN);
     } else {
       this.car.movingLeft = false;
-    }
-    if (this.keyListener.isKeyDown(KeyListener.KEY_RIGHT)) {
-      this.car.movingRight = true;
-    } else {
       this.car.movingRight = false;
-    }
-    if (this.keyListener.isKeyDown(KeyListener.KEY_UP)) {
-      this.car.movingUp = true;
-    } else {
       this.car.movingUp = false;
-    }
-    if (this.keyListener.isKeyDown(KeyListener.KEY_DOWN)) {
-      this.car.movingDown = true;
-    } else {
       this.car.movingDown = false;
     }
-    // if (this.mouseListener.isButtonDown(MouseListener.BUTTON_LEFT)) {
-    // }
   }
 
   /**
@@ -77,6 +75,12 @@ export default class BaseGame extends Game {
 
     this.currentScene.update(delta);
 
+    // Only update the car in Racetrack-scenes
+    if (this.currentScene instanceof RacetrackScene) {
+      this.car.update(delta, this.canvas);
+    }
+
+    // Change scenes
     const nextScene: Scene | null = this.currentScene.getNextScene();
     if (nextScene) {
       this.currentScene = nextScene;
@@ -93,7 +97,8 @@ export default class BaseGame extends Game {
     // Render the current scene
     this.currentScene.render(this.canvas);
 
-    if (!(this.currentScene instanceof SceneStart)) {
+    // Render the car only in racetrack-scenes
+    if (this.currentScene instanceof RacetrackScene) {
       this.car.render(this.canvas);
     }
   }
