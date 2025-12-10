@@ -16,9 +16,9 @@ export default class Racetrack1 extends RacetrackScene {
   }
 
   /**
-   * Starts the game when esc is pressed
+   * Changes the scene to SceneTrackSelection when ESC is being pressed
    *
-   * @param keyListener Looks is the esc key is being pressed
+   * @param keyListener The keylistener which is being used
    */
   public override processInput(keyListener: KeyListener): void {
     if (keyListener.keyPressed(KeyListener.KEY_ESC)) {
@@ -43,7 +43,7 @@ export default class Racetrack1 extends RacetrackScene {
   }
 
   /**
-   * /
+   * Renders everything in Racetrack1
    *
    * @param canvas the canvas it needs to be rendered on
    */
@@ -51,8 +51,10 @@ export default class Racetrack1 extends RacetrackScene {
     const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
     if (!ctx) {
       return;
-    }
+    } // Renders the background
     ctx.drawImage(this.background, 0, 0, canvas.width, canvas.height);
+
+    // Renders the text on the screen
     CanvasRenderer.writeText(
       canvas,
       'Racetrack 1. Press escape to go back to the track selection.',
