@@ -2,19 +2,11 @@ import Game from './Game.js';
 import Scene from './scenes/Scene.js';
 import RacetrackScene from './scenes/RacetrackScene.js';
 import SceneStart from './scenes/SceneStart.js';
-import SceneTrackSelection from './scenes/SceneTrackSelection.js';
-import SceneShop from './scenes/SceneShop.js';
 import Vector2 from './Vector2.js';
 import KeyListener from './KeyListener.js';
 import MouseListener from './MouseListener.js';
 import CanvasRenderer from './CanvasRenderer.js';
 import Car from './Car.js';
-
-// import Racetrack1 from './scenes/Racetrack1.js';
-// import Racetrack4 from './scenes/Racetrack4.js';
-// import Racetrack2 from './scenes/Racetrack2.js';
-// import Racetrack3 from './scenes/Racetrack3.js';
-// import Racetrack4 from './scenes/Racetrack4.js';
 
 export default class BaseGame extends Game {
   private canvas: HTMLCanvasElement;
@@ -77,7 +69,7 @@ export default class BaseGame extends Game {
 
     // Only update the car in Racetrack-scenes
     if (this.currentScene instanceof RacetrackScene) {
-      this.car.update(delta, this.canvas);
+      this.car.update(delta);
     }
 
     // Change scenes
