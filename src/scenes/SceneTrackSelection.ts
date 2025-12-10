@@ -19,8 +19,8 @@ export default class SceneTrackSelection extends Scene {
 
   private goBack: boolean;
 
-  public constructor(boardSize: Vector2) {
-    super(boardSize);
+  public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
+    super(boardSize, canvas);
     this.raceTrack1 = false;
     this.raceTrack2 = false;
     this.raceTrack3 = false;
@@ -58,15 +58,15 @@ export default class SceneTrackSelection extends Scene {
 
   public override getNextScene(): Scene | null {
     if(this.raceTrack1) {
-      return new Racetrack1(this.boardSize);
+      return new Racetrack1(this.boardSize, this.canvas);
     } else if (this.raceTrack2) {
-      return new Racetrack2(this.boardSize);
+      return new Racetrack2(this.boardSize, this.canvas);
     } else if (this.raceTrack3) {
-      return new Racetrack3(this.boardSize);
+      return new Racetrack3(this.boardSize, this.canvas);
     } else if (this.raceTrack4) {
-      return new Racetrack4(this.boardSize);
+      return new Racetrack4(this.boardSize, this.canvas);
     } else if (this.goBack) {
-      return new SceneStart(this.boardSize);
+      return new SceneStart(this.boardSize, this.canvas);
     }
     return null;
   }

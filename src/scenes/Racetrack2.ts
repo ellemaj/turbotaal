@@ -7,8 +7,8 @@ import Scene from './Scene.js';
 export default class Racetrack2 extends Scene {
   private goBack: boolean;
 
-  public constructor(boardSize: Vector2) {
-    super(boardSize);
+  public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
+    super(boardSize, canvas);
     this.goBack = false;
   }
 
@@ -34,7 +34,7 @@ export default class Racetrack2 extends Scene {
 
   public override getNextScene(): Scene | null {
     if(this.goBack){
-      return new SceneTrackSelection(this.boardSize);
+      return new SceneTrackSelection(this.boardSize, this.canvas);
     }
     return null;
   }
