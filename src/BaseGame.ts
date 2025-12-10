@@ -32,10 +32,14 @@ export default class BaseGame extends Game {
    */
   public processInput(): void {
     if(this.keyListener.isKeyDown(KeyListener.KEY_LEFT)) {
-      this.car.moveLeft();
+      this.car.movingLeft = true;
+    } else {
+      this.car.movingLeft = false;
     }
     if(this.keyListener.isKeyDown(KeyListener.KEY_RIGHT)) {
-      this.car.moveRight();
+      this.car.movingRight = true;
+    } else {
+      this.car.movingRight = false;
     }
     if(this.keyListener.isKeyDown(KeyListener.KEY_UP)) {
       this.car.movingUp = true;
@@ -43,7 +47,9 @@ export default class BaseGame extends Game {
       this.car.movingUp = false;
     }
     if(this.keyListener.isKeyDown(KeyListener.KEY_DOWN)) {
-      this.car.moveDown();
+      this.car.movingDown = true;
+    } else {
+      this.car.movingDown = false;
     }
     if (this.mouseListener.isButtonDown(MouseListener.BUTTON_LEFT)){
 }
@@ -69,6 +75,6 @@ export default class BaseGame extends Game {
     // Clear the canvas
     CanvasRenderer.clearCanvas(this.canvas);
     this.car.render(this.canvas);
-    this.startScreen.render(this.canvas);
+    //this.startScreen.render(this.canvas);
   }
 }
