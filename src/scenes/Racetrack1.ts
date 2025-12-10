@@ -7,9 +7,12 @@ import Scene from './Scene.js';
 export default class Racetrack1 extends Scene {
   private goBack: boolean;
 
+  private background: HTMLImageElement;
+
   public constructor(boardSize: Vector2) {
     super(boardSize);
     this.goBack = false;
+    this.background = CanvasRenderer.loadNewImage('./assets/racebaan.jng');
   }
 
   /**
@@ -45,6 +48,11 @@ export default class Racetrack1 extends Scene {
    * @param canvas the canvas it needs to be rendered on
    */
   public override render(canvas: HTMLCanvasElement): void {
+    const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
+    if (!ctx) {
+      return;
+    }
+    ctx.drawImage(this.background, 0, 0, canvas.width, canvas.height);
     CanvasRenderer.writeText(
       canvas,
       'Racetrack 1. Press escape to go back to the track selection.',
