@@ -55,7 +55,6 @@ export default class SceneStart extends Scene {
 
     if (isClicked && this.mouseListener.buttonPressed(MouseListener.BUTTON_LEFT)) {
       this.goToTrackSelection = true;
-      console.log("broekuit!!!");
       return true;
     }
     return false;
@@ -115,5 +114,10 @@ export default class SceneStart extends Scene {
         this.startButton.height * this.scale
       );
     }
+    // Renders the title on the screen
+    ctx.fillStyle = 'black';
+    ctx.font = 'bold 100px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('TurboTaal', this.canvas.width / 2, this.canvas.height / 4);
   }
 }
