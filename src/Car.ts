@@ -1,17 +1,13 @@
 import CanvasRenderer from './CanvasRenderer.js';
+import CanvasItem from './CanvasItem.js';
+//import Vector2 from './Vector2.js';
 
-export default class Car {
-  private image: HTMLImageElement;
-
-  private posX: number;
-
-  private posY: number;
-
-  private rotation: number = 0;
+export default class Car extends CanvasItem {
+  private rotation: number = -2;
 
   private speed: number = 0;
 
-  private maxSpeed: number = 5;
+  public maxSpeed: number = 2.5;
 
   private scale: number = 0.28; // Scaling for the car (1 is standard)
 
@@ -23,7 +19,7 @@ export default class Car {
 
   public movingDown: boolean = false;
 
-  private turnSpeed: number = 5;
+  public turnSpeed: number = 5;
 
   public constructor() {
     this.image = CanvasRenderer.loadNewImage('./assets/car2.png');
@@ -94,7 +90,7 @@ export default class Car {
    *
    * @param canvas The canvas the car needs to be rendered on
    */
-  public render(canvas: HTMLCanvasElement): void {
+  public override render(canvas: HTMLCanvasElement): void {
     const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
     if (!ctx) {
       return;
@@ -116,22 +112,6 @@ export default class Car {
     );
 
     ctx.restore();
-  }
-
-  public getPosX(): number {
-    return this.posX;
-  }
-
-  public getPosY(): number {
-    return this.posY;
-  }
-
-  public getWidth(): number {
-    return this.image.width;
-  }
-
-  public getHeight(): number {
-    return this.image.height;
   }
 
   public setScale(scale: number): void {
