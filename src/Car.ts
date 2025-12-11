@@ -1,5 +1,4 @@
 import CanvasRenderer from './CanvasRenderer.js';
-//import Vector2 from './Vector2.js';
 
 export default class Car {
   private image: HTMLImageElement;
@@ -26,11 +25,15 @@ export default class Car {
 
   private turnSpeed: number = 5;
 
-  public constructor(canvas: HTMLCanvasElement) {
+  public constructor() {
     this.image = CanvasRenderer.loadNewImage('./assets/car2.png');
-    this.posX = canvas.width * 0.5;
-    this.posY = canvas.height * 0.285;
-    this.rotation = 1.085;
+    // this.posX = canvas.width * 0.5;
+    // this.posY = canvas.height * 0.285;
+    // this.rotation = 1.085;
+
+    this.posX = 0; // Standard coordinates, configure the start position in the racetrack scenes
+    this.posY = 0;
+    this.rotation = 0;
   }
 
   /**
@@ -118,5 +121,19 @@ export default class Car {
 
   public setScale(scale: number): void {
     this.scale = scale;
+  }
+
+  public setStartPosition(x: number, y: number, rotation: number): void {
+    this.posX = x;
+    this.posY = y;
+    this.rotation = rotation;
+    this.speed = 0;
+  }
+
+  public resetPosition(canvas: HTMLCanvasElement): void {
+    this.posX = canvas.width * 0.5;
+    this.posY = canvas.height * 0.285;
+    this.rotation = 1.085;
+    this.speed = 0;
   }
 }

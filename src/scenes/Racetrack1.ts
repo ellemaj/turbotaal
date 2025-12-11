@@ -13,6 +13,8 @@ export default class Racetrack1 extends RacetrackScene {
     super(boardSize, canvas);
     this.goBack = false;
     this.background = CanvasRenderer.loadNewImage('./assets/racetrack1Demo.png');
+
+    this.setCarStart(canvas.width * 0.5, canvas.height * 0.285, 1.085);
   }
 
   /**
@@ -21,8 +23,15 @@ export default class Racetrack1 extends RacetrackScene {
    * @param keyListener The keylistener which is being used
    */
   public override processInput(keyListener: KeyListener): void {
-    // Starts the race when moved for the first time
+    this.processCarInput(keyListener);
+
+    // Timer start
     this.startRaceIfMoving(keyListener);
+
+    // Reset race with R
+    if (keyListener.keyPressed(KeyListener.KEY_R)) {
+      this.resetRace();
+    }
 
     // Changes the scene to SceneTrackSelection when ESC is being pressed
     if (keyListener.keyPressed(KeyListener.KEY_ESC)) {
@@ -36,6 +45,8 @@ export default class Racetrack1 extends RacetrackScene {
    * @returns time elapsed
    */
   public override update(delta: number): void {
+    this.car.update(delta);
+
     this.stopwatch.update(delta);
 
     // Stopwatch stops when LapCount = 3
@@ -45,7 +56,7 @@ export default class Racetrack1 extends RacetrackScene {
   }
 
   public override getNextScene(): Scene | null {
-    if(this.goBack){
+    if (this.goBack) {
       return new SceneTrackSelection(this.boardSize, this.canvas);
     }
     return null;
@@ -63,6 +74,8 @@ export default class Racetrack1 extends RacetrackScene {
     } // Renders the background
     ctx.drawImage(this.background, 0, 0, canvas.width, canvas.height);
 
+    this.car.render(canvas);
+
     // Renders the text on the screen
     CanvasRenderer.writeText(
       canvas,
@@ -76,6 +89,7 @@ export default class Racetrack1 extends RacetrackScene {
     ctx.textAlign = 'left';
     ctx.fillText(`Laps: ${this.getLaps()} / ${this.getMaxLaps()}`, 20, 40);
 
+    // Renders the timer
     ctx.textAlign = 'right';
     ctx.fillText(this.stopwatch.getFormatted(), canvas.width - 20, 40);
   }
