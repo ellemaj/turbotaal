@@ -21,7 +21,7 @@ export default class SceneTrackSelection extends Scene {
 
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
     super(boardSize, canvas);
-    this.raceTrack1 = false;
+    this.raceTrack1 = true; // Only for the school demo!
     this.raceTrack2 = false;
     this.raceTrack3 = false;
     this.raceTrack4 = false;
