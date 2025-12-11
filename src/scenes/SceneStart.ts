@@ -1,68 +1,119 @@
 import CanvasRenderer from '../CanvasRenderer.js';
-import KeyListener from '../KeyListener.js';
 import Vector2 from '../Vector2.js';
+import MouseListener, { MouseCoordinates } from '../MouseListener.js';
+import KeyListener from '../KeyListener.js';
+import Scene from './Scene.js';
 import SceneTrackSelection from './SceneTrackSelection.js';
 import SceneShop from './SceneShop.js';
-import Scene from './Scene.js';
 
 export default class SceneStart extends Scene {
   private goToTrackSelection: boolean;
 
   private goToShop: boolean;
 
-  public constructor(boardSize: Vector2) {
-    super(boardSize);
+  private goBack: boolean;
+
+  private startButton: HTMLImageElement;
+
+  private startButtonLoaded: boolean = false;
+
+  //private shopButtonLoaded: boolean = false;
+
+  public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
+    super(boardSize, canvas);
     this.goToTrackSelection = false;
     this.goToShop = false;
+    this.goBack = false;
+
+    this.startButton = CanvasRenderer.loadNewImage('./assets/start.png');
+    this.background = CanvasRenderer.loadNewImage('./assets/background.png');
+    this.scale = 0.5;
+
+    this.startButton.onload = (): void => {
+      this.posX = (this.canvas.width - this.startButton.width * this.scale) / 2;
+      this.posY = (this.canvas.height - this.startButton.height * this.scale) / 2;
+      this.startButtonLoaded = true;
+    };
   }
 
-  /**
-   * Starts the game when space is pressed
-   *
-   * @param keyListener Looks is the space key is being pressed
-   */
-  public override processInput(keyListener: KeyListener): void {
-    if (keyListener.keyPressed(KeyListener.KEY_SPACE)) {
-      this.goToTrackSelection = true;
-    } else if (keyListener.keyPressed(KeyListener.KEY_S)) {
-      this.goToShop = true;
+  private isStartButtonClicked(): boolean {
+    if (!this.startButtonLoaded) {
+      return false;
     }
+
+    const mousePos: MouseCoordinates = this.mouseListener.getMousePosition();
+    const buttonWidth: number = this.startButton.width * this.scale;
+    const buttonHeight: number = this.startButton.height * this.scale;
+    const buttonX: number = this.posX;
+    const buttonY: number = this.posY;
+
+    const isClicked: boolean =
+      mousePos.x > buttonX &&
+      mousePos.y > buttonY &&
+      mousePos.x <= buttonX + buttonWidth &&
+      mousePos.y <= buttonY + buttonHeight;
+
+    if (isClicked && this.mouseListener.buttonPressed(MouseListener.BUTTON_LEFT)) {
+      this.goToTrackSelection = true;
+      console.log("broekuit!!!");
+      return true;
+    }
+    return false;
   }
 
   /**
-   * /
-   * @param delta /
-   * @returns /
+   * Update function
    */
   public override update(delta: number): void {
-    return;
+    if (this.startButtonLoaded) {
+      this.isStartButtonClicked();
+    }
+
+    // this.isShopButtonClicked();
+  }
+
+  /**
+   * processinput (not in use)
+   *
+   * @param keyListener keylistener
+   * @param mouseListener mouselistener
+   */
+  public override processInput(
+    keyListener: KeyListener,
+    mouseListener: MouseListener
+  ): void {
+    if (keyListener.keyPressed(KeyListener.KEY_ESC)) {
+      this.goBack = true;
+    }
   }
 
   public override getNextScene(): Scene | null {
     if (this.goToTrackSelection) {
-      return new SceneTrackSelection(this.boardSize);
+      return new SceneTrackSelection(this.boardSize, this.canvas);
     } else if (this.goToShop) {
-      return new SceneShop(this.boardSize);
+      return new SceneShop(this.boardSize, this.canvas);
     }
     return null;
   }
 
   /**
-   * Renders the text on the screen.
-   *
-   * @param canvas the canvas it needs to be rendered on
+   *center the picture
    */
   public override render(canvas: HTMLCanvasElement): void {
-    CanvasRenderer.writeText(
-      canvas,
-      'Press SPACE to select a track.',
-      this.boardSize.x / 2,
-      this.boardSize.y / 2 - 50);
+    const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
+    if (!ctx) {
+      return;
+    }
+    ctx.drawImage(this.background, 0, 0, canvas.width, canvas.height);
 
-    CanvasRenderer.writeText(
-      canvas,
-      'Press S for the shop menu.',
-      this.boardSize.x / 2,
-      this.boardSize.y / 2);
+    if (this.startButtonLoaded) {
+      ctx.drawImage(
+        this.startButton,
+        this.posX,
+        this.posY,
+        this.startButton.width * this.scale,
+        this.startButton.height * this.scale
+      );
+    }
   }
 }

@@ -1,5 +1,5 @@
 import CanvasRenderer from './CanvasRenderer.js';
-import Vector2 from './Vector2.js';
+//import Vector2 from './Vector2.js';
 
 export default class Car {
   private image: HTMLImageElement;
@@ -8,11 +8,13 @@ export default class Car {
 
   private posY: number;
 
-  private turnSpeed: number = 3;
-
   private rotation: number = 0;
 
+  private speed: number = 0;
+
   private maxSpeed: number = 40;
+
+  private scale: number = 0.25; // Scaling for the car (1 is standard)
 
   public movingLeft: boolean = false;
 
@@ -22,18 +24,19 @@ export default class Car {
 
   public movingDown: boolean = false;
 
-  private pivot: Vector2;
-
-  private speed: number = 0;
-
   public constructor(maxX: number, maxY: number) {
     this.image = CanvasRenderer.loadNewImage('./assets/car2.png');
     this.posX = (maxX / 2) - (this.image.width / 2);
     this.posY = maxY - this.image.height;
-    this.pivot = new Vector2(this.image.width / 2, this.image.height / 2);
   }
 
-  public update(delta: number, canvas: HTMLCanvasElement): void {
+  /**
+   * Updates the car
+   *
+   * @param delta Elapsed time
+   * @param canvas The canvas it needs to be rendered on
+   */
+  public update(delta: number): void {
     if (this.movingLeft && (this.movingUp || this.movingDown)) {
       this.rotation -= (Math.PI * (delta / 10) / 180);
       this.movingLeft = false;
@@ -65,8 +68,33 @@ export default class Car {
     this.posY -= Math.sin(this.rotation + Math.PI / 2) * this.speed;
   }
 
+  /**
+   * Render the car
+   *
+   * @param canvas The canvas the car needs to be rendered on
+   */
   public render(canvas: HTMLCanvasElement): void {
-    CanvasRenderer.drawImage(canvas, this.image, this.posX, this.posY, this.rotation);
+    const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
+    if (!ctx) {
+      return;
+    }
+    ctx.save();
+
+    ctx.translate(
+      this.posX + (this.image.width * this.scale) / 2,
+      this.posY + (this.image.height * this.scale) / 2
+    );
+
+    ctx.rotate(this.rotation);
+    ctx.scale(this.scale, this.scale);
+
+    ctx.drawImage(
+      this.image,
+      -(this.image.width / 2),
+      -(this.image.height / 2)
+    );
+
+    ctx.restore();
   }
 
   public getPosX(): number {
@@ -83,5 +111,9 @@ export default class Car {
 
   public getHeight(): number {
     return this.image.height;
+  }
+
+  public setScale(scale: number): void {
+    this.scale = scale;
   }
 }

@@ -7,8 +7,8 @@ import Scene from './Scene.js';
 export default class ScenePowerups extends Scene {
   private shopSkins: boolean;
 
-  public constructor(boardSize: Vector2) {
-    super(boardSize);
+  public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
+    super(boardSize, canvas);
     this.shopSkins = true;
   }
 
@@ -34,7 +34,7 @@ export default class ScenePowerups extends Scene {
 
   public override getNextScene(): Scene | null {
     if(!this.shopSkins){
-      return new SceneShop(this.boardSize);
+      return new SceneShop(this.boardSize, this.canvas);
     }
     return null;
   }

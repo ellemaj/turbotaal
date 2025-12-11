@@ -10,8 +10,8 @@ export default class SceneShop extends Scene {
 
   private shopPowerups: boolean;
 
-  public constructor(boardSize: Vector2) {
-    super(boardSize);
+  public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
+    super(boardSize, canvas);
     this.shopSkins = false;
     this.shopPowerups = false;
   }
@@ -40,9 +40,9 @@ export default class SceneShop extends Scene {
 
   public override getNextScene(): Scene | null {
     if(this.shopSkins) {
-      return new SceneSkins(this.boardSize);
+      return new SceneSkins(this.boardSize, this.canvas);
     } else if (this.shopPowerups) {
-      return new ScenePowerups(this.boardSize);
+      return new ScenePowerups(this.boardSize, this.canvas);
     }
     return null;
   }
