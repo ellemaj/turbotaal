@@ -12,38 +12,65 @@ export default class Racetrack4 extends RacetrackScene {
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
     super(boardSize, canvas);
     this.goBack = false;
-    this.background = CanvasRenderer.loadNewImage('./assets/background.png'); //verander in de goede filename!
+    this.background = CanvasRenderer.loadNewImage('./assets/background.png'); // Change to the right background!
   }
 
   /**
-   * Changes the scene to SceneTrackSelection when ESC is being pressed
+   * Processes the input
    *
    * @param keyListener The keylistener which is being used
    */
   public override processInput(keyListener: KeyListener): void {
+    this.processCarInput(keyListener);
+
+    // Timer start
+    this.startRaceIfMoving(keyListener);
+
+    // Reset race with R
+    if (keyListener.keyPressed(KeyListener.KEY_R)) {
+      this.resetRace();
+    }
+
+    // Changes the scene to SceneTrackSelection when ESC is being pressed
     if (keyListener.keyPressed(KeyListener.KEY_ESC)) {
       this.goBack = true;
     }
   }
 
   /**
-   * /
-   * @param delta /
-   * @returns /
+   * Updates the stopwatch with the elapsed time
+   * @param delta elapsed time
+   * @returns time elapsed
    */
   public override update(delta: number): void {
-    return;
+    this.car.update(delta, this.canvas);
+
+    this.stopwatch.update(delta);
+
+    // Stopwatch stops when LapCount = 3
+    if (this.isFinished()) {
+      this.stopwatch.stop();
+    }
   }
 
   public override getNextScene(): Scene | null {
-    if(this.goBack){
+    if (this.goBack) {
       return new SceneTrackSelection(this.boardSize, this.canvas);
     }
     return null;
   }
 
+  protected override setCarStart(): void { // Change the startposition of the car!
+    this.car.setStartPosition(
+      this.canvas.width * 0.5,
+      this.canvas.height * 0.5,
+      1
+    );
+  }
+
+
   /**
-   * Renders everything in Racetrack4
+   * Renders everything in Racetrack1
    *
    * @param canvas the canvas it needs to be rendered on
    */
@@ -54,11 +81,23 @@ export default class Racetrack4 extends RacetrackScene {
     } // Renders the background
     ctx.drawImage(this.background, 0, 0, canvas.width, canvas.height);
 
+    this.car.render(canvas);
+
     // Renders the text on the screen
     CanvasRenderer.writeText(
       canvas,
-      'Racetrack 4. Press escape to go back to the track selection.',
+      'Racetrack 4', //Press escape to go back to the track selection.',
       this.boardSize.x / 2,
       this.boardSize.y / 2);
+
+    // Renders the lapcount
+    ctx.fillStyle = 'black';
+    ctx.font = '30px Arial';
+    ctx.textAlign = 'left';
+    ctx.fillText(`Laps: ${this.getLaps()} / ${this.getMaxLaps()}`, 20, 40);
+
+    // Renders the timer
+    ctx.textAlign = 'right';
+    ctx.fillText(this.stopwatch.getFormatted(), canvas.width - 20, 40);
   }
 }

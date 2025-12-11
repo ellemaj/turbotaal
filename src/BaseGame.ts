@@ -1,6 +1,5 @@
 import Game from './Game.js';
 import Scene from './scenes/Scene.js';
-import RacetrackScene from './scenes/RacetrackScene.js';
 import SceneStart from './scenes/SceneStart.js';
 import Vector2 from './Vector2.js';
 import KeyListener from './KeyListener.js';
@@ -16,8 +15,6 @@ export default class BaseGame extends Game {
   private keyListener: KeyListener;
 
   private mouseListener: MouseListener;
-
-  private car: Car;
 
   private currentScene: Scene;
 
