@@ -7,6 +7,8 @@ import KeyListener from './KeyListener.js';
 import MouseListener from './MouseListener.js';
 import CanvasRenderer from './CanvasRenderer.js';
 import Car from './Car.js';
+import Question from './Question.js';
+import { verkleinwoorden } from './questions/verkleinwoorden.js';
 
 export default class BaseGame extends Game {
   private canvas: HTMLCanvasElement;
@@ -19,6 +21,8 @@ export default class BaseGame extends Game {
 
   private currentScene: Scene;
 
+  private question: Question;
+
   public constructor(canvas: HTMLCanvasElement) {
     super();
     this.canvas = canvas;
@@ -28,6 +32,9 @@ export default class BaseGame extends Game {
     this.keyListener = new KeyListener();
     this.mouseListener = new MouseListener(canvas);
     this.car = new Car(this.canvas.width, this.canvas.height);
+    this.question = new Question();
+    // load a default question so it can be rendered
+    this.question.loadFromData(verkleinwoorden.normal[0]!);
 
     this.currentScene = new SceneStart(new Vector2(
       this.canvas.width,
@@ -100,9 +107,10 @@ export default class BaseGame extends Game {
     // Render the current scene
     this.currentScene.render(this.canvas);
 
-    // Render the car only in racetrack-scenes
+    // Render the car and Q&A only in racetrack-scenes
     if (this.currentScene instanceof RacetrackScene) {
       this.car.render(this.canvas);
+      this.question.draw(this.canvas);
     }
   }
 }

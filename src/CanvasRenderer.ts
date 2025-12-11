@@ -213,4 +213,32 @@ export default class CanvasRenderer {
     ctx.rect(dx, dy, width, height);
     ctx.fill();
   }
+
+  /**
+   * Draws the answers in a box
+   * @param canvas Canvas you draw to
+   * @param dx x coord
+   * @param dy y coord
+   * @param width width of block
+   * @param height height of block
+   * @param bgColor color of block
+   * @param text text within block
+   * @param textColor textcolor of said text
+   * @param font font of said text
+   */
+  public static drawAnswerBox(
+    canvas: HTMLCanvasElement,
+    dx: number,
+    dy: number,
+    width: number,
+    height: number,
+    bgColor: string,
+    text: string,
+    textColor: string = 'white',
+    font: string = '16px Arial'
+  ): void {
+    this.fillRectangle(canvas, dx, dy, width, height, bgColor);
+
+    this.writeText(canvas, text, dx + width / 2, dy + height / 2, 'center', font, 20, textColor);
+  }
 }
