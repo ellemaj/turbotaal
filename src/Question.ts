@@ -1,6 +1,6 @@
 import CanvasItem from './CanvasItem.js';
 import Answer from './Answer.js';
-import { verkleinwoorden } from './questions/verkleinwoorden.js';
+import Car from './Car.js';
 import { Question as QuestionType } from './questions/types.js';
 import CanvasRenderer from './CanvasRenderer.js';
 
@@ -15,6 +15,8 @@ export default class Question extends CanvasItem {
 
   private answers: Answer[];
 
+  public selectedAnswerIndex: number;
+
   public constructor() {
     super();
     this.isActive = false;
@@ -22,6 +24,7 @@ export default class Question extends CanvasItem {
     this.questionText = '';
     this.difficulty = 1;
     this.answers = [];
+    this.selectedAnswerIndex = 0;
   }
 
   public checkDifficulty(): number {
@@ -44,31 +47,29 @@ export default class Question extends CanvasItem {
       CanvasRenderer.writeText(canvas, labelText, centerX, textY, 'center', 'Arial', 18, 'black');
     });
 
-    // draw 3 boxes (1-3 antwoorden)
-    const boxWidth: number = 50;
-    const boxHeight: number = 50;
-    const spacing: number = 200;
-    const totalWidth: number = 3 * boxWidth + 2 * spacing;
-    const startX: number = centerX - totalWidth / 2;
-    const boxesY: number = questionY + 30 + this.answers.length * lineHeight + 20;
+    // // draw 3 boxes (1-3 antwoorden)
+    // const boxWidth: number = 30;
+    // const boxHeight: number = 30;
+    // const spacing: number = 300;
+    // const totalWidth: number = 3 * boxWidth + 2 * spacing;
+    // const startX: number = centerX - totalWidth / 2;
+    // const boxesY: number = questionY + 30 + this.answers.length * lineHeight + 20;
 
-    this.answers.forEach((ans: Answer, i: number) => {
-      const x: number = startX + i * (boxWidth + spacing);
-      const y: number = boxesY;
+    // this.answers.forEach((ans: Answer, i: number) => {
+    //   const x: number = startX + i * (boxWidth + spacing);
+    //   const y: number = boxesY;
 
-      // update answer pos (later collision)
-      // ans.setPosition(x, y);
-
-      // draw answerbox
-      CanvasRenderer.drawAnswerBox(canvas, x, y, boxWidth, boxHeight, 'blue', `${i + 1}`, 'white', '20px Arial');
-    });
+    //   // draw answerbox (positions in setPosition())
+    //   CanvasRenderer.drawAnswerBox(
+    // canvas, x, y, boxWidth, boxHeight, 'blue', `${i + 1}`, 'white', '20px Arial');
+    // });
   }
 
   public loadFromData(question: QuestionType): void {
     this.questionText = question.question;
     this.answers = question.answers.map((text: string, i: number) => {
       const ans: Answer = Answer.from(text, i === question.correct);
-      const boxX: number = this.posX + i * 270; // 3 boxes, elk 270px uit elkaar
+      const boxX: number = this.posX + i;
       ans.setPosition(boxX, this.posY + 100);
       return ans;
     });
@@ -77,8 +78,13 @@ export default class Question extends CanvasItem {
   public setPosition(x: number, y: number): void {
     this.posX = x;
     this.posY = y;
-    this.answers.forEach((ans: Answer, i: number) => {
-      ans.setPosition(this.posX + i * 270, this.posY + 100);
-    });
+  }
+
+  public getAnswerIndex(index: number): Answer | undefined {
+    return this.answers[index];
+  }
+
+  public checkAnswerAt(index: number): boolean {
+    return this.answers[index]?.isCorrectAnswer() ?? false;
   }
 }

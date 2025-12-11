@@ -15,6 +15,8 @@ export default class Answer extends CanvasItem {
 
   private correctAnswerCounter: number;
 
+  private car: Car;
+
   public constructor() {
     super();
     this.active = false;
@@ -25,23 +27,21 @@ export default class Answer extends CanvasItem {
     this.isCorrect = false;
     this.posX = 800;
     this.posY = 400;
+    this.car = new Car(1200, 1200);
   }
 
-  public checkCollision(car: Car): void {
-    //TODO: hitbox, the box should have a hitbox
-
-    // if (item.X + item.width >= player.X
-    // && item.X <= player.X + player.width
-    // && item.Y + item.height >= player.Y
-    // && item.Y <= player.Y + player.height)
+  public checkCollision(car: Car): boolean {
+    if (this.posX + 30 >= car.getPosX()
+      && this.posX <= car.getPosX() + car.getWidth()
+      && this.posY + 30 >= car.getPosY()
+      && this.posY <= car.getPosY() + car.getHeight()) {
+      return true;
+    }
+    return false;
   }
 
   public isCorrectAnswer(): boolean {
     return this.isCorrect;
-  }
-
-  public drawAnswer(canvas: HTMLCanvasElement): void {
-    CanvasRenderer.drawAnswerBox(canvas, this.posX, this.posY, 150, 60, 'blue', this.answerText);
   }
 
   public static from(text: string, isCorrect: boolean = false): Answer {
@@ -62,4 +62,3 @@ export default class Answer extends CanvasItem {
     this.posY = y;
   }
 }
-//krijg shit op canvas en answertext moet in de box komen te staan. de box heeft dan een hitbox.
