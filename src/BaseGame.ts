@@ -27,7 +27,7 @@ export default class BaseGame extends Game {
 
     this.keyListener = new KeyListener();
     this.mouseListener = new MouseListener(canvas);
-    this.car = new Car(this.canvas.width, this.canvas.height);
+    this.car = new Car(this.canvas);
 
     this.currentScene = new SceneStart(new Vector2(
       this.canvas.width,

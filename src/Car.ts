@@ -14,7 +14,7 @@ export default class Car {
 
   private maxSpeed: number = 5;
 
-  private scale: number = 0.25; // Scaling for the car (1 is standard)
+  private scale: number = 0.28; // Scaling for the car (1 is standard)
 
   public movingLeft: boolean = false;
 
@@ -26,10 +26,11 @@ export default class Car {
 
   private turnSpeed: number = 5;
 
-  public constructor(maxX: number, maxY: number) {
+  public constructor(canvas: HTMLCanvasElement) {
     this.image = CanvasRenderer.loadNewImage('./assets/car2.png');
-    this.posX = 1800;
-    this.posY = 100;
+    this.posX = canvas.width * 0.5;
+    this.posY = canvas.height * 0.285;
+    this.rotation = 1.085;
   }
 
   /**
