@@ -1,6 +1,7 @@
 import Game from './Game.js';
 import Scene from './scenes/Scene.js';
 import SceneStart from './scenes/SceneStart.js';
+import RacetrackScene from './scenes/RacetrackScene.js';
 import Vector2 from './Vector2.js';
 import KeyListener from './KeyListener.js';
 import MouseListener from './MouseListener.js';
@@ -40,7 +41,7 @@ export default class BaseGame extends Game {
 
     this.keyListener = new KeyListener();
     this.mouseListener = new MouseListener(canvas);
-    this.car = new Car(this.canvas.width, this.canvas.height);
+
     this.question = new Question();
     // load a default question so it can be rendered
     this.question.loadFromData(verkleinwoorden.normal[
@@ -49,9 +50,8 @@ export default class BaseGame extends Game {
     // position the question once (centered)
     this.question.setPosition(this.canvas.width / 2, 100);
 
-    this.currentScene = new SceneStart(new Vector2(
-      this.canvas.width,
-      this.canvas.height),
+    this.currentScene = new SceneStart(
+      new Vector2(this.canvas.width, this.canvas.height),
       this.canvas);
   }
 
@@ -62,31 +62,8 @@ export default class BaseGame extends Game {
     // Let the current scene process the input
     this.currentScene.processInput(this.keyListener, this.mouseListener);
 
-    // Only let the car move in the racetrack-scenes
     if (this.currentScene instanceof RacetrackScene) {
-      this.car.movingLeft =
-        this.keyListener.isKeyDown(KeyListener.KEY_LEFT) ||
-        this.keyListener.isKeyDown(KeyListener.KEY_A);
-
-      this.car.movingRight =
-        this.keyListener.isKeyDown(KeyListener.KEY_RIGHT) ||
-        this.keyListener.isKeyDown(KeyListener.KEY_D);
-
-      this.car.movingUp =
-        this.keyListener.isKeyDown(KeyListener.KEY_UP) ||
-        this.keyListener.isKeyDown(KeyListener.KEY_W);
-
-      this.car.movingDown =
-        this.keyListener.isKeyDown(KeyListener.KEY_DOWN) ||
-        this.keyListener.isKeyDown(KeyListener.KEY_S);
-    } else {
-      this.car.movingLeft = false;
-      this.car.movingRight = false;
-      this.car.movingUp = false;
-      this.car.movingDown = false;
-    }
-
-    if (this.currentScene instanceof RacetrackScene) {
+      const car: Car = this.currentScene.getCar();
       // only accept answers when not locked
       if (!this.answerLocked) {
         if (this.keyListener.keyPressed(KeyListener.KEY_1)) {
@@ -96,14 +73,14 @@ export default class BaseGame extends Game {
           // 10 sec boost :)
           this.answerLocked = true;
           this.effectTimer = 10;
-          this.savedMaxSpeed = this.car.maxSpeed;
-          this.savedTurnSpeed = this.car.turnSpeed;
+          this.savedMaxSpeed = car.maxSpeed;
+          this.savedTurnSpeed = car.turnSpeed;
           if (correct) {
-            this.car.maxSpeed = this.savedMaxSpeed + 0.5;
-            this.car.turnSpeed = this.savedTurnSpeed - 0.5;
+            car.maxSpeed = this.savedMaxSpeed + 0.5;
+            car.turnSpeed = this.savedTurnSpeed - 0.5;
           } else {
-            this.car.maxSpeed = this.savedMaxSpeed - 0.5;
-            this.car.turnSpeed = this.savedTurnSpeed + 0.5;
+            car.maxSpeed = this.savedMaxSpeed - 0.5;
+            car.turnSpeed = this.savedTurnSpeed + 0.5;
           }
         }
         if (this.keyListener.keyPressed(KeyListener.KEY_2)) {
@@ -112,14 +89,14 @@ export default class BaseGame extends Game {
           this.lastMessageTTL = 10;
           this.answerLocked = true;
           this.effectTimer = 10;
-          this.savedMaxSpeed = this.car.maxSpeed;
-          this.savedTurnSpeed = this.car.turnSpeed;
+          this.savedMaxSpeed = car.maxSpeed;
+          this.savedTurnSpeed = car.turnSpeed;
           if (correct) {
-            this.car.maxSpeed = this.savedMaxSpeed + 0.5;
-            this.car.turnSpeed = this.savedTurnSpeed - 0.5;
+            car.maxSpeed = this.savedMaxSpeed + 0.5;
+            car.turnSpeed = this.savedTurnSpeed - 0.5;
           } else {
-            this.car.maxSpeed = this.savedMaxSpeed - 0.5;
-            this.car.turnSpeed = this.savedTurnSpeed + 0.5;
+            car.maxSpeed = this.savedMaxSpeed - 0.5;
+            car.turnSpeed = this.savedTurnSpeed + 0.5;
           }
         }
         if (this.keyListener.keyPressed(KeyListener.KEY_3)) {
@@ -128,14 +105,14 @@ export default class BaseGame extends Game {
           this.lastMessageTTL = 10;
           this.answerLocked = true;
           this.effectTimer = 10;
-          this.savedMaxSpeed = this.car.maxSpeed;
-          this.savedTurnSpeed = this.car.turnSpeed;
+          this.savedMaxSpeed = car.maxSpeed;
+          this.savedTurnSpeed = car.turnSpeed;
           if (correct) {
-            this.car.maxSpeed = this.savedMaxSpeed + 0.5;
-            this.car.turnSpeed = this.savedTurnSpeed - 0.5;
+            car.maxSpeed = this.savedMaxSpeed + 0.5;
+            car.turnSpeed = this.savedTurnSpeed - 0.5;
           } else {
-            this.car.maxSpeed = this.savedMaxSpeed - 0.5;
-            this.car.turnSpeed = this.savedTurnSpeed + 0.5;
+            car.maxSpeed = this.savedMaxSpeed - 0.5;
+            car.turnSpeed = this.savedTurnSpeed + 0.5;
           }
         }
       }
@@ -155,7 +132,8 @@ export default class BaseGame extends Game {
 
     // Only update the car in Racetrack-scenes
     if (this.currentScene instanceof RacetrackScene) {
-      this.car.update(delta);
+      const car: Car = this.currentScene.getCar();
+      car.update(delta, this.canvas);
     }
 
     // decrement message TTL
@@ -172,11 +150,14 @@ export default class BaseGame extends Game {
       this.effectTimer -= delta / 1000;
       if (this.effectTimer <= 0) {
         // revert car stats if we saved them
-        if (this.savedMaxSpeed !== null) {
-          this.car.maxSpeed = this.savedMaxSpeed;
-        }
-        if (this.savedTurnSpeed !== null) {
-          this.car.turnSpeed = this.savedTurnSpeed;
+        if (this.currentScene instanceof RacetrackScene) {
+          const car: Car = this.currentScene.getCar();
+          if (this.savedMaxSpeed !== null) {
+            car.maxSpeed = this.savedMaxSpeed;
+          }
+          if (this.savedTurnSpeed !== null) {
+            car.turnSpeed = this.savedTurnSpeed;
+          }
         }
         this.savedMaxSpeed = null;
         this.savedTurnSpeed = null;
@@ -211,7 +192,8 @@ export default class BaseGame extends Game {
 
     // Render the car and Q&A only in racetrack-scenes
     if (this.currentScene instanceof RacetrackScene) {
-      this.car.render(this.canvas);
+      const car: Car = this.currentScene.getCar();
+      car.render(this.canvas);
       this.question.draw(this.canvas);
       if (this.lastMessage) {
         CanvasRenderer.writeText(this.canvas, this.lastMessage, this.canvas.width / 2, 60, 'center', 'Arial', 36, this.lastMessage === 'Correct!' ? 'green' : 'red');

@@ -86,8 +86,8 @@ export default class Racetrack1 extends RacetrackScene {
     // Renders the lapcount
     ctx.fillStyle = 'black';
     ctx.font = '30px Arial';
-    ctx.textAlign = 'left';
-    ctx.fillText(`Laps: ${this.getLaps()} / ${this.getMaxLaps()}`, 20, 40);
+    // ctx.textAlign = 'left'; // Only for the demo outcommented!!
+    // ctx.fillText(`Laps: ${this.getLaps()} / ${this.getMaxLaps()}`, 20, 40);
 
     // Renders the timer
     ctx.textAlign = 'right';
