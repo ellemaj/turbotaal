@@ -57,7 +57,7 @@ export default class Racetrack1 extends RacetrackScene {
     // Renders the text on the screen
     CanvasRenderer.writeText(
       canvas,
-      'Racetrack 1. Press escape to go back to the track selection.',
+      'Racetrack 1.', //Press escape to go back to the track selection.',
       this.boardSize.x / 2,
       this.boardSize.y / 2);
   }
