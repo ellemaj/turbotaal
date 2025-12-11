@@ -45,7 +45,7 @@ export default class Racetrack1 extends RacetrackScene {
    * @returns time elapsed
    */
   public override update(delta: number): void {
-    this.car.update(delta);
+    this.car.update(delta, this.canvas);
 
     this.stopwatch.update(delta);
 
