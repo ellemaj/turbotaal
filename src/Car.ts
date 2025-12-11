@@ -1,6 +1,5 @@
 import CanvasRenderer from './CanvasRenderer.js';
 import CanvasItem from './CanvasItem.js';
-//import Vector2 from './Vector2.js';
 
 export default class Car extends CanvasItem {
   private rotation: number = -2;
@@ -22,6 +21,7 @@ export default class Car extends CanvasItem {
   public turnSpeed: number = 5;
 
   public constructor() {
+    super();
     this.image = CanvasRenderer.loadNewImage('./assets/car2.png');
 
     this.posX = 0; // Standard coordinates, configure the start position in the racetrack scenes
@@ -69,7 +69,7 @@ export default class Car extends CanvasItem {
 
     // Ensures that te car cannot drive out of your screen
     const carWidth: number = this.image.width * this.scale;
-    const carHeight: number = this.image.width * this.scale;
+    const carHeight: number = this.image.height * this.scale;
 
     if (this.posX < 0) {
       this.posX = 0;

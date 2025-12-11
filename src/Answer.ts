@@ -1,6 +1,5 @@
 import Car from './Car.js';
 import CanvasItem from './CanvasItem.js';
-import CanvasRenderer from './CanvasRenderer.js';
 
 export default class Answer extends CanvasItem {
   private answerText: string;
@@ -27,23 +26,38 @@ export default class Answer extends CanvasItem {
     this.isCorrect = false;
     this.posX = 800;
     this.posY = 400;
-    this.car = new Car(1200, 1200);
+    this.car = new Car();
   }
 
-  public checkCollision(car: Car): boolean {
-    if (this.posX + 30 >= car.getPosX()
-      && this.posX <= car.getPosX() + car.getWidth()
-      && this.posY + 30 >= car.getPosY()
-      && this.posY <= car.getPosY() + car.getHeight()) {
-      return true;
-    }
-    return false;
-  }
+  // /**
+  //  * collision
+  //  * @param car the car it uses
+  //  * @returns true if collides false if not
+  //  */
+  // public checkCollision(car: Car): boolean {
+  //   if (this.posX + 30 >= car.getPosX()
+  //     && this.posX <= car.getPosX() + car.getWidth()
+  //     && this.posY + 30 >= car.getPosY()
+  //     && this.posY <= car.getPosY() + car.getHeight()) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
+  /**
+   * Looks if answer is correct
+   * @returns true or false
+   */
   public isCorrectAnswer(): boolean {
     return this.isCorrect;
   }
 
+  /**
+   * shiii
+   * @param text text
+   * @param isCorrect looks if its correct
+   * @returns a
+   */
   public static from(text: string, isCorrect: boolean = false): Answer {
     const a: Answer = new Answer();
     a.answerText = text;
