@@ -12,7 +12,7 @@ export default class Car {
 
   private speed: number = 0;
 
-  private maxSpeed: number = 40;
+  private maxSpeed: number = 5;
 
   private scale: number = 0.25; // Scaling for the car (1 is standard)
 
@@ -24,10 +24,12 @@ export default class Car {
 
   public movingDown: boolean = false;
 
+  private turnSpeed: number = 5;
+
   public constructor(maxX: number, maxY: number) {
     this.image = CanvasRenderer.loadNewImage('./assets/car2.png');
-    this.posX = (maxX / 2) - (this.image.width / 2);
-    this.posY = maxY - this.image.height;
+    this.posX = 1800;
+    this.posY = 100;
   }
 
   /**
@@ -37,12 +39,12 @@ export default class Car {
    * @param canvas The canvas it needs to be rendered on
    */
   public update(delta: number): void {
-    if (this.movingLeft && (this.movingUp || this.movingDown)) {
-      this.rotation -= (Math.PI * (delta / 10) / 180);
+    if (this.movingLeft && this.speed != 0) {
+      this.rotation -= (Math.PI * (delta / this.turnSpeed) / 180);
       this.movingLeft = false;
     }
-    if (this.movingRight && (this.movingUp || this.movingDown)) {
-      this.rotation += (Math.PI * (delta / 10) / 180);
+    if (this.movingRight && this.speed != 0) {
+      this.rotation += (Math.PI * (delta / this.turnSpeed) / 180);
       this.movingRight = false;
     }
     if (this.movingUp && !this.movingDown) {
