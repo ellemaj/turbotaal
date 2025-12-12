@@ -76,11 +76,11 @@ export default class BaseGame extends Game {
           this.savedMaxSpeed = car.maxSpeed;
           this.savedTurnSpeed = car.turnSpeed;
           if (correct) {
-            car.maxSpeed = this.savedMaxSpeed + 0.75;
-            car.turnSpeed = this.savedTurnSpeed - 0.75;
+            car.maxSpeed = this.savedMaxSpeed + 0.075;
+            car.turnSpeed = this.savedTurnSpeed - 0.5;
           } else {
-            car.maxSpeed = this.savedMaxSpeed - 0.75;
-            car.turnSpeed = this.savedTurnSpeed + 0.75;
+            car.maxSpeed = this.savedMaxSpeed - 0.075;
+            car.turnSpeed = this.savedTurnSpeed + 0.5;
           }
         }
         if (this.keyListener.keyPressed(KeyListener.KEY_2)) {
@@ -92,11 +92,11 @@ export default class BaseGame extends Game {
           this.savedMaxSpeed = car.maxSpeed;
           this.savedTurnSpeed = car.turnSpeed;
           if (correct) {
-            car.maxSpeed = this.savedMaxSpeed + 0.75;
-            car.turnSpeed = this.savedTurnSpeed - 0.75;
+            car.maxSpeed = this.savedMaxSpeed + 0.075;
+            car.turnSpeed = this.savedTurnSpeed - 0.5;
           } else {
-            car.maxSpeed = this.savedMaxSpeed - 0.75;
-            car.turnSpeed = this.savedTurnSpeed + 0.75;
+            car.maxSpeed = this.savedMaxSpeed - 0.075;
+            car.turnSpeed = this.savedTurnSpeed + 0.5;
           }
         }
         if (this.keyListener.keyPressed(KeyListener.KEY_3)) {
@@ -108,11 +108,11 @@ export default class BaseGame extends Game {
           this.savedMaxSpeed = car.maxSpeed;
           this.savedTurnSpeed = car.turnSpeed;
           if (correct) {
-            car.maxSpeed = this.savedMaxSpeed + 0.75;
-            car.turnSpeed = this.savedTurnSpeed - 0.75;
+            car.maxSpeed = this.savedMaxSpeed + 0.075;
+            car.turnSpeed = this.savedTurnSpeed - 0.5;
           } else {
-            car.maxSpeed = this.savedMaxSpeed - 0.75;
-            car.turnSpeed = this.savedTurnSpeed + 0.75;
+            car.maxSpeed = this.savedMaxSpeed - 0.075;
+            car.turnSpeed = this.savedTurnSpeed + 0.5;
           }
         }
       }

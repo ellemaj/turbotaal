@@ -6,7 +6,7 @@ export default class Car extends CanvasItem {
 
   private speed: number = 0;
 
-  public maxSpeed: number = 2.5;
+  public maxSpeed: number = 0.2;
 
   private scale: number = 0.28; // Scaling for the car (1 is standard)
 
@@ -18,7 +18,7 @@ export default class Car extends CanvasItem {
 
   public movingDown: boolean = false;
 
-  public turnSpeed: number = 5;
+  public turnSpeed: number = 4;
 
   public constructor() {
     super();
@@ -64,8 +64,8 @@ export default class Car extends CanvasItem {
     if (this.speed > this.maxSpeed) {
       this.speed = this.maxSpeed;
     }
-    this.posX -= Math.cos(this.rotation + Math.PI / 2) * this.speed;
-    this.posY -= Math.sin(this.rotation + Math.PI / 2) * this.speed;
+    this.posX -= Math.cos(this.rotation + Math.PI / 2) * this.speed * delta;
+    this.posY -= Math.sin(this.rotation + Math.PI / 2) * this.speed * delta;
 
     // Ensures that te car cannot drive out of your screen
     const carWidth: number = this.image.width * this.scale;
