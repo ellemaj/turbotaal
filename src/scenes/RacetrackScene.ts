@@ -91,6 +91,7 @@ export default abstract class RacetrackScene extends Scene {
     this.car.setStartPosition(x, y, rotation);
   }
 
+  // Resets the stopwatch, car position and lapcount when pressed
   public resetRace(): void {
     this.stopwatch.stop();
     this.stopwatch = new Stopwatch();
