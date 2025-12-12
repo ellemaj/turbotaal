@@ -72,15 +72,15 @@ export default class BaseGame extends Game {
           this.lastMessageTTL = 10;
           // 10 sec boost :)
           this.answerLocked = true;
-          this.effectTimer = 10;
+          this.effectTimer = 5;
           this.savedMaxSpeed = car.maxSpeed;
           this.savedTurnSpeed = car.turnSpeed;
           if (correct) {
-            car.maxSpeed = this.savedMaxSpeed + 0.5;
-            car.turnSpeed = this.savedTurnSpeed - 0.5;
+            car.maxSpeed = this.savedMaxSpeed + 0.75;
+            car.turnSpeed = this.savedTurnSpeed - 0.75;
           } else {
-            car.maxSpeed = this.savedMaxSpeed - 0.5;
-            car.turnSpeed = this.savedTurnSpeed + 0.5;
+            car.maxSpeed = this.savedMaxSpeed - 0.75;
+            car.turnSpeed = this.savedTurnSpeed + 0.75;
           }
         }
         if (this.keyListener.keyPressed(KeyListener.KEY_2)) {
@@ -88,15 +88,15 @@ export default class BaseGame extends Game {
           this.lastMessage = correct ? 'Correct!' : 'Fout';
           this.lastMessageTTL = 10;
           this.answerLocked = true;
-          this.effectTimer = 10;
+          this.effectTimer = 5;
           this.savedMaxSpeed = car.maxSpeed;
           this.savedTurnSpeed = car.turnSpeed;
           if (correct) {
-            car.maxSpeed = this.savedMaxSpeed + 0.5;
-            car.turnSpeed = this.savedTurnSpeed - 0.5;
+            car.maxSpeed = this.savedMaxSpeed + 0.75;
+            car.turnSpeed = this.savedTurnSpeed - 0.75;
           } else {
-            car.maxSpeed = this.savedMaxSpeed - 0.5;
-            car.turnSpeed = this.savedTurnSpeed + 0.5;
+            car.maxSpeed = this.savedMaxSpeed - 0.75;
+            car.turnSpeed = this.savedTurnSpeed + 0.75;
           }
         }
         if (this.keyListener.keyPressed(KeyListener.KEY_3)) {
@@ -104,15 +104,15 @@ export default class BaseGame extends Game {
           this.lastMessage = correct ? 'Correct!' : 'Fout';
           this.lastMessageTTL = 10;
           this.answerLocked = true;
-          this.effectTimer = 10;
+          this.effectTimer = 5;
           this.savedMaxSpeed = car.maxSpeed;
           this.savedTurnSpeed = car.turnSpeed;
           if (correct) {
-            car.maxSpeed = this.savedMaxSpeed + 0.5;
-            car.turnSpeed = this.savedTurnSpeed - 0.5;
+            car.maxSpeed = this.savedMaxSpeed + 0.75;
+            car.turnSpeed = this.savedTurnSpeed - 0.75;
           } else {
-            car.maxSpeed = this.savedMaxSpeed - 0.5;
-            car.turnSpeed = this.savedTurnSpeed + 0.5;
+            car.maxSpeed = this.savedMaxSpeed - 0.75;
+            car.turnSpeed = this.savedTurnSpeed + 0.75;
           }
         }
       }
