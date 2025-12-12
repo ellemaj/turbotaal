@@ -55,9 +55,9 @@ export default class Car extends CanvasItem {
     }
     if (this.movingDown) {
       if (this.speed <= 0) {
-        this.speed -= 0.1 * delta;
+        this.speed -= 0.005 * delta;
       } else {
-        this.speed -= 0.01 * delta;
+        this.speed -= 0.0005 * delta;
       }
     }
 
