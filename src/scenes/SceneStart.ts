@@ -17,7 +17,9 @@ export default class SceneStart extends Scene {
 
   private startButtonLoaded: boolean = false;
 
-  //private shopButtonLoaded: boolean = false;
+  private shopButtonLoaded: boolean = false;
+
+  private shopButton: HTMLImageElement;
 
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
     super(boardSize, canvas);
@@ -27,12 +29,16 @@ export default class SceneStart extends Scene {
 
     this.startButton = CanvasRenderer.loadNewImage('./assets/start.png');
     this.background = CanvasRenderer.loadNewImage('./assets/background.png');
+    this.shopButton = CanvasRenderer.loadNewImage('./assets/shop.png');
     this.scale = 0.5;
 
     this.startButton.onload = (): void => {
       this.posX = (this.canvas.width - this.startButton.width * this.scale) / 2;
       this.posY = (this.canvas.height - this.startButton.height * this.scale) / 2;
       this.startButtonLoaded = true;
+    };
+    this.shopButton.onload = (): void => {
+      this.shopButtonLoaded = true;
     };
   }
 
@@ -60,12 +66,34 @@ export default class SceneStart extends Scene {
     return false;
   }
 
+  private isShopButtonClicked(): boolean {
+    if (!this.startButtonLoaded || !this.shopButtonLoaded) {
+      return false;
+    }
+    const mousePos: MouseCoordinates = this.mouseListener.getMousePosition();
+    const shopX: number = this.posX +
+      (this.startButton.width * this.scale - this.shopButton.width * this.scale) / 2;
+    const shopY: number = this.posY - this.shopButton.height - 20;
+    const isClicked: boolean =
+      mousePos.x > shopX &&
+      mousePos.y > shopY &&
+      mousePos.x <= shopX + this.shopButton.width &&
+      mousePos.y <= shopY + this.shopButton.height;
+    if (isClicked && this.mouseListener.buttonPressed(MouseListener.BUTTON_LEFT)) {
+      this.goToShop = true;
+      return true;
+    }
+    return false;
+
+  }
+
   /**
    * Update function
    */
   public override update(delta: number): void {
-    if (this.startButtonLoaded) {
+    if (this.startButtonLoaded || this.shopButtonLoaded) {
       this.isStartButtonClicked();
+      this.isShopButtonClicked();
     }
 
     // this.isShopButtonClicked();
@@ -112,6 +140,17 @@ export default class SceneStart extends Scene {
         this.posY,
         this.startButton.width * this.scale,
         this.startButton.height * this.scale
+      );
+    }
+    // render shop button
+    if (this.startButtonLoaded && this.shopButtonLoaded) {
+      const shopX: number = this.posX +
+        (this.startButton.width * this.scale - this.shopButton.width * this.scale) / 2;
+      const shopY: number = this.posY - this.shopButton.height * this.scale - 20;
+      ctx.drawImage(
+        this.shopButton, shopX, shopY,
+        this.shopButton.width * this.scale,
+        this.shopButton.height * this.scale
       );
     }
     // Renders the title on the screen
