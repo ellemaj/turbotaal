@@ -4,14 +4,14 @@ import Vector2 from '../Vector2.js';
 import KeyListener from '../KeyListener.js';
 import Scene from './Scene.js';
 import RacetrackScene from './RacetrackScene.js';
-import SceneTrackSelection from './SceneTrackSelection.js';
+import ScenePause from './ScenePause.js';
 
 export default class Racetrack1 extends RacetrackScene {
-  private goBack: boolean;
+  private pause: boolean;
 
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
     super(boardSize, canvas);
-    this.goBack = false;
+    this.pause = false;
     this.background = CanvasRenderer.loadNewImage('./assets/racetrack1Demo.png');
 
     this.setCarStart(canvas.width * 0.5, canvas.height * 0.285, 1.085);
@@ -35,7 +35,7 @@ export default class Racetrack1 extends RacetrackScene {
 
     // Changes the scene to SceneTrackSelection when ESC is being pressed
     if (keyListener.keyPressed(KeyListener.KEY_ESC)) {
-      this.goBack = true;
+      this.pause = true;
     }
   }
 
@@ -55,9 +55,11 @@ export default class Racetrack1 extends RacetrackScene {
     }
   }
 
+  // Switches to the pausescene if ESC is pressed
   public override getNextScene(): Scene | null {
-    if (this.goBack) {
-      return new SceneTrackSelection(this.boardSize, this.canvas);
+    if (this.pause) {
+      this.pause = false;
+      return new ScenePause(this.boardSize, this.canvas, this);
     }
     return null;
   }
@@ -79,15 +81,15 @@ export default class Racetrack1 extends RacetrackScene {
     // Renders the text on the screen
     CanvasRenderer.writeText(
       canvas,
-      'Welkom bij TurboTaal!', //Press escape to go back to the track selection.',
+      'Welkom bij TurboTaal! Press escape to pause',
       this.boardSize.x / 2,
       this.boardSize.y / 2);
 
     // Renders the lapcount
     ctx.fillStyle = 'black';
     ctx.font = '30px Arial';
-    // ctx.textAlign = 'left'; // Only for the demo outcommented!!
-    // ctx.fillText(`Laps: ${this.getLaps()} / ${this.getMaxLaps()}`, 20, 40);
+    ctx.textAlign = 'left';
+    ctx.fillText(`Laps: ${this.getLaps()} / ${this.getMaxLaps()}`, 20, 40);
 
     // Renders the timer
     ctx.textAlign = 'right';
