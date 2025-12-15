@@ -6,9 +6,15 @@ export default class Car extends CanvasItem {
 
   private speed: number = 0;
 
-  public maxSpeed: number = 0.2;
+  private scale: number = 0.28; // Scaling for the car (0.28 is standard)
 
-  private scale: number = 0.28; // Scaling for the car (1 is standard)
+  private imageStraight: HTMLImageElement;
+
+  private imageLeft: HTMLImageElement;
+
+  private imageRight: HTMLImageElement;
+
+  public maxSpeed: number = 0.2;
 
   public movingLeft: boolean = false;
 
@@ -22,7 +28,12 @@ export default class Car extends CanvasItem {
 
   public constructor() {
     super();
-    this.image = CanvasRenderer.loadNewImage('./assets/car2.png');
+
+    this.imageStraight = CanvasRenderer.loadNewImage('./assets/car_straight.png');
+    this.imageLeft = CanvasRenderer.loadNewImage('./assets/car_left.png');
+    this.imageRight = CanvasRenderer.loadNewImage('./assets/car_right.png');
+
+    this.image = this.imageStraight;
 
     this.posX = 0; // Standard coordinates, configure the start position in the racetrack scenes
     this.posY = 0;
@@ -36,6 +47,15 @@ export default class Car extends CanvasItem {
    * @param canvas The canvas it needs to be rendered on
    */
   public update(delta: number, canvas: HTMLCanvasElement): void {
+    // Change skins when steering
+    if (this.movingLeft && !this.movingRight) {
+      this.image = this.imageLeft;
+    } else if (this.movingRight && !this.movingLeft) {
+      this.image = this.imageRight;
+    } else {
+      this.image = this.imageStraight;
+    }
+
     // Movement
     if (this.movingLeft && this.speed != 0) {
       this.rotation -= (Math.PI * (delta / this.turnSpeed) / 180);
