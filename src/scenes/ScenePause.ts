@@ -1,5 +1,6 @@
 import Scene from './Scene.js';
 import SceneTrackSelection from './SceneTrackSelection.js';
+import SceneStart from './SceneStart.js';
 import KeyListener from '../KeyListener.js';
 import MouseListener from '../MouseListener.js';
 import Vector2 from '../Vector2.js';
@@ -9,6 +10,8 @@ export default class ScenePause extends Scene {
   private previousScene: Scene;
 
   private resume: boolean = false;
+
+  private trackSelection: boolean = false;
 
   private quit: boolean = false;
 
@@ -22,7 +25,7 @@ export default class ScenePause extends Scene {
   }
 
   /**
-   * Processed the input
+   * Processes the input
    *
    * @param keyListener keylistener that is used
    * @param mouseListener mouselistener that is used
@@ -32,22 +35,36 @@ export default class ScenePause extends Scene {
       this.resume = true;
     }
 
+    if (keyListener.keyPressed(KeyListener.KEY_T)) {
+      this.trackSelection = true;
+    }
+
     if (keyListener.keyPressed(KeyListener.KEY_Q)) {
       this.quit = true;
     }
   }
 
+  /**
+   * Update function, nothing needs to update when ScenePause is loaded.
+   *
+   * @param delta time elapsed
+   */
   public override update(delta: number): void {
     //
   }
 
+  // Gives back the right scene
   public override getNextScene(): Scene | null {
     if (this.resume) {
       return this.previousScene;
     }
 
-    if (this.quit) {
+    if (this.trackSelection) {
       return new SceneTrackSelection(this.boardSize, this.canvas);
+    }
+
+    if (this.quit) {
+      return new SceneStart(this.boardSize, this.canvas);
     }
 
     return null;
@@ -85,7 +102,7 @@ export default class ScenePause extends Scene {
 
     CanvasRenderer.writeText(
       canvas,
-      'ESC = verder | Q = stoppen',
+      'ESC = verder | T = trackselection | Q = stoppen',
       canvas.width / 2,
       canvas.height / 2 + 20,
       'center',
