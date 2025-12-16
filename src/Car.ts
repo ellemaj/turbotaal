@@ -21,7 +21,7 @@ export default class Car extends CanvasItem {
 
   public turnSpeed: number = 4;
 
-  private camera: Camera;
+  public camera: Camera;
 
   public constructor() {
     super();
@@ -72,22 +72,21 @@ export default class Car extends CanvasItem {
     this.posY -= Math.sin(this.rotation + Math.PI / 2) * this.speed * delta;
 
     // Ensures that te car cannot drive out of your screen
-    const carWidth: number = this.image.width * this.scale;
-    const carHeight: number = this.image.height * this.scale;
+    //const carWidth: number = this.image.width * this.scale;
+    //const carHeight: number = this.image.height * this.scale;
 
-    if (this.posX < 0) {
-      this.posX = 0;
-    }
-    if (this.posY < 0) {
-      this.posY = 0;
-    }
-    if (this.posX + carWidth > canvas.width) {
-      this.posX = canvas.width - carWidth;
-    }
-    if (this.posY + carHeight > canvas.height) {
-      this.posY = canvas.height - carHeight;
-    }
-    console.log('Render car at:', this.posX - this.camera.x, this.posY - this.camera.y);
+    // if (this.posX < 0) {
+    //   this.posX = 0;
+    // }
+    // if (this.posY < 0) {
+    //   this.posY = 0;
+    // }
+    // if (this.posX + carWidth > canvas.width) {
+    //   this.posX = canvas.width - carWidth;
+    // }
+    // if (this.posY + carHeight > canvas.height) {
+    //   this.posY = canvas.height - carHeight;
+    // }
   }
 
   /**
@@ -99,8 +98,8 @@ export default class Car extends CanvasItem {
     CanvasRenderer.drawImage(
       canvas,
       this.image,
-      this.posX - this.camera.x,
-      this.posY - this.camera.y,
+      canvas.width / 2,
+      canvas.height / 2,
       this.rotation,
       this.scale
     );

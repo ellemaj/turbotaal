@@ -138,7 +138,6 @@ export default class BaseGame extends Game {
     if (this.currentScene instanceof RacetrackScene) {
       const car: Car = this.currentScene.getCar();
       car.update(delta, this.canvas);
-      this.camera.follow(car.getPosX(), car.getPosY(), this.canvas);
       console.log('Camera:', this.camera.x, this.camera.y);
       console.log('Car:', car.getPosX(), car.getPosY());
     }
@@ -199,8 +198,13 @@ export default class BaseGame extends Game {
 
     // Render the car and Q&A only in racetrack-scenes
     if (this.currentScene instanceof RacetrackScene) {
-      const car: Car = this.currentScene.getCar();
-      car.render(this.canvas);
+      CanvasRenderer.drawCircle(
+        this.canvas,
+        -this.camera.x,
+        -this.camera.y,
+        10,
+        'blue'
+      );
       this.question.draw(this.canvas);
       if (this.lastMessage) {
         CanvasRenderer.writeText(this.canvas, this.lastMessage, this.canvas.width / 2, 60, 'center', 'Arial', 36, this.lastMessage === 'Correct!' ? 'green' : 'red');

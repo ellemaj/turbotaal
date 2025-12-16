@@ -12,6 +12,10 @@ export default class Racetrack1 extends RacetrackScene {
 
   private camera: Camera;
 
+  public worldWidth: number = 3000;
+
+  public worldHeight: number = 3000;
+
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
     super(boardSize, canvas);
     this.goBack = false;
@@ -50,6 +54,8 @@ export default class Racetrack1 extends RacetrackScene {
   public override update(delta: number): void {
     this.car.update(delta, this.canvas);
 
+    this.camera.follow(this.car.getPosX(), this.car.getPosY(), this.canvas);
+
     this.stopwatch.update(delta);
 
     // Stopwatch stops when LapCount = 3
@@ -75,7 +81,8 @@ export default class Racetrack1 extends RacetrackScene {
     if (!ctx) {
       return;
     } // Renders the background
-    ctx.drawImage(this.background, -this.camera.x, -this.camera.y);
+
+    ctx.drawImage(this.background, -this.camera.x, -this.camera.y, this.worldWidth, this.worldHeight);
 
     this.car.render(canvas);
 
