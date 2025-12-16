@@ -9,6 +9,7 @@ import CanvasRenderer from './CanvasRenderer.js';
 import Car from './Car.js';
 import Question from './Question.js';
 import { verkleinwoorden } from './questions/verkleinwoorden.js';
+import Camera from './Camera.js';
 
 export default class BaseGame extends Game {
   private canvas: HTMLCanvasElement;
@@ -33,6 +34,8 @@ export default class BaseGame extends Game {
 
   private savedTurnSpeed: number | null = null;
 
+  private camera: Camera;
+
   public constructor(canvas: HTMLCanvasElement) {
     super();
     this.canvas = canvas;
@@ -53,6 +56,7 @@ export default class BaseGame extends Game {
     this.currentScene = new SceneStart(
       new Vector2(this.canvas.width, this.canvas.height),
       this.canvas);
+    this.camera = new Camera();
   }
 
   /**
@@ -134,6 +138,9 @@ export default class BaseGame extends Game {
     if (this.currentScene instanceof RacetrackScene) {
       const car: Car = this.currentScene.getCar();
       car.update(delta, this.canvas);
+      this.camera.follow(car.getPosX(), car.getPosY(), this.canvas);
+      console.log('Camera:', this.camera.x, this.camera.y);
+      console.log('Car:', car.getPosX(), car.getPosY());
     }
 
     // decrement message TTL

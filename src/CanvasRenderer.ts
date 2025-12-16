@@ -61,6 +61,7 @@ export default class CanvasRenderer {
     dx: number,
     dy: number,
     rotation: number = 0,
+    scale: number = 1,
   ): void {
     const ctx: CanvasRenderingContext2D = CanvasRenderer.getCanvasContext(canvas);
 
@@ -71,6 +72,8 @@ export default class CanvasRenderer {
 
     // rotate around origin
     ctx.rotate(rotation);
+
+    ctx.scale(scale, scale);
 
     // draw image centered
     ctx.drawImage(image, -image.width / 2, -image.height / 2);
