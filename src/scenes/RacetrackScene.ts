@@ -87,6 +87,24 @@ export default abstract class RacetrackScene extends Scene {
     this.raceStarted = false;
   }
 
+  /**
+   * Pauses the stopwatch
+   */
+  public pauseTimer(): void {
+    this.stopwatch.pause();
+  }
+
+  /**
+   * Resumes the stopwatch
+   */
+  public resumeTimer(): void {
+    this.stopwatch.resume();
+  }
+
+  public getFormattedTime(): string {
+    return this.stopwatch.getFormatted();
+  }
+
   protected setCarStart(x: number, y: number, rotation: number): void {
     this.car.setStartPosition(x, y, rotation);
   }

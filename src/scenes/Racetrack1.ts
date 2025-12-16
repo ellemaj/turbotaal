@@ -72,8 +72,8 @@ export default class Racetrack1 extends RacetrackScene {
     }
 
     if (this.pitstop) {
-      console.log("pitstop");
       this.pitstop = false;
+      this.pauseTimer();
       return new ScenePitstop(this.boardSize, this.canvas, this);
     }
     return null;
