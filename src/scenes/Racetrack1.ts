@@ -4,16 +4,23 @@ import Vector2 from '../Vector2.js';
 import KeyListener from '../KeyListener.js';
 import Scene from './Scene.js';
 import RacetrackScene from './RacetrackScene.js';
-import ScenePause from './ScenePause.js';
+import SceneTrackSelection from './SceneTrackSelection.js';
+import Camera from '../Camera.js';
 
 export default class Racetrack1 extends RacetrackScene {
-  private pause: boolean;
+  private goBack: boolean;
+
+  private camera: Camera;
+
+  public worldWidth: number = 3000;
+
+  public worldHeight: number = 3000;
 
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
     super(boardSize, canvas);
-    this.pause = false;
+    this.goBack = false;
     this.background = CanvasRenderer.loadNewImage('./assets/racetrack1Demo.png');
-
+    this.camera = new Camera();
     this.setCarStart(canvas.width * 0.5, canvas.height * 0.285, 1.085);
   }
 
@@ -35,7 +42,7 @@ export default class Racetrack1 extends RacetrackScene {
 
     // Changes the scene to SceneTrackSelection when ESC is being pressed
     if (keyListener.keyPressed(KeyListener.KEY_ESC)) {
-      this.pause = true;
+      this.goBack = true;
     }
   }
 
@@ -47,6 +54,8 @@ export default class Racetrack1 extends RacetrackScene {
   public override update(delta: number): void {
     this.car.update(delta, this.canvas);
 
+    this.camera.follow(this.car.getPosX(), this.car.getPosY(), this.canvas);
+
     this.stopwatch.update(delta);
 
     // Stopwatch stops when LapCount = 3
@@ -55,11 +64,9 @@ export default class Racetrack1 extends RacetrackScene {
     }
   }
 
-  // Switches to the pausescene if ESC is pressed
   public override getNextScene(): Scene | null {
-    if (this.pause) {
-      this.pause = false;
-      return new ScenePause(this.boardSize, this.canvas, this);
+    if (this.goBack) {
+      return new SceneTrackSelection(this.boardSize, this.canvas);
     }
     return null;
   }
@@ -74,22 +81,23 @@ export default class Racetrack1 extends RacetrackScene {
     if (!ctx) {
       return;
     } // Renders the background
-    ctx.drawImage(this.background, 0, 0, canvas.width, canvas.height);
+
+    ctx.drawImage(this.background, -this.camera.x, -this.camera.y, this.worldWidth, this.worldHeight);
 
     this.car.render(canvas);
 
     // Renders the text on the screen
     CanvasRenderer.writeText(
       canvas,
-      'Welkom bij TurboTaal! Press escape to pause',
+      'Welkom bij TurboTaal!', //Press escape to go back to the track selection.',
       this.boardSize.x / 2,
       this.boardSize.y / 2);
 
     // Renders the lapcount
     ctx.fillStyle = 'black';
     ctx.font = '30px Arial';
-    ctx.textAlign = 'left';
-    ctx.fillText(`Laps: ${this.getLaps()} / ${this.getMaxLaps()}`, 20, 40);
+    // ctx.textAlign = 'left'; // Only for the demo outcommented!!
+    // ctx.fillText(`Laps: ${this.getLaps()} / ${this.getMaxLaps()}`, 20, 40);
 
     // Renders the timer
     ctx.textAlign = 'right';
