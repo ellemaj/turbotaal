@@ -1,9 +1,7 @@
 export default class Stopwatch {
-  private elapsed: number = 0;
-
   private running: boolean = false;
 
-  private penalty: boolean = false; // Only for the demo!
+  private elapsed: number = 0;
 
   /**
    * Starts the timer
@@ -19,9 +17,18 @@ export default class Stopwatch {
     this.running = false;
   }
 
-  // Only for the demo!
-  public getPenalty(): void {
-    this.penalty = true;
+  /**
+   * Pauses the timer
+   */
+  public pause(): void {
+    this.running = false;
+  }
+
+  /**
+   * Resumes the timer
+   */
+  public resume(): void {
+    this.running = true;
   }
 
   /**
@@ -32,10 +39,6 @@ export default class Stopwatch {
   public update(delta: number): void {
     if (this.running) {
       this.elapsed += delta;
-    }
-    if (this.penalty) { // Only for the demo!
-      this.elapsed += 10000;
-      this.penalty = false;
     }
   }
 

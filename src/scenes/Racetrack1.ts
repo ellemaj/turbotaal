@@ -1,9 +1,10 @@
 import CanvasRenderer from '../CanvasRenderer.js';
 import Vector2 from '../Vector2.js';
-// import MouseListener from '../MouseListener.js';
 import KeyListener from '../KeyListener.js';
 import Scene from './Scene.js';
 import RacetrackScene from './RacetrackScene.js';
+import ScenePause from './ScenePause.js';
+import ScenePitstop from './ScenePitstop.js';
 import SceneTrackSelection from './SceneTrackSelection.js';
 import Camera from '../Camera.js';
 
@@ -16,8 +17,12 @@ export default class Racetrack1 extends RacetrackScene {
 
   public worldHeight: number = 3000;
 
+  private pitstop: boolean;
+
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
     super(boardSize, canvas);
+    this.pause = false;
+    this.pitstop = false;
     this.goBack = false;
     this.background = CanvasRenderer.loadNewImage('./assets/racetrack1Demo.png');
     this.camera = new Camera();
@@ -44,6 +49,12 @@ export default class Racetrack1 extends RacetrackScene {
     if (keyListener.keyPressed(KeyListener.KEY_ESC)) {
       this.goBack = true;
     }
+
+    // Changes the scene to ScenePitstop when P is pressed
+    // (needs to activate with collision in next version)
+    if (keyListener.keyPressed(KeyListener.KEY_P)) {
+      this.pitstop = true;
+    }
   }
 
   /**
@@ -67,6 +78,12 @@ export default class Racetrack1 extends RacetrackScene {
   public override getNextScene(): Scene | null {
     if (this.goBack) {
       return new SceneTrackSelection(this.boardSize, this.canvas);
+    }
+
+    if (this.pitstop) {
+      this.pitstop = false;
+      this.pauseTimer();
+      return new ScenePitstop(this.boardSize, this.canvas, this);
     }
     return null;
   }
