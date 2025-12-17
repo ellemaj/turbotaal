@@ -15,6 +15,10 @@ export default abstract class RacetrackScene extends Scene {
 
   protected car: Car;
 
+  protected worldWidth: number = this.canvas.width * 2;
+
+  protected worldHeight: number = this.canvas.height * 2;
+
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
     super(boardSize, canvas);
 

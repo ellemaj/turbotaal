@@ -15,12 +15,11 @@ export default class ScenePitstop extends Scene {
 
   private dialog: string[] = [
     'Hoi! Ik ben Walter de wasbeer.',
-    'Beantwoord de vragen zo snel mogelijk om verder te racen!',
-    'druk op R om terug te gaan naar de race',
-    'eigenlijk moet dit gebeuren als de vragen klaar zijn maar dat is er nog niet',
+    'Welkom bij de pitstop! Hier kun je zorgen dat je auto weer health krijgt!',
+    'Beantwoord zo snel mogelijk de vragen zodat je weer met een gerepareerde auto kan racen!',
   ];
 
-  private questions: { text: string; missing: string }[] = [
+  private questions: {text: string; missing: string}[] = [
     { text: 'Er moet een leesteken in deze zin', missing: '.' },
     { text: 'Tijd om te racen', missing: '!' },
     { text: 'We zijn bijna klaar, toch', missing: '?' },
@@ -36,8 +35,6 @@ export default class ScenePitstop extends Scene {
   private state: 'dialog' | 'questions' | 'finished' = 'dialog';
 
   private currentDialogIndex: number = 0;
-
-  private dialogFinished: boolean = false;
 
   public constructor(
     boardSize: Vector2,
@@ -56,13 +53,21 @@ export default class ScenePitstop extends Scene {
    * @param mouseListener mouselistener that is being used
    */
   public override processInput(keyListener: KeyListener, mouseListener: MouseListener): void {
+    // Pause when ESC is pressed
+    if (keyListener.keyPressed(KeyListener.KEY_ESC)) {
+      this.pause = true;
+    }
+
+    // Go to the next dialog when SPACE is pressed
     if (this.state === 'dialog') {
       if (keyListener.keyPressed(KeyListener.KEY_SPACE)) {
-        this.state = 'questions';
-        this.dialogFinished = true;
+        this.currentDialogIndex += 1;
       }
     }
+
+    // Resume the stopwatch when the dialog is over
     if (this.state === 'questions') {
+      this.previousScene.resumeTimer();
       const currentQuestion:
         { text: string; missing: string } | undefined = this.questions[this.currentQuestionIndex];
       if (!currentQuestion) {
@@ -74,8 +79,8 @@ export default class ScenePitstop extends Scene {
         (currentQuestion.missing == '.') && keyListener.keyPressed(KeyListener.KEY_3) ||
         (currentQuestion.missing == ',') && keyListener.keyPressed(KeyListener.KEY_4)
       ) {
-        this.questionsAnswered++;
-        this.currentQuestionIndex++;
+        this.questionsAnswered += 1;
+        this.currentQuestionIndex += 1;
         if (this.questionsAnswered == this.maxQuestions) {
           this.state = 'finished';
           this.resumeRace = true;
@@ -90,7 +95,8 @@ export default class ScenePitstop extends Scene {
    * @param delta time elapsed
    */
   public override update(delta: number): void {
-    if (this.dialogFinished) {
+    if (this.currentDialogIndex >= this.dialog.length) {
+      this.state = 'questions'; // Change the state to questions when the dialog is done
       this.previousScene.update(delta); // Only update racetrack when the dialog is done
     }
   }
@@ -105,13 +111,6 @@ export default class ScenePitstop extends Scene {
       this.resumeRace = false;
       return this.previousScene;
     }
-
-    // Start the questions when dialog is finished
-    if (this.dialogFinished) {
-      // add questions here
-      return null;
-    }
-
     return null;
   }
 
@@ -143,7 +142,7 @@ export default class ScenePitstop extends Scene {
     ctx.textAlign = 'right';
     ctx.fillText(this.previousScene.getFormattedTime(), canvas.width - 20, 40);
 
-    // Render dialog when it isnt finished
+    // Render dialog and questions
     if (this.state == 'dialog') {
       ctx.font = '24px Arial';
       ctx.textAlign = 'left';
@@ -155,7 +154,9 @@ export default class ScenePitstop extends Scene {
     if (this.state == 'questions') {
       const currentQuestion:
         { text: string; missing: string } | undefined = this.questions[this.currentQuestionIndex];
-      if (!currentQuestion) return;
+      if (!currentQuestion) {
+        return;
+      }
       CanvasRenderer.writeText(canvas, currentQuestion.text, this.boardSize.x / 2, 50, 'center', 'Arial', 30,);
       CanvasRenderer.writeText(canvas, 'Typ het ontbrekende leesteken!', this.boardSize.x/2, 90, 'center', 'Arial', 24, 'white');
       CanvasRenderer.writeText(canvas, 'Toets 1 voor!|Toets 2 voor ?| Toets 3 voor .Toets 4 voor ,', this.boardSize.x/2, 20, 'center', 'Arial', 24, );

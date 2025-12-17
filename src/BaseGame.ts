@@ -198,13 +198,6 @@ export default class BaseGame extends Game {
 
     // Render the car and Q&A only in racetrack-scenes
     if (this.currentScene instanceof RacetrackScene) {
-      CanvasRenderer.drawCircle(
-        this.canvas,
-        -this.camera.x,
-        -this.camera.y,
-        10,
-        'blue'
-      );
       this.question.draw(this.canvas);
       if (this.lastMessage) {
         CanvasRenderer.writeText(this.canvas, this.lastMessage, this.canvas.width / 2, 60, 'center', 'Arial', 36, this.lastMessage === 'Correct!' ? 'green' : 'red');
