@@ -9,6 +9,7 @@ import CanvasRenderer from './CanvasRenderer.js';
 import Car from './Car.js';
 import Question from './Question.js';
 import { verkleinwoorden } from './questions/verkleinwoorden.js';
+import Camera from './Camera.js';
 
 export default class BaseGame extends Game {
   private canvas: HTMLCanvasElement;
@@ -33,6 +34,8 @@ export default class BaseGame extends Game {
 
   private savedTurnSpeed: number | null = null;
 
+  private camera: Camera;
+
   public constructor(canvas: HTMLCanvasElement) {
     super();
     this.canvas = canvas;
@@ -53,6 +56,7 @@ export default class BaseGame extends Game {
     this.currentScene = new SceneStart(
       new Vector2(this.canvas.width, this.canvas.height),
       this.canvas);
+    this.camera = new Camera();
   }
 
   /**
@@ -134,6 +138,8 @@ export default class BaseGame extends Game {
     if (this.currentScene instanceof RacetrackScene) {
       const car: Car = this.currentScene.getCar();
       car.update(delta, this.canvas);
+      console.log('Camera:', this.camera.x, this.camera.y);
+      console.log('Car:', car.getPosX(), car.getPosY());
     }
 
     // decrement message TTL
@@ -192,8 +198,13 @@ export default class BaseGame extends Game {
 
     // Render the car and Q&A only in racetrack-scenes
     if (this.currentScene instanceof RacetrackScene) {
-      const car: Car = this.currentScene.getCar();
-      car.render(this.canvas);
+      CanvasRenderer.drawCircle(
+        this.canvas,
+        -this.camera.x,
+        -this.camera.y,
+        10,
+        'blue'
+      );
       this.question.draw(this.canvas);
       if (this.lastMessage) {
         CanvasRenderer.writeText(this.canvas, this.lastMessage, this.canvas.width / 2, 60, 'center', 'Arial', 36, this.lastMessage === 'Correct!' ? 'green' : 'red');

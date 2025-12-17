@@ -1,5 +1,6 @@
 import CanvasRenderer from './CanvasRenderer.js';
 import CanvasItem from './CanvasItem.js';
+import Camera from './Camera.js';
 
 export default class Car extends CanvasItem {
   private rotation: number = -2;
@@ -26,6 +27,8 @@ export default class Car extends CanvasItem {
 
   public turnSpeed: number = 4;
 
+  public camera: Camera;
+
   public constructor() {
     super();
 
@@ -38,6 +41,7 @@ export default class Car extends CanvasItem {
     this.posX = 0; // Standard coordinates, configure the start position in the racetrack scenes
     this.posY = 0;
     this.rotation = 0;
+    this.camera = new Camera();
   }
 
   /**
@@ -88,21 +92,21 @@ export default class Car extends CanvasItem {
     this.posY -= Math.sin(this.rotation + Math.PI / 2) * this.speed * delta;
 
     // Ensures that te car cannot drive out of your screen
-    const carWidth: number = this.image.width * this.scale;
-    const carHeight: number = this.image.height * this.scale;
+    //const carWidth: number = this.image.width * this.scale;
+    //const carHeight: number = this.image.height * this.scale;
 
-    if (this.posX < 0) {
-      this.posX = 0;
-    }
-    if (this.posY < 0) {
-      this.posY = 0;
-    }
-    if (this.posX + carWidth > canvas.width) {
-      this.posX = canvas.width - carWidth;
-    }
-    if (this.posY + carHeight > canvas.height) {
-      this.posY = canvas.height - carHeight;
-    }
+    // if (this.posX < 0) {
+    //   this.posX = 0;
+    // }
+    // if (this.posY < 0) {
+    //   this.posY = 0;
+    // }
+    // if (this.posX + carWidth > canvas.width) {
+    //   this.posX = canvas.width - carWidth;
+    // }
+    // if (this.posY + carHeight > canvas.height) {
+    //   this.posY = canvas.height - carHeight;
+    // }
   }
 
   /**
@@ -111,32 +115,16 @@ export default class Car extends CanvasItem {
    * @param canvas The canvas the car needs to be rendered on
    */
   public override render(canvas: HTMLCanvasElement): void {
-    const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
-    if (!ctx) {
-      return;
-    }
-    ctx.save();
-
-    ctx.translate(
-      this.posX + (this.image.width * this.scale) / 2,
-      this.posY + (this.image.height * this.scale) / 2
-    );
-
-    ctx.rotate(this.rotation);
-    ctx.scale(this.scale, this.scale);
-
-    ctx.drawImage(
+    CanvasRenderer.drawImage(
+      canvas,
       this.image,
-      -(this.image.width / 2),
-      -(this.image.height / 2)
+      canvas.width / 2,
+      canvas.height / 2,
+      this.rotation,
+      this.scale
     );
-
-    ctx.restore();
   }
 
-  public setScale(scale: number): void {
-    this.scale = scale;
-  }
 
   public setStartPosition(x: number, y: number, rotation: number): void {
     this.posX = x;
