@@ -138,8 +138,6 @@ export default class BaseGame extends Game {
     if (this.currentScene instanceof RacetrackScene) {
       const car: Car = this.currentScene.getCar();
       car.update(delta, this.canvas);
-      console.log('Camera:', this.camera.x, this.camera.y);
-      console.log('Car:', car.getPosX(), car.getPosY());
     }
 
     // decrement message TTL
