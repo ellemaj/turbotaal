@@ -10,6 +10,8 @@ export default abstract class Scene{
 
   protected walter: HTMLImageElement;
 
+  protected cheeta: HTMLImageElement;
+
   protected scale: number;
 
   protected posX: number;
@@ -24,6 +26,7 @@ export default abstract class Scene{
     this.boardSize = boardSize;
     this.background = new Image();
     this.walter = CanvasRenderer.loadNewImage('./assets/wasbeer1.png');
+    this.cheeta = CanvasRenderer.loadNewImage('./assets/cheetah1.png');
     this.scale = 1;
     this.posX = 0;
     this.posY = 0;
