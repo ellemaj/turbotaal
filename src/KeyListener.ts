@@ -121,6 +121,13 @@ export default class KeyListener {
 
   public static readonly KEY_Z: string = 'KeyZ';
 
+  public static readonly Key_Period: string = 'Period';
+
+  public static readonly Key_Comma: string = 'Comma';
+
+  public static readonly Key_Slash: string = 'Slash';
+
+
   /**
    * Record that holds a boolean for each keycode. The keycode is the index of
    * the array and the boolean is the state of that key (`true` means that

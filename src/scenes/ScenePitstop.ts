@@ -73,11 +73,12 @@ export default class ScenePitstop extends Scene {
       if (!currentQuestion) {
         return;
       }
-      if (
-        (currentQuestion.missing == '!') && keyListener.keyPressed(KeyListener.KEY_1) ||
-        (currentQuestion.missing == '?') && keyListener.keyPressed(KeyListener.KEY_2) ||
-        (currentQuestion.missing == '.') && keyListener.keyPressed(KeyListener.KEY_3) ||
-        (currentQuestion.missing == ',') && keyListener.keyPressed(KeyListener.KEY_4)
+      if
+      (
+        (currentQuestion.missing == '!') && keyListener.keyPressed(KeyListener.KEY_1) && keyListener.keyPressed(KeyListener.KEY_SHIFT_LEFT)||
+        (currentQuestion.missing == '?') && keyListener.keyPressed(KeyListener.Key_Slash) && keyListener.keyPressed(KeyListener.KEY_SHIFT_LEFT,)||
+        (currentQuestion.missing == '.') && keyListener.keyPressed(KeyListener.Key_Period)||
+        (currentQuestion.missing == ',') && keyListener.keyPressed(KeyListener.Key_Comma)
       ) {
         this.questionsAnswered += 1;
         this.currentQuestionIndex += 1;
@@ -159,7 +160,6 @@ export default class ScenePitstop extends Scene {
       }
       CanvasRenderer.writeText(canvas, currentQuestion.text, this.boardSize.x / 2, 50, 'center', 'Arial', 30,);
       CanvasRenderer.writeText(canvas, 'Typ het ontbrekende leesteken!', this.boardSize.x/2, 90, 'center', 'Arial', 24, 'white');
-      CanvasRenderer.writeText(canvas, 'Toets 1 voor!|Toets 2 voor ?| Toets 3 voor .Toets 4 voor ,', this.boardSize.x/2, 20, 'center', 'Arial', 24, );
     }
   }
 }
