@@ -9,21 +9,46 @@ export default class Camera {
 
   private viewportHeight: number;
 
-  public constructor(viewportWidth: number, viewportHeight: number, zoom: number = 1) {
+  private worldWidth: number;
+
+  private worldHeight: number;
+
+  public constructor(
+    viewportWidth: number,
+    viewportHeight: number,
+    worldWidth: number,
+    worldHeight: number,
+    zoom: number = 1
+  ) {
     this.viewportWidth = viewportWidth;
     this.viewportHeight = viewportHeight;
+    this.worldWidth = worldWidth;
+    this.worldHeight = worldHeight;
     this.zoom = zoom;
 
     this.position = new Vector2(0, 0);
   }
 
+
   /**
    * Center the camera on a target (like the car)
    */
   public follow(target: Vector2): void {
-    this.position.x = target.x - (this.viewportWidth / 2) / this.zoom;
-    this.position.y = target.y - (this.viewportHeight / 2) / this.zoom;
+    const halfW: number = (this.viewportWidth / this.zoom) / 2;
+    const halfH: number = (this.viewportHeight / this.zoom) / 2;
+
+    let x: number = target.x - halfW;
+    let y: number = target.y - halfH;
+
+    // clamp X
+    x = Math.max(0, Math.min(x, this.worldWidth - halfW * 2));
+    // clamp Y
+    y = Math.max(0, Math.min(y, this.worldHeight - halfH * 2));
+
+    this.position.x = x;
+    this.position.y = y;
   }
+
 
   /**
    * Apply camera transform to the canvas

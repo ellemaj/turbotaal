@@ -65,13 +65,14 @@ export default class BaseGame extends Game {
 
     this.currentScene = new SceneStart(
       new Vector2(this.canvas.width, this.canvas.height),
-      this.canvas
-    );
+      this.canvas);
 
     this.camera = new Camera(
       this.canvas.width,
       this.canvas.height,
-      1.5 // Zoomlevel (1.5 - 2.5)
+      1920,
+      1280,
+      1.5
     );
   }
 
@@ -242,10 +243,17 @@ export default class BaseGame extends Game {
 
     // Render the car and Q&A only in racetrack-scenes
     if (this.currentScene instanceof RacetrackScene) {
+      const car: Car = this.currentScene.getCar();
+      car.render(this.canvas);
+      ctx.restore();
+      // NOW ctx restore, so everything after is always on screen and not on the map (UI elements)
       this.question.draw(this.canvas);
       if (this.lastMessage) {
         CanvasRenderer.writeText(this.canvas, this.lastMessage, this.canvas.width / 2, 60, 'center', 'Arial', 36, this.lastMessage === 'Correct!' ? 'green' : 'red');
       }
+      const track1: Racetrack1 = this.currentScene as Racetrack1;
+      track1.renderLapcount();
+      track1.renderTimer();
     }
   }
 }

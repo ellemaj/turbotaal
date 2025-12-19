@@ -31,11 +31,17 @@ export default abstract class RacetrackScene extends Scene {
 
   // Starts the timer when the player moves for the first time
   protected startRaceIfMoving(keyListener: KeyListener): void {
-    if (!this.raceStarted &&
-      (keyListener.isKeyDown(KeyListener.KEY_LEFT) || keyListener.isKeyDown(KeyListener.KEY_A) ||
-        keyListener.isKeyDown(KeyListener.KEY_RIGHT) || keyListener.isKeyDown(KeyListener.KEY_D) ||
-        keyListener.isKeyDown(KeyListener.KEY_UP) || keyListener.isKeyDown(KeyListener.KEY_W) ||
-        keyListener.isKeyDown(KeyListener.KEY_DOWN) || keyListener.isKeyDown(KeyListener.KEY_S))) {
+    const moving: boolean =
+      keyListener.isKeyDown(KeyListener.KEY_LEFT) ||
+      keyListener.isKeyDown(KeyListener.KEY_A) ||
+      keyListener.isKeyDown(KeyListener.KEY_RIGHT) ||
+      keyListener.isKeyDown(KeyListener.KEY_D) ||
+      keyListener.isKeyDown(KeyListener.KEY_UP) ||
+      keyListener.isKeyDown(KeyListener.KEY_W) ||
+      keyListener.isKeyDown(KeyListener.KEY_DOWN) ||
+      keyListener.isKeyDown(KeyListener.KEY_S);
+
+    if (moving && !this.raceStarted) {
       this.stopwatch.start();
       this.raceStarted = true;
     }

@@ -32,8 +32,6 @@ export default class Car extends CanvasItem {
 
   private previousPosition: Vector2;
 
-  // public camera: Camera;
-
   public constructor() {
     super();
     this.position = new Vector2(0, 0);
@@ -99,6 +97,7 @@ export default class Car extends CanvasItem {
     this.position.x -= Math.cos(this.rotation + Math.PI / 2) * this.speed * delta;
     this.position.y -= Math.sin(this.rotation + Math.PI / 2) * this.speed * delta;
 
+
     // car hitbox accurate maker tm
     const tileSize: number = grid.getTileSize();
     const carWidth: number = this.image.width * this.scale;
@@ -144,7 +143,7 @@ export default class Car extends CanvasItem {
       this.position = this.previousPosition.clone();
       this.speed = 0;
     }
-    // Ensures that te car cannot drive out of your screen
+    // // Ensures that te car cannot drive out of your screen
     //const carWidth: number = this.image.width * this.scale;
     //const carHeight: number = this.image.height * this.scale;
 
@@ -163,10 +162,10 @@ export default class Car extends CanvasItem {
   }
 
   /**
-    * Render the car
-    *
-    * @param canvas The canvas the car needs to be rendered on
-    */
+   * Render the car
+   *
+   * @param canvas The canvas the car needs to be rendered on
+   */
   public override render(canvas: HTMLCanvasElement): void {
     const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
     if (!ctx) {
@@ -196,16 +195,17 @@ export default class Car extends CanvasItem {
     this.scale = scale;
   }
 
+
   public setStartPosition(x: number, y: number, rotation: number): void {
-    this.posX = x;
-    this.posY = y;
+    this.position.x = x;
+    this.position.y = y;
     this.rotation = rotation;
     this.speed = 0;
   }
 
   public resetPosition(canvas: HTMLCanvasElement): void {
-    this.posX = canvas.width * 0.5;
-    this.posY = canvas.height * 0.285;
+    this.position.x = canvas.width * 0.5;
+    this.position.y = canvas.height * 0.285;
     this.rotation = 1.085;
     this.speed = 0;
   }
