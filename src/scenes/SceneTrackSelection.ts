@@ -7,6 +7,7 @@ import Racetrack3 from './Racetrack3.js';
 import Racetrack4 from './Racetrack4.js';
 import SceneStart from './SceneStart.js';
 import Scene from './Scene.js';
+import Grid from '../Grid.js';
 
 export default class SceneTrackSelection extends Scene {
   private raceTrack1: boolean;
@@ -19,6 +20,8 @@ export default class SceneTrackSelection extends Scene {
 
   private goBack: boolean;
 
+  private grid: Grid;
+
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
     super(boardSize, canvas);
     this.raceTrack1 = false; // Only for the school demo!
@@ -26,6 +29,7 @@ export default class SceneTrackSelection extends Scene {
     this.raceTrack3 = false;
     this.raceTrack4 = false;
     this.goBack = false;
+    this.grid = new Grid(30, 20, []);
   }
 
   /**
@@ -57,14 +61,14 @@ export default class SceneTrackSelection extends Scene {
   }
 
   public override getNextScene(): Scene | null {
-    if(this.raceTrack1) {
-      return new Racetrack1(this.boardSize, this.canvas);
+    if (this.raceTrack1) {
+      return new Racetrack1(this.boardSize, this.canvas, this.grid);
     } else if (this.raceTrack2) {
-      return new Racetrack2(this.boardSize, this.canvas);
+      return new Racetrack2(this.boardSize, this.canvas, this.grid);
     } else if (this.raceTrack3) {
-      return new Racetrack3(this.boardSize, this.canvas);
+      return new Racetrack3(this.boardSize, this.canvas, this.grid);
     } else if (this.raceTrack4) {
-      return new Racetrack4(this.boardSize, this.canvas);
+      return new Racetrack4(this.boardSize, this.canvas, this.grid);
     } else if (this.goBack) {
       return new SceneStart(this.boardSize, this.canvas);
     }

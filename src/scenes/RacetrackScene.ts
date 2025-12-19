@@ -3,6 +3,7 @@ import Vector2 from '../Vector2.js';
 import Stopwatch from '../Stopwatch.js';
 import KeyListener from '../KeyListener.js';
 import Car from '../Car.js';
+import Grid from '../Grid.js';
 
 export default abstract class RacetrackScene extends Scene {
   private laps: number = 0;
@@ -19,10 +20,13 @@ export default abstract class RacetrackScene extends Scene {
 
   protected worldHeight: number = this.canvas.height * 2;
 
-  public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
+  protected grid: Grid;
+
+  public constructor(boardSize: Vector2, canvas: HTMLCanvasElement, grid: Grid) {
     super(boardSize, canvas);
 
     this.car = new Car();
+    this.grid = grid;
   }
 
   // Starts the timer when the player moves for the first time

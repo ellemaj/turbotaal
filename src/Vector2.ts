@@ -15,6 +15,10 @@ export default class Vector2 {
     this.y = y;
   }
 
+  public clone(): Vector2 {
+    return new Vector2(this.x, this.y);
+  }
+
   /**
    * Adds another Vector2 to this one.
    *

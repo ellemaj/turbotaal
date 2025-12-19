@@ -10,6 +10,9 @@ import Car from './Car.js';
 import Question from './Question.js';
 import { verkleinwoorden } from './questions/verkleinwoorden.js';
 import Camera from './Camera.js';
+import Grid from './Grid.js';
+import { COLUMNS, ROWS, COLLISIONS } from './scenes/CollisionDataTrack1.js';
+import Racetrack1 from './scenes/Racetrack1.js';
 
 export default class BaseGame extends Game {
   private canvas: HTMLCanvasElement;
@@ -21,6 +24,10 @@ export default class BaseGame extends Game {
   private currentScene: Scene;
 
   private question: Question;
+
+  private grid: Grid;
+
+  private racetrack1: Racetrack1;
 
   private lastMessage: string | null = null;
 
@@ -53,10 +60,19 @@ export default class BaseGame extends Game {
     // position the question once (centered)
     this.question.setPosition(this.canvas.width / 2, 100);
 
+    this.grid = new Grid(COLUMNS, ROWS, COLLISIONS);
+    this.racetrack1 = new Racetrack1(new Vector2(canvas.width, canvas.height), canvas, this.grid);
+
     this.currentScene = new SceneStart(
       new Vector2(this.canvas.width, this.canvas.height),
-      this.canvas);
-    this.camera = new Camera();
+      this.canvas
+    );
+
+    this.camera = new Camera(
+      this.canvas.width,
+      this.canvas.height,
+      1.5 // Zoomlevel (1.5 - 2.5)
+    );
   }
 
   /**
@@ -137,7 +153,12 @@ export default class BaseGame extends Game {
     // Only update the car in Racetrack-scenes
     if (this.currentScene instanceof RacetrackScene) {
       const car: Car = this.currentScene.getCar();
-      car.update(delta, this.canvas);
+      car.update(delta, this.canvas, this.grid);
+    }
+
+    if (this.currentScene instanceof RacetrackScene) {
+      const car: Car = this.currentScene.getCar();
+      this.camera.follow(car.getPosition());
     }
 
     // decrement message TTL
@@ -189,10 +210,35 @@ export default class BaseGame extends Game {
    * Render all the elements in the screen.
    */
   public render(): void {
-    CanvasRenderer.clearCanvas(this.canvas);
+    const ctx: CanvasRenderingContext2D | null =
+      this.canvas.getContext('2d');
+    if (!ctx) {
+      return;
+    }
+
+    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    if (this.currentScene instanceof RacetrackScene) {
+      ctx.save();
+      this.camera.apply(ctx);
+    }
 
     // Render the current scene
     this.currentScene.render(this.canvas);
+
+    window.addEventListener('keydown', (e: KeyboardEvent) => {
+      const blockedKeys: string[] = [
+        'ArrowUp',
+        'ArrowDown',
+        'ArrowLeft',
+        'ArrowRight',
+        ' '
+      ];
+
+      if (blockedKeys.includes(e.key)) {
+        e.preventDefault();
+      }
+    });
 
     // Render the car and Q&A only in racetrack-scenes
     if (this.currentScene instanceof RacetrackScene) {

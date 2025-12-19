@@ -1,5 +1,4 @@
 import CanvasRenderer from './CanvasRenderer.js';
-import Camera from './Camera.js';
 
 export default abstract class CanvasItem {
   protected image: HTMLImageElement;

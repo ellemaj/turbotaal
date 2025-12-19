@@ -5,23 +5,61 @@ import Scene from './Scene.js';
 import RacetrackScene from './RacetrackScene.js';
 import ScenePause from './ScenePause.js';
 import ScenePitstop from './ScenePitstop.js';
-import Camera from '../Camera.js';
+import Grid from '../Grid.js';
 
 export default class Racetrack1 extends RacetrackScene {
   private pause: boolean;
 
   private pitstop: boolean;
 
-  private camera: Camera;
+  private columns: number;
 
-  public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
-    super(boardSize, canvas);
+  private rows: number;
+
+  private collisionLayer: number[];
+
+  private map: HTMLImageElement;
+
+  public constructor(boardSize: Vector2, canvas: HTMLCanvasElement, grid: Grid) {
+    super(boardSize, canvas, grid);
     this.pause = false;
     this.pitstop = false;
 
-    this.camera = new Camera();
+    this.columns = 30;
+    this.rows = 20;
+    this.map = CanvasRenderer.loadNewImage('assets/map-background.png');
 
-    this.background = CanvasRenderer.loadNewImage('./assets/racetrack1Demo.png');
+    this.collisionLayer =
+      [
+        0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1,
+        0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1,
+        0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1,
+        0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1,
+        0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1,
+        0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1,
+        0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
+        0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
+        0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      ];
+    this.background = CanvasRenderer.loadNewImage('./assets/race1.png');
+
+
+    this.background.onload = (): void => {
+      this.canvas.width = this.background.width; // Set canvas width to image width
+      this.canvas.height = this.background.height; // Set canvas height to image height
+    };
+
     this.setCarStart(canvas.width * 0.5, canvas.height * 0.285, 1.085);
   }
 
@@ -59,9 +97,7 @@ export default class Racetrack1 extends RacetrackScene {
    * @returns time elapsed
    */
   public override update(delta: number): void {
-    this.car.update(delta, this.canvas);
-
-    this.camera.follow(this.car.getPosX(), this.car.getPosY(), this.canvas);
+    this.car.update(delta, this.canvas, this.grid);
 
     this.stopwatch.update(delta);
 
@@ -96,10 +132,7 @@ export default class Racetrack1 extends RacetrackScene {
       return;
     }
     // Renders the background
-    ctx.drawImage(this.background,
-      -this.camera.x, -this.camera.y,
-      this.worldWidth, this.worldHeight
-    );
+    ctx.drawImage(this.background, 0, 0);
 
     // Renders the car
     this.car.render(canvas);

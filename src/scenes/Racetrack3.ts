@@ -5,12 +5,13 @@ import KeyListener from '../KeyListener.js';
 import Scene from './Scene.js';
 import RacetrackScene from './RacetrackScene.js';
 import SceneTrackSelection from './SceneTrackSelection.js';
+import Grid from '../Grid.js';
 
 export default class Racetrack3 extends RacetrackScene {
   private goBack: boolean;
 
-  public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
-    super(boardSize, canvas);
+  public constructor(boardSize: Vector2, canvas: HTMLCanvasElement, grid: Grid) {
+    super(boardSize, canvas, grid);
     this.goBack = false;
     this.background = CanvasRenderer.loadNewImage('./assets/background.png'); // Change to the right background!
   }
@@ -43,7 +44,7 @@ export default class Racetrack3 extends RacetrackScene {
    * @returns time elapsed
    */
   public override update(delta: number): void {
-    this.car.update(delta, this.canvas);
+    this.car.update(delta, this.canvas, this.grid);
 
     this.stopwatch.update(delta);
 
