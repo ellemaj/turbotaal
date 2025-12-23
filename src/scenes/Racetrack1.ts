@@ -53,10 +53,6 @@ export default class Racetrack1 extends RacetrackScene {
       ];
     this.background = CanvasRenderer.loadNewImage('./assets/race1.png');
 
-    this.background.onload = (): void => {
-      this.canvas.width = this.background.width; // Set canvas width to image width
-      this.canvas.height = this.background.height; // Set canvas height to image height
-    };
     this.setCarStart(canvas.width * 0.5, canvas.height * 0.65, -1.5);
   }
 
