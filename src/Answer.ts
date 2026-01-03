@@ -1,4 +1,3 @@
-import Car from './Car.js';
 import CanvasItem from './CanvasItem.js';
 
 export default class Answer extends CanvasItem {
@@ -14,8 +13,6 @@ export default class Answer extends CanvasItem {
 
   private correctAnswerCounter: number;
 
-  private car: Car;
-
   public constructor() {
     super();
     this.active = false;
@@ -26,7 +23,6 @@ export default class Answer extends CanvasItem {
     this.isCorrect = false;
     this.posX = 800;
     this.posY = 400;
-    this.car = new Car();
   }
 
   // /**
