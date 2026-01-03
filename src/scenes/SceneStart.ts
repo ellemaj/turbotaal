@@ -5,11 +5,14 @@ import KeyListener from '../KeyListener.js';
 import Scene from './Scene.js';
 import SceneTrackSelection from './SceneTrackSelection.js';
 import SceneShop from './SceneShop.js';
+import SceneTutorial from './SceneTutorial.js';
 
 export default class SceneStart extends Scene {
   private goToTrackSelection: boolean;
 
   private goToShop: boolean;
+
+  private goToTutorial: boolean;
 
   private goBack: boolean;
 
@@ -29,6 +32,7 @@ export default class SceneStart extends Scene {
     super(boardSize, canvas);
     this.goToTrackSelection = false;
     this.goToShop = false;
+    this.goToTutorial = false;
     this.goBack = false;
 
     this.background = CanvasRenderer.loadNewImage('./assets/backgrounds/start.png');
@@ -123,6 +127,9 @@ export default class SceneStart extends Scene {
     if (keyListener.keyPressed(KeyListener.KEY_ESC)) {
       this.goBack = true;
     }
+    if (keyListener.keyPressed(KeyListener.KEY_T)) {
+      this.goToTutorial = true;
+    }
   }
 
   public override getNextScene(): Scene | null {
@@ -130,6 +137,8 @@ export default class SceneStart extends Scene {
       return new SceneTrackSelection(this.boardSize, this.canvas);
     } else if (this.goToShop) {
       return new SceneShop(this.boardSize, this.canvas);
+    } else if (this.goToTutorial) {
+      return new SceneTutorial(this.boardSize, this.canvas);
     }
     return null;
   }
