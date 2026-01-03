@@ -13,13 +13,17 @@ export default class SceneStart extends Scene {
 
   private goBack: boolean;
 
+  private logo: HTMLImageElement;
+
   private startButton: HTMLImageElement;
+
+  private shopButton: HTMLImageElement;
+
+  private logoLoaded: boolean = false;
 
   private startButtonLoaded: boolean = false;
 
   private shopButtonLoaded: boolean = false;
-
-  private shopButton: HTMLImageElement;
 
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
     super(boardSize, canvas);
@@ -27,9 +31,11 @@ export default class SceneStart extends Scene {
     this.goToShop = false;
     this.goBack = false;
 
-    this.startButton = CanvasRenderer.loadNewImage('./assets/buttons/start.png');
     this.background = CanvasRenderer.loadNewImage('./assets/backgrounds/start.png');
+    this.logo = CanvasRenderer.loadNewImage('./assets/logo.png');
+    this.startButton = CanvasRenderer.loadNewImage('./assets/buttons/start.png');
     this.shopButton = CanvasRenderer.loadNewImage('./assets/buttons/shop.png');
+
     this.scale = 0.5;
 
     this.startButton.onload = (): void => {
@@ -37,11 +43,17 @@ export default class SceneStart extends Scene {
       this.posY = (this.canvas.height - this.startButton.height * this.scale) / 2;
       this.startButtonLoaded = true;
     };
+
     this.shopButton.onload = (): void => {
       this.shopButtonLoaded = true;
     };
+
+    this.logo.onload = (): void => {
+      this.logoLoaded = true;
+    };
   }
 
+  // Looks if the startbutton is clicked
   private isStartButtonClicked(): boolean {
     if (!this.startButtonLoaded) {
       return false;
@@ -59,6 +71,7 @@ export default class SceneStart extends Scene {
       mousePos.x <= buttonX + buttonWidth &&
       mousePos.y <= buttonY + buttonHeight;
 
+    // Change the scene to trackselection when the startbutton is pressed
     if (isClicked && this.mouseListener.buttonPressed(MouseListener.BUTTON_LEFT)) {
       this.goToTrackSelection = true;
       return true;
@@ -66,6 +79,7 @@ export default class SceneStart extends Scene {
     return false;
   }
 
+  // Looks if the shopbutton is pressed
   private isShopButtonClicked(): boolean {
     if (!this.startButtonLoaded || !this.shopButtonLoaded) {
       return false;
@@ -121,7 +135,7 @@ export default class SceneStart extends Scene {
   }
 
   /**
-   *center the picture
+   * Render
    */
   public override render(canvas: HTMLCanvasElement): void {
     const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
@@ -150,10 +164,21 @@ export default class SceneStart extends Scene {
         this.shopButton.height * this.scale
       );
     }
-    // Renders the title on the screen
-    ctx.fillStyle = 'black';
-    ctx.font = 'bold 100px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillText('TurboTaal', this.canvas.width / 2, this.canvas.height / 4);
+
+    if (this.logoLoaded) {
+      const logoX: number = this.posX +
+        (this.startButton.width * this.scale - this.logo.width * this.scale) / 2;
+      const logoY: number = this.posY - this.logo.height * this.scale - 80;
+      ctx.drawImage(
+        this.logo, logoX, logoY,
+        this.logo.width * this.scale,
+        this.logo.height * this.scale
+      );
+    } else {
+      ctx.fillStyle = 'black';
+      ctx.font = 'bold 100px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('TurboTaal', this.canvas.width / 2, this.canvas.height / 4);
+    }
   }
 }
