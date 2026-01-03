@@ -24,11 +24,13 @@ export default class SceneTrackSelection extends Scene {
 
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
     super(boardSize, canvas);
-    this.raceTrack1 = false; // Only for the school demo!
+    this.raceTrack1 = false;
     this.raceTrack2 = false;
     this.raceTrack3 = false;
     this.raceTrack4 = false;
     this.goBack = false;
+
+    this.background = CanvasRenderer.loadNewImage('./assets/backgrounds/trackselection.png');
     this.grid = new Grid(30, 20, []);
   }
 
@@ -81,6 +83,12 @@ export default class SceneTrackSelection extends Scene {
    * @param canvas the canvas it needs to be rendered on
    */
   public override render(canvas: HTMLCanvasElement): void {
+    const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
+    if (!ctx) {
+      return;
+    }
+    ctx.drawImage(this.background, 0, 0, canvas.width, canvas.height);
+
     CanvasRenderer.writeText(
       canvas,
       'Welcome to the track selection!',

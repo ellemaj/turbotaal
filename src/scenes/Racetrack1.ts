@@ -26,7 +26,7 @@ export default class Racetrack1 extends RacetrackScene {
     this.pitstop = false;
     this.columns = 30;
     this.rows = 20;
-    this.map = CanvasRenderer.loadNewImage('assets/map-background.png');
+    this.map = CanvasRenderer.loadNewImage('./assets/map-background.png');
 
     this.collisionLayer =
       [
@@ -51,7 +51,7 @@ export default class Racetrack1 extends RacetrackScene {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
       ];
-    this.background = CanvasRenderer.loadNewImage('./assets/race1.png');
+    this.background = CanvasRenderer.loadNewImage('./assets/racetracks/race1.png');
 
     this.setCarStart(canvas.width * 0.5, canvas.height * 0.65, -1.5);
   }

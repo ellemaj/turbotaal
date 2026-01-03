@@ -43,7 +43,7 @@ export default class ScenePitstop extends Scene {
   ) {
     super(boardSize, canvas);
     this.previousScene = previousScene;
-    this.background = CanvasRenderer.loadNewImage('./assets/pitstop.png');
+    this.background = CanvasRenderer.loadNewImage('./assets/backgrounds/pitstop.png');
   }
 
   /**

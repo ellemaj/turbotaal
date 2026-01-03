@@ -27,9 +27,9 @@ export default class SceneStart extends Scene {
     this.goToShop = false;
     this.goBack = false;
 
-    this.startButton = CanvasRenderer.loadNewImage('./assets/start.png');
-    this.background = CanvasRenderer.loadNewImage('./assets/background.png');
-    this.shopButton = CanvasRenderer.loadNewImage('./assets/shop.png');
+    this.startButton = CanvasRenderer.loadNewImage('./assets/buttons/start.png');
+    this.background = CanvasRenderer.loadNewImage('./assets/backgrounds/start.png');
+    this.shopButton = CanvasRenderer.loadNewImage('./assets/buttons/shop.png');
     this.scale = 0.5;
 
     this.startButton.onload = (): void => {
@@ -84,7 +84,6 @@ export default class SceneStart extends Scene {
       return true;
     }
     return false;
-
   }
 
   /**
@@ -95,12 +94,10 @@ export default class SceneStart extends Scene {
       this.isStartButtonClicked();
       this.isShopButtonClicked();
     }
-
-    // this.isShopButtonClicked();
   }
 
   /**
-   * processinput (not in use)
+   * processinput
    *
    * @param keyListener keylistener
    * @param mouseListener mouselistener

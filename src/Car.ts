@@ -37,9 +37,9 @@ export default class Car extends CanvasItem {
     this.position = new Vector2(0, 0);
     this.previousPosition = this.position.clone();
 
-    this.imageStraight = CanvasRenderer.loadNewImage('./assets/car_straight.png');
-    this.imageLeft = CanvasRenderer.loadNewImage('./assets/car_left.png');
-    this.imageRight = CanvasRenderer.loadNewImage('./assets/car_right.png');
+    this.imageStraight = CanvasRenderer.loadNewImage('./assets/sprites/car_straight.png');
+    this.imageLeft = CanvasRenderer.loadNewImage('./assets/sprites/car_left.png');
+    this.imageRight = CanvasRenderer.loadNewImage('./assets/sprites/car_right.png');
 
     this.image = this.imageStraight;
 
