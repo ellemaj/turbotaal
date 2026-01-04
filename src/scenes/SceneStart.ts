@@ -14,13 +14,13 @@ export default class SceneStart extends Scene {
 
   private goToTutorial: boolean;
 
-  private goBack: boolean;
-
   private logo: HTMLImageElement;
 
   private startButton: HTMLImageElement;
 
   private shopButton: HTMLImageElement;
+
+  private tutorialButton: HTMLImageElement;
 
   private logoLoaded: boolean = false;
 
@@ -28,19 +28,25 @@ export default class SceneStart extends Scene {
 
   private shopButtonLoaded: boolean = false;
 
+  private tutorialButtonLoaded: boolean = false;
+
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
     super(boardSize, canvas);
     this.goToTrackSelection = false;
     this.goToShop = false;
     this.goToTutorial = false;
-    this.goBack = false;
 
     this.background = CanvasRenderer.loadNewImage('./assets/backgrounds/start.png');
     this.logo = CanvasRenderer.loadNewImage('./assets/logo.png');
     this.startButton = CanvasRenderer.loadNewImage('./assets/buttons/start.png');
     this.shopButton = CanvasRenderer.loadNewImage('./assets/buttons/shop.png');
+    this.tutorialButton = CanvasRenderer.loadNewImage('./assets/buttons/tutorial.png');
 
     this.scale = 0.5;
+
+    this.logo.onload = (): void => {
+      this.logoLoaded = true;
+    };
 
     this.startButton.onload = (): void => {
       this.posX = (this.canvas.width - this.startButton.width * this.scale) / 2;
@@ -52,8 +58,8 @@ export default class SceneStart extends Scene {
       this.shopButtonLoaded = true;
     };
 
-    this.logo.onload = (): void => {
-      this.logoLoaded = true;
+    this.tutorialButton.onload = (): void => {
+      this.tutorialButtonLoaded = true;
     };
   }
 
@@ -104,13 +110,35 @@ export default class SceneStart extends Scene {
     return false;
   }
 
+  // // Looks if the tutorialbutton is pressed
+  // private isTutotialButtonPressed(): boolean {
+  //   if (!this.tutorialButtonLoaded) {
+  //     return false;
+  //   }
+  //   const mousePos: MouseCoordinates = this.mouseListener.getMousePosition();
+  //   const tutorialX: number = this.posX +
+  //     (this.tutorialButton.width * this.scale - this.tutorialButton.width * this.scale) / 2;
+  //   const tutorialY: number = this.posY - this.tutorialButton.height - 20;
+  //   const isClicked: boolean =
+  //     mousePos.x > tutorialX &&
+  //     mousePos.y > tutorialY &&
+  //     mousePos.x <= tutorialX + this.tutorialButton.width &&
+  //     mousePos.y <= tutorialY + this.tutorialButton.height;
+  //   if (isClicked && this.mouseListener.buttonPressed(MouseListener.BUTTON_LEFT)) {
+  //     this.goToTutorial = true;
+  //     return true;
+  //   }
+  //   return false;
+  // }
+
   /**
    * Update function
    */
   public override update(delta: number): void {
-    if (this.startButtonLoaded || this.shopButtonLoaded) {
+    if (this.startButtonLoaded || this.shopButtonLoaded || this.tutorialButtonLoaded) {
       this.isStartButtonClicked();
       this.isShopButtonClicked();
+      // this.isTutotialButtonPressed();
     }
   }
 
@@ -124,9 +152,6 @@ export default class SceneStart extends Scene {
     keyListener: KeyListener,
     mouseListener: MouseListener
   ): void {
-    if (keyListener.keyPressed(KeyListener.KEY_ESC)) {
-      this.goBack = true;
-    }
     if (keyListener.keyPressed(KeyListener.KEY_T)) {
       this.goToTutorial = true;
     }
@@ -153,6 +178,7 @@ export default class SceneStart extends Scene {
     }
     ctx.drawImage(this.background, 0, 0, canvas.width, canvas.height);
 
+    // Render tutorial button
     if (this.startButtonLoaded) {
       ctx.drawImage(
         this.startButton,

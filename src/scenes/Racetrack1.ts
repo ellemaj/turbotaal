@@ -18,15 +18,12 @@ export default class Racetrack1 extends RacetrackScene {
 
   private collisionLayer: number[];
 
-  private map: HTMLImageElement;
-
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement, grid: Grid) {
     super(boardSize, canvas, grid);
     this.pause = false;
     this.pitstop = false;
     this.columns = 30;
     this.rows = 20;
-    this.map = CanvasRenderer.loadNewImage('./assets/map-background.png');
 
     this.collisionLayer =
       [
