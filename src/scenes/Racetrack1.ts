@@ -6,7 +6,6 @@ import RacetrackScene from './RacetrackScene.js';
 import ScenePause from './ScenePause.js';
 import ScenePitstop from './ScenePitstop.js';
 import Grid from '../Grid.js';
-
 export default class Racetrack1 extends RacetrackScene {
   private pause: boolean;
 
@@ -17,6 +16,7 @@ export default class Racetrack1 extends RacetrackScene {
   private rows: number;
 
   private collisionLayer: number[];
+
 
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement, grid: Grid) {
     super(boardSize, canvas, grid);
@@ -52,6 +52,7 @@ export default class Racetrack1 extends RacetrackScene {
 
     this.setCarStart(canvas.width * 0.5, canvas.height * 0.65, -1.5);
   }
+
 
   /**
    * Processes the input
@@ -107,6 +108,9 @@ export default class Racetrack1 extends RacetrackScene {
       this.pitstop = false;
       this.pauseTimer();
       return new ScenePitstop(this.boardSize, this.canvas, this);
+    }
+    if (this.car.getHealth().carIsLow()){
+      this.pitstop = true;
     }
 
     return null;

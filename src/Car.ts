@@ -2,7 +2,7 @@ import CanvasRenderer from './CanvasRenderer.js';
 import CanvasItem from './CanvasItem.js';
 import Vector2 from './Vector2.js';
 import Grid from './Grid.js';
-
+import Health from './Health.js';
 export default class Car extends CanvasItem {
   private rotation: number = -2;
 
@@ -32,6 +32,8 @@ export default class Car extends CanvasItem {
 
   private previousPosition: Vector2;
 
+  private health: Health;
+
   public constructor() {
     super();
     this.position = new Vector2(0, 0);
@@ -44,6 +46,7 @@ export default class Car extends CanvasItem {
     this.image = this.imageStraight;
 
     this.rotation = 0;
+    this.health = new Health;
   }
 
   public getPosition(): Vector2 {
@@ -94,6 +97,7 @@ export default class Car extends CanvasItem {
     if (this.speed > this.maxSpeed) {
       this.speed = this.maxSpeed;
     }
+    this.previousPosition = this.position.clone();
     this.position.x -= Math.cos(this.rotation + Math.PI / 2) * this.speed * delta;
     this.position.y -= Math.sin(this.rotation + Math.PI / 2) * this.speed * delta;
 
@@ -125,11 +129,14 @@ export default class Car extends CanvasItem {
         }
       }
       if (collision) {
+        this.health.setColliding(true);
+        this.health.updateHealth();
+        this.health.setColliding(false);
         break;
       }
     }
 
-    this.previousPosition = this.position.clone();
+
     if (collision) {
       this.position = this.previousPosition.clone();
       this.speed = 0;
@@ -208,6 +215,10 @@ export default class Car extends CanvasItem {
     this.position.y = canvas.height * 0.285;
     this.rotation = 1.085;
     this.speed = 0;
+  }
+
+  public getHealth(): Health {
+    return this.health;
   }
 
   //Tile position for collision (oh bars)
