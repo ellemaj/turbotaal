@@ -1,7 +1,9 @@
-import CanvasRenderer from './CanvasRenderer.js';
 import CanvasItem from './CanvasItem.js';
 import Vector2 from './Vector2.js';
 import Grid from './Grid.js';
+import PlayerData from './data/PlayerData.js';
+import type { CarSkin } from './data/CarSkin.js';
+import { getCarSkin } from './data/CarSkins.js';
 
 export default class Car extends CanvasItem {
   private rotation: number = -2;
@@ -9,12 +11,6 @@ export default class Car extends CanvasItem {
   private speed: number = 0;
 
   private scale: number = 0.28; // Scaling for the car (0.28 is standard)
-
-  private imageStraight: HTMLImageElement;
-
-  private imageLeft: HTMLImageElement;
-
-  private imageRight: HTMLImageElement;
 
   public maxSpeed: number = 0.2;
 
@@ -34,15 +30,12 @@ export default class Car extends CanvasItem {
 
   public constructor() {
     super();
+
+    const skin: CarSkin = getCarSkin(PlayerData.getSkinIndex());
+    this.image = skin.straight;
+
     this.position = new Vector2(0, 0);
     this.previousPosition = this.position.clone();
-
-    this.imageStraight = CanvasRenderer.loadNewImage('./assets/sprites/car_straight.png');
-    this.imageLeft = CanvasRenderer.loadNewImage('./assets/sprites/car_left.png');
-    this.imageRight = CanvasRenderer.loadNewImage('./assets/sprites/car_right.png');
-
-    this.image = this.imageStraight;
-
     this.rotation = 0;
   }
 
@@ -57,13 +50,15 @@ export default class Car extends CanvasItem {
    * @param canvas The canvas it needs to be rendered on
    */
   public update(delta: number, canvas: HTMLCanvasElement, grid: Grid): void {
+    const skin: CarSkin = getCarSkin(PlayerData.getSkinIndex());
+
     // Change skins when steering
     if (this.movingLeft && !this.movingRight) {
-      this.image = this.imageLeft;
+      this.image = skin.left;
     } else if (this.movingRight && !this.movingLeft) {
-      this.image = this.imageRight;
+      this.image = skin.right;
     } else {
-      this.image = this.imageStraight;
+      this.image = skin.straight;
     }
 
     // Movement
