@@ -4,7 +4,7 @@ import { CarSkin } from './CarSkin.js';
 const CarSkins: CarSkin[] = [
   {
     id: 0,
-    name: 'Default',
+    name: 'Default - Red Racer',
     unlocked: true,
     straight: CanvasRenderer.loadNewImage('../assets/cars/car1_straight.png'),
     left: CanvasRenderer.loadNewImage('../assets/cars/car1_left.png'),
@@ -12,19 +12,19 @@ const CarSkins: CarSkin[] = [
   },
   {
     id: 1,
-    name: 'Orange Racer',
+    name: 'Green Gobliner',
     unlocked: false,
-    straight: CanvasRenderer.loadNewImage('../assets/cars/car1_straight.png'),
-    left: CanvasRenderer.loadNewImage('../assets/cars/car1_left.png'),
-    right: CanvasRenderer.loadNewImage('../assets/cars/car1_right.png'),
+    straight: CanvasRenderer.loadNewImage('../assets/cars/car2_straight.png'),
+    left: CanvasRenderer.loadNewImage('../assets/cars/car2_left.png'),
+    right: CanvasRenderer.loadNewImage('../assets/cars/car2_right.png'),
   },
   {
     id: 2,
-    name: 'Red Racer',
+    name: 'Snel & Fel - 67 raket',
     unlocked: false,
-    straight: CanvasRenderer.loadNewImage('../assets/cars/car1_straight.png'),
-    left: CanvasRenderer.loadNewImage('../assets/cars/car1_left.png'),
-    right: CanvasRenderer.loadNewImage('../assets/cars/car1_right.png'),
+    straight: CanvasRenderer.loadNewImage('../assets/cars/car3_straight.png'),
+    left: CanvasRenderer.loadNewImage('../assets/cars/car3_left.png'),
+    right: CanvasRenderer.loadNewImage('../assets/cars/car3_right.png'),
   },
 ];
 
