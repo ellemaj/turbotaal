@@ -5,43 +5,65 @@ import KeyListener from '../KeyListener.js';
 import Scene from './Scene.js';
 import SceneTrackSelection from './SceneTrackSelection.js';
 import SceneShop from './SceneShop.js';
+import SceneTutorial from './SceneTutorial.js';
 
 export default class SceneStart extends Scene {
   private goToTrackSelection: boolean;
 
   private goToShop: boolean;
 
-  private goBack: boolean;
+  private goToTutorial: boolean;
+
+  private logo: HTMLImageElement;
 
   private startButton: HTMLImageElement;
+
+  private shopButton: HTMLImageElement;
+
+  private tutorialButton: HTMLImageElement;
+
+  private logoLoaded: boolean = false;
 
   private startButtonLoaded: boolean = false;
 
   private shopButtonLoaded: boolean = false;
 
-  private shopButton: HTMLImageElement;
+  private tutorialButtonLoaded: boolean = false;
 
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
     super(boardSize, canvas);
     this.goToTrackSelection = false;
     this.goToShop = false;
-    this.goBack = false;
+    this.goToTutorial = false;
 
-    this.startButton = CanvasRenderer.loadNewImage('./assets/start.png');
-    this.background = CanvasRenderer.loadNewImage('./assets/background.png');
-    this.shopButton = CanvasRenderer.loadNewImage('./assets/shop.png');
+    this.background = CanvasRenderer.loadNewImage('./assets/backgrounds/start.png');
+    this.logo = CanvasRenderer.loadNewImage('./assets/logo.png');
+    this.startButton = CanvasRenderer.loadNewImage('./assets/buttons/start.png');
+    this.shopButton = CanvasRenderer.loadNewImage('./assets/buttons/shop.png');
+    this.tutorialButton = CanvasRenderer.loadNewImage('./assets/buttons/tutorial.png');
+
     this.scale = 0.5;
+
+    this.logo.onload = (): void => {
+      this.logoLoaded = true;
+    };
 
     this.startButton.onload = (): void => {
       this.posX = (this.canvas.width - this.startButton.width * this.scale) / 2;
       this.posY = (this.canvas.height - this.startButton.height * this.scale) / 2;
       this.startButtonLoaded = true;
     };
+
     this.shopButton.onload = (): void => {
       this.shopButtonLoaded = true;
     };
+
+    this.tutorialButton.onload = (): void => {
+      this.tutorialButtonLoaded = true;
+    };
   }
 
+  // Looks if the startbutton is clicked
   private isStartButtonClicked(): boolean {
     if (!this.startButtonLoaded) {
       return false;
@@ -59,6 +81,7 @@ export default class SceneStart extends Scene {
       mousePos.x <= buttonX + buttonWidth &&
       mousePos.y <= buttonY + buttonHeight;
 
+    // Change the scene to trackselection when the startbutton is pressed
     if (isClicked && this.mouseListener.buttonPressed(MouseListener.BUTTON_LEFT)) {
       this.goToTrackSelection = true;
       return true;
@@ -66,6 +89,7 @@ export default class SceneStart extends Scene {
     return false;
   }
 
+  // Looks if the shopbutton is pressed
   private isShopButtonClicked(): boolean {
     if (!this.startButtonLoaded || !this.shopButtonLoaded) {
       return false;
@@ -84,23 +108,42 @@ export default class SceneStart extends Scene {
       return true;
     }
     return false;
-
   }
+
+  // // Looks if the tutorialbutton is pressed
+  // private isTutotialButtonPressed(): boolean {
+  //   if (!this.tutorialButtonLoaded) {
+  //     return false;
+  //   }
+  //   const mousePos: MouseCoordinates = this.mouseListener.getMousePosition();
+  //   const tutorialX: number = this.posX +
+  //     (this.tutorialButton.width * this.scale - this.tutorialButton.width * this.scale) / 2;
+  //   const tutorialY: number = this.posY - this.tutorialButton.height - 20;
+  //   const isClicked: boolean =
+  //     mousePos.x > tutorialX &&
+  //     mousePos.y > tutorialY &&
+  //     mousePos.x <= tutorialX + this.tutorialButton.width &&
+  //     mousePos.y <= tutorialY + this.tutorialButton.height;
+  //   if (isClicked && this.mouseListener.buttonPressed(MouseListener.BUTTON_LEFT)) {
+  //     this.goToTutorial = true;
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
   /**
    * Update function
    */
   public override update(delta: number): void {
-    if (this.startButtonLoaded || this.shopButtonLoaded) {
+    if (this.startButtonLoaded || this.shopButtonLoaded || this.tutorialButtonLoaded) {
       this.isStartButtonClicked();
       this.isShopButtonClicked();
+      // this.isTutotialButtonPressed();
     }
-
-    // this.isShopButtonClicked();
   }
 
   /**
-   * processinput (not in use)
+   * processinput
    *
    * @param keyListener keylistener
    * @param mouseListener mouselistener
@@ -109,8 +152,8 @@ export default class SceneStart extends Scene {
     keyListener: KeyListener,
     mouseListener: MouseListener
   ): void {
-    if (keyListener.keyPressed(KeyListener.KEY_ESC)) {
-      this.goBack = true;
+    if (keyListener.keyPressed(KeyListener.KEY_T)) {
+      this.goToTutorial = true;
     }
   }
 
@@ -119,12 +162,14 @@ export default class SceneStart extends Scene {
       return new SceneTrackSelection(this.boardSize, this.canvas);
     } else if (this.goToShop) {
       return new SceneShop(this.boardSize, this.canvas);
+    } else if (this.goToTutorial) {
+      return new SceneTutorial(this.boardSize, this.canvas);
     }
     return null;
   }
 
   /**
-   *center the picture
+   * Render
    */
   public override render(canvas: HTMLCanvasElement): void {
     const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
@@ -133,6 +178,7 @@ export default class SceneStart extends Scene {
     }
     ctx.drawImage(this.background, 0, 0, canvas.width, canvas.height);
 
+    // Render tutorial button
     if (this.startButtonLoaded) {
       ctx.drawImage(
         this.startButton,
@@ -153,10 +199,21 @@ export default class SceneStart extends Scene {
         this.shopButton.height * this.scale
       );
     }
-    // Renders the title on the screen
-    ctx.fillStyle = 'black';
-    ctx.font = 'bold 100px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillText('TurboTaal', this.canvas.width / 2, this.canvas.height / 4);
+
+    if (this.logoLoaded) {
+      const logoX: number = this.posX +
+        (this.startButton.width * this.scale - this.logo.width * this.scale) / 2;
+      const logoY: number = this.posY - this.logo.height * this.scale - 80;
+      ctx.drawImage(
+        this.logo, logoX, logoY,
+        this.logo.width * this.scale,
+        this.logo.height * this.scale
+      );
+    } else {
+      ctx.fillStyle = 'black';
+      ctx.font = 'bold 100px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('TurboTaal', this.canvas.width / 2, this.canvas.height / 4);
+    }
   }
 }

@@ -18,15 +18,12 @@ export default class Racetrack1 extends RacetrackScene {
 
   private collisionLayer: number[];
 
-  private map: HTMLImageElement;
-
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement, grid: Grid) {
     super(boardSize, canvas, grid);
     this.pause = false;
     this.pitstop = false;
     this.columns = 30;
     this.rows = 20;
-    this.map = CanvasRenderer.loadNewImage('assets/map-background.png');
 
     this.collisionLayer =
       [
@@ -51,12 +48,8 @@ export default class Racetrack1 extends RacetrackScene {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
       ];
-    this.background = CanvasRenderer.loadNewImage('./assets/race1.png');
+    this.background = CanvasRenderer.loadNewImage('./assets/racetracks/race1.png');
 
-    this.background.onload = (): void => {
-      this.canvas.width = this.background.width; // Set canvas width to image width
-      this.canvas.height = this.background.height; // Set canvas height to image height
-    };
     this.setCarStart(canvas.width * 0.5, canvas.height * 0.65, -1.5);
   }
 
@@ -136,7 +129,10 @@ export default class Racetrack1 extends RacetrackScene {
     this.car.render(canvas);
   }
 
-  // Render the lapcount
+  /**
+   * Render the lapcount in the left corner of the screen
+   * @returns /
+   */
   public renderLapcount(): void {
     const ctx: CanvasRenderingContext2D | null = this.canvas.getContext('2d');
     if (!ctx) {
@@ -145,10 +141,13 @@ export default class Racetrack1 extends RacetrackScene {
     ctx.fillStyle = 'black';
     ctx.font = '30px Arial';
     ctx.textAlign = 'left';
-    ctx.fillText(`Laps: ${this.getLaps()} / ${this.getMaxLaps()}`, 50, 40);
+    ctx.fillText(`Laps: ${this.getLaps()} / ${this.getMaxLaps()}`, 25, 40);
   }
 
-  // Renders the timer
+  /**
+   * Render the stopwatch in the right corner of the screen
+   * @returns /
+   */
   public renderTimer(): void {
     const ctx: CanvasRenderingContext2D | null = this.canvas.getContext('2d');
     if (!ctx) {
@@ -157,6 +156,6 @@ export default class Racetrack1 extends RacetrackScene {
     ctx.fillStyle = 'black';
     ctx.font = '30px Arial';
     ctx.textAlign = 'right';
-    ctx.fillText(this.stopwatch.getFormatted(), this.canvas.width - 100, 40);
+    ctx.fillText(this.stopwatch.getFormatted(), this.canvas.width - 25, 40);
   }
 }

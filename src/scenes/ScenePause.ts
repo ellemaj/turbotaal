@@ -15,6 +15,8 @@ export default class ScenePause extends Scene {
 
   private quit: boolean = false;
 
+  private logo: HTMLImageElement;
+
   public constructor(
     boardSize: Vector2,
     canvas: HTMLCanvasElement,
@@ -22,6 +24,7 @@ export default class ScenePause extends Scene {
   ) {
     super(boardSize, canvas);
     this.previousScene = previousScene;
+    this.logo = CanvasRenderer.loadNewImage('./assets/logo.png');
   }
 
   /**
@@ -50,7 +53,7 @@ export default class ScenePause extends Scene {
    * @param delta time elapsed
    */
   public override update(delta: number): void {
-    //
+    // Nothing to update during the break
   }
 
   // Gives back the right scene
@@ -77,38 +80,100 @@ export default class ScenePause extends Scene {
    * @returns nothing
    */
   public render(canvas: HTMLCanvasElement): void {
-    // Render the scene under the pausescene
+    // Render the scene under the pauseScene
     this.previousScene.render(canvas);
 
-    // Overlay
     const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
     if (!ctx) {
       return;
     }
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+
+    // Render the overlay
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Render the text
+    // Pausebox
+    const boxWidth: number = 560;
+    const boxHeight: number = 360;
+    const boxX: number = canvas.width / 2 - boxWidth / 2;
+    const boxY: number = canvas.height / 2 - boxHeight / 2;
+    let contentY: number = boxY + 30;
+
+    ctx.fillStyle = '#1e1e1e';
+    ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
+
+    ctx.strokeStyle = '#888';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
+
+    // Render the logo
+    if (this.logo.complete) {
+      const logoWidth: number = 220;
+      const logoRatio: number = this.logo.height / this.logo.width;
+      const logoHeight: number = logoWidth * logoRatio;
+
+      ctx.drawImage(
+        this.logo,
+        canvas.width / 2 - logoWidth / 2,
+        contentY,
+        logoWidth,
+        logoHeight
+      );
+
+      contentY += logoHeight + 30;
+    }
+
+    // Renders the text
     CanvasRenderer.writeText(
       canvas,
-      'PAUZE',
+      'Spel gepauzeerd',
       canvas.width / 2,
-      canvas.height / 2 - 40,
+      contentY,
       'center',
       'Arial',
-      48,
-      'white'
+      20,
+      '#cccccc'
     );
 
+    // Render the options
+    const startY: number = contentY + 50;
+    const lineHeight: number = 36;
+    const menuColor: string = '#e0e0e0';
+
+    // Resume
     CanvasRenderer.writeText(
       canvas,
-      'ESC = verder | T = trackselection | Q = stoppen',
+      '[ESC] Verder spelen',
       canvas.width / 2,
-      canvas.height / 2 + 20,
+      startY,
       'center',
       'Arial',
-      22,
-      'white'
+      24,
+      menuColor
+    );
+
+    // Trackselection
+    CanvasRenderer.writeText(
+      canvas,
+      '[T] Trackselectie',
+      canvas.width / 2,
+      startY + lineHeight,
+      'center',
+      'Arial',
+      24,
+      menuColor
+    );
+
+    // Back to main menu
+    CanvasRenderer.writeText(
+      canvas,
+      '[Q] Stoppen',
+      canvas.width / 2,
+      startY + lineHeight * 2,
+      'center',
+      'Arial',
+      24,
+      menuColor
     );
   }
 }
