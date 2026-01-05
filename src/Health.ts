@@ -22,6 +22,16 @@ export default class Health {
     return this.carHealth;
   }
 
+  /**
+   *heals the car
+   */
+  public Heal(healing: number): void {
+    this.carHealth += healing;
+    if (this.carHealth > 100) {
+      this.carHealth = 100;
+    }
+  }
+
   /** if car is below 20 pitstop will become true
    *@returns if car is low
    */

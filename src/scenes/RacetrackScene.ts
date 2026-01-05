@@ -97,6 +97,10 @@ export default abstract class RacetrackScene extends Scene {
     return this.car;
   }
 
+  public getCanvas() : HTMLCanvasElement {
+    return this.canvas;
+  }
+
   private resetLaps(): void {
     this.laps = 0;
     this.raceStarted = false;
