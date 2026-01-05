@@ -147,8 +147,8 @@ export default class Car extends CanvasItem {
       this.speed = 0;
     }
     // // Ensures that te car cannot drive out of your screen
-    //const carWidth: number = this.image.width * this.scale;
-    //const carHeight: number = this.image.height * this.scale;
+    // const carWidth: number = this.image.width * this.scale;
+    // const carHeight: number = this.image.height * this.scale;
 
     // if (this.posX < 0) {
     //   this.posX = 0;
