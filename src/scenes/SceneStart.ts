@@ -241,7 +241,7 @@ export default class SceneStart extends Scene {
       ctx.fillStyle = 'black';
       ctx.font = 'bold 50px Arial';
       ctx.textAlign = 'center';
-      ctx.fillText('Press T for the tutorial', this.canvas.width / 2, this.canvas.height / 4);
+      ctx.fillText('Press T for the tutorial', this.canvas.width / 2, this.canvas.height / 2);
     }
 
     // Render the logo

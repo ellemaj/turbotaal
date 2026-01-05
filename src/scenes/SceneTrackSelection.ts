@@ -30,7 +30,7 @@ export default class SceneTrackSelection extends Scene {
     this.raceTrack4 = false;
     this.goBack = false;
 
-    this.background = CanvasRenderer.loadNewImage('./assets/backgrounds/trackselection.png');
+    this.background = CanvasRenderer.loadNewImage('./assets/backgrounds/background.png');
     this.grid = new Grid(30, 20, []);
   }
 
