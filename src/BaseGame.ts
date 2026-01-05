@@ -244,7 +244,9 @@ export default class BaseGame extends Game {
     // Render the car and Q&A only in racetrack-scenes
     if (this.currentScene instanceof RacetrackScene) {
       const car: Car = this.currentScene.getCar();
+      const question: Question = this.currentScene.getQuestion();
       car.render(this.canvas);
+      question.draw(this.canvas);
       ctx.restore();
       // NOW ctx restore, so everything after is always on screen and not on the map (UI elements)
       this.question.draw(this.canvas);

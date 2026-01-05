@@ -6,6 +6,7 @@ import RacetrackScene from './RacetrackScene.js';
 import ScenePause from './ScenePause.js';
 import ScenePitstop from './ScenePitstop.js';
 import Grid from '../Grid.js';
+import Camera from '../Camera.js';
 
 export default class Racetrack1 extends RacetrackScene {
   private pause: boolean;
@@ -18,12 +19,15 @@ export default class Racetrack1 extends RacetrackScene {
 
   private collisionLayer: number[];
 
+  private camera: Camera;
+
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement, grid: Grid) {
     super(boardSize, canvas, grid);
     this.pause = false;
     this.pitstop = false;
     this.columns = 30;
     this.rows = 20;
+    this.camera = new Camera(canvas.width, canvas.height, this.worldWidth, this.worldHeight);
 
     this.collisionLayer =
       [
@@ -127,6 +131,8 @@ export default class Racetrack1 extends RacetrackScene {
 
     // Renders the car
     this.car.render(canvas);
+
+    this.question.spawnBoxes(canvas, this.camera);
   }
 
   /**
