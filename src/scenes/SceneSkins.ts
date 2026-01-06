@@ -2,6 +2,7 @@
 // import KeyListener from '../KeyListener.js';
 // import Vector2 from '../Vector2.js';
 // import SceneShop from './SceneShop.js';
+// import SceneGarage from './SceneGarage.js';
 // import Scene from './Scene.js';
 
 // export default class ScenePowerups extends Scene {
@@ -9,7 +10,7 @@
 
 //   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
 //     super(boardSize, canvas);
-//     this.shopSkins = true;
+//     this.shopSkins = true; // go to garage
 //   }
 
 //   /**
@@ -33,8 +34,8 @@
 //   }
 
 //   public override getNextScene(): Scene | null {
-//     if(!this.shopSkins){
-//       return new SceneShop(this.boardSize, this.canvas);
+//     if(this.shopSkins){
+//       return new SceneGarage(this.boardSize, this.canvas);
 //     }
 //     return null;
 //   }
