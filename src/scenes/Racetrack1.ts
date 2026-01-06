@@ -6,17 +6,21 @@ import RacetrackScene from './RacetrackScene.js';
 import ScenePause from './ScenePause.js';
 import ScenePitstop from './ScenePitstop.js';
 import Grid from '../Grid.js';
+import Camera from '../Camera.js';
 
 export default class Racetrack1 extends RacetrackScene {
   private pause: boolean;
 
   private pitstop: boolean;
 
+  private camera: Camera;
+
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement, grid: Grid) {
     super(boardSize, canvas, grid);
     this.pause = false;
     this.pitstop = false;
-    this.background = CanvasRenderer.loadNewImage('./assets/racetracks/race1.png');
+    this.camera = new Camera(canvas.width, canvas.height, this.worldWidth, this.worldHeight);
+    this.background = CanvasRenderer.loadNewImage('./assets/racetracks/race1UPDATED.png');
 
     this.setCarStart(canvas.width * 0.5, canvas.height * 0.65, -1.5);
   }
@@ -99,6 +103,8 @@ export default class Racetrack1 extends RacetrackScene {
 
     // Renders the car
     this.car.render(canvas);
+
+    this.question.spawnBoxes(canvas, this.camera);
   }
 
   /**

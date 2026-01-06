@@ -1,7 +1,8 @@
 import CanvasRenderer from '../CanvasRenderer.js';
 import KeyListener from '../KeyListener.js';
 import Vector2 from '../Vector2.js';
-import SceneSkins from './SceneSkins.js';
+// import SceneSkins from './SceneSkins.js';
+import SceneGarage from './SceneGarage.js';
 import ScenePowerups from './ScenePowerups.js';
 import Scene from './Scene.js';
 import SceneStart from './SceneStart.js';
@@ -53,7 +54,7 @@ export default class SceneShop extends Scene {
 
   public override getNextScene(): Scene | null {
     if (this.shopSkins) {
-      return new SceneSkins(this.boardSize, this.canvas);
+      return new SceneGarage(this.boardSize, this.canvas);
     }
 
     if (this.shopPowerups) {

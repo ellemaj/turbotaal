@@ -4,6 +4,7 @@ import Stopwatch from '../Stopwatch.js';
 import KeyListener from '../KeyListener.js';
 import Car from '../Car.js';
 import Grid from '../Grid.js';
+import Question from '../Question.js';
 
 
 export default abstract class RacetrackScene extends Scene {
@@ -17,6 +18,8 @@ export default abstract class RacetrackScene extends Scene {
 
   protected car: Car;
 
+  protected question: Question;
+
   protected worldWidth: number = this.canvas.width * 2;
 
   protected worldHeight: number = this.canvas.height * 2;
@@ -27,6 +30,7 @@ export default abstract class RacetrackScene extends Scene {
     super(boardSize, canvas);
 
     this.car = new Car();
+    this.question = new Question();
     this.grid = grid;
   }
 
@@ -95,6 +99,14 @@ export default abstract class RacetrackScene extends Scene {
 
   public getCar(): Car {
     return this.car;
+  }
+
+  public getCanvas() : HTMLCanvasElement {
+    return this.canvas;
+  }
+
+  public getQuestion(): Question {
+    return this.question;
   }
 
   private resetLaps(): void {

@@ -6,9 +6,10 @@ import RacetrackScene from './RacetrackScene.js';
 import ScenePause from './ScenePause.js';
 import ScenePitstop from './ScenePitstop.js';
 import Grid from '../Grid.js';
+import Camera from '../Camera.js';
 
 export default class Racetrack3 extends RacetrackScene {
-  private goBack: boolean;
+  private camera: Camera;
 
   private pause: boolean;
 
@@ -16,7 +17,7 @@ export default class Racetrack3 extends RacetrackScene {
 
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement, grid: Grid) {
     super(boardSize, canvas, grid);
-    this.goBack = false;
+    this.camera = new Camera(canvas.width, canvas.height, this.worldWidth, this.worldHeight);
     this.background = CanvasRenderer.loadNewImage('assets/racetracks/race3.png');
     this.pause = false;
     this.pitstop = false;

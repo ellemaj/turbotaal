@@ -13,13 +13,23 @@ export default class Health {
    *checks if carhealth should change */
   public updateHealth(): void {
     if (this.isColliding) {
-      this.carHealth = (this.carHealth - 0.1);
+      this.carHealth = (this.carHealth - 0.05);
       console.log(this.carHealth);
     }
   }
 
   public getHealth(): number{
     return this.carHealth;
+  }
+
+  /**
+   *heals the car
+   */
+  public Heal(healing: number): void {
+    this.carHealth += healing;
+    if (this.carHealth > 100) {
+      this.carHealth = 100;
+    }
   }
 
   /** if car is below 20 pitstop will become true
