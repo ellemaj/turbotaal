@@ -15,13 +15,27 @@ export default class SceneShop extends Scene {
 
   private goToPowerups: boolean;
 
-  private coinImage: HTMLImageElement;
-
   private logo: HTMLImageElement;
+
+  private skinsButton: HTMLImageElement;
+
+  private powerupButton: HTMLImageElement;
 
   private logoLoaded: boolean = false;
 
+  private skinsButtonLoaded: boolean = false;
+
+  private powerupButtonLoaded: boolean = false;
+
   private logoScale: number;
+
+  private skinsButtonX: number = 0;
+
+  private skinsButtonY: number = 0;
+
+  private powerupButtonX: number = 0;
+
+  private powerupButtonY: number = 0;
 
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
     super(boardSize, canvas);
@@ -29,22 +43,81 @@ export default class SceneShop extends Scene {
     this.goToSkins = false;
     this.goToPowerups = false;
 
-    this.coinImage = CanvasRenderer.loadNewImage('./assets/sprites/turbotoken.png');
     this.background = CanvasRenderer.loadNewImage('./assets/backgrounds/shop.png');
     this.logo = CanvasRenderer.loadNewImage('./assets/shoplogo.png');
+    this.skinsButton = CanvasRenderer.loadNewImage('./assets/buttons/skins.png');
+    this.powerupButton = CanvasRenderer.loadNewImage('./assets/buttons/powerup.png');
 
     this.logoScale = 0.5;
+    this.scale = 1.25;
 
     this.logo.onload = (): void => {
       this.logoLoaded = true;
     };
+
+    this.skinsButton.onload = (): void => {
+      this.skinsButtonLoaded = true;
+    };
+
+    this.powerupButton.onload = (): void => {
+      this.powerupButtonLoaded = true;
+    };
+  }
+
+  // Looks if the skinsbutton is clicked
+  private isSkinsButtonClicked(): boolean {
+    if (!this.skinsButtonLoaded) {
+      return false;
+    }
+
+    const mousePos: MouseCoordinates = this.mouseListener.getMousePosition();
+    const width: number = this.skinsButton.width * this.scale;
+    const height: number = this.skinsButton.height * this.scale;
+
+    const isClicked: boolean =
+    mousePos.x >= this.skinsButtonX &&
+    mousePos.x <= this.skinsButtonX + width &&
+    mousePos.y >= this.skinsButtonY &&
+    mousePos.y <= this.skinsButtonY + height;
+
+    if (isClicked && this.mouseListener.buttonPressed(MouseListener.BUTTON_LEFT)) {
+      this.goToSkins = true;
+      return true;
+    }
+    return false;
+  }
+
+  // Looks if the powerup button is clicked
+  private isPowerupButtonClicked(): boolean {
+    if (!this.powerupButtonLoaded) {
+      return false;
+    }
+
+    const mousePos: MouseCoordinates = this.mouseListener.getMousePosition();
+    const width: number = this.powerupButton.width * this.scale;
+    const height: number = this.powerupButton.height * this.scale;
+
+    const isClicked: boolean =
+    mousePos.x >= this.powerupButtonX &&
+    mousePos.x <= this.powerupButtonX + width &&
+    mousePos.y >= this.powerupButtonY &&
+    mousePos.y <= this.powerupButtonY + height;
+
+    if (isClicked && this.mouseListener.buttonPressed(MouseListener.BUTTON_LEFT)) {
+      this.goToPowerups = true;
+      return true;
+    }
+    return false;
   }
 
   /**
    * Update function
    */
   public override update(delta: number): void {
-    //
+    if (this.skinsButtonLoaded || this.powerupButtonLoaded) {
+      this.isSkinsButtonClicked();
+      this.isPowerupButtonClicked();
+    }
   }
 
   /**
@@ -59,23 +132,22 @@ export default class SceneShop extends Scene {
   ): void {
     if (keyListener.keyPressed(KeyListener.KEY_ESC)) {
       this.goBack = true;
-    }
-
-    if (keyListener.keyPressed(KeyListener.KEY_S)) {
+    } else if (keyListener.keyPressed(KeyListener.KEY_S)) {
       this.goToSkins = true;
-    }
-
-    if (keyListener.keyPressed(KeyListener.KEY_P)) {
+    } else if (keyListener.keyPressed(KeyListener.KEY_P)) {
       this.goToPowerups = true;
     }
   }
 
   public override getNextScene(): Scene | null {
     if (this.goBack) {
+      this.goBack = false;
       return new SceneStart(this.boardSize, this.canvas);
     } else if (this.goToSkins) {
-      return new SceneGarage(this.boardSize, this.canvas);
+      this.goToSkins = false;
+      return new SceneGarage(this.boardSize, this.canvas, this);
     } else if (this.goToPowerups) {
+      this.goToPowerups = false;
       return new ScenePowerups(this.boardSize, this.canvas);
     }
     return null;
@@ -93,7 +165,7 @@ export default class SceneShop extends Scene {
 
     const centerX: number = canvas.width / 2;
     let currentY: number = canvas.height * 0.06;
-    const spacing: number = 10; // Room between the buttons
+    const spacing: number = 100; // Room between the buttons
 
     ctx.textAlign = 'center';
     ctx.fillStyle = 'black';
@@ -117,16 +189,66 @@ export default class SceneShop extends Scene {
       currentY += 100 + spacing;
     }
 
-    // Render the coins
+    const buttonY: number = currentY + 30;
+    const gap: number = 75; // room between the buttons
+
+    // Render skins button
+    if (this.skinsButtonLoaded) {
+      const width: number = this.skinsButton.width * this.scale;
+      const height: number = this.skinsButton.height * this.scale;
+
+      this.skinsButtonX = centerX - gap / 2 - width;
+      this.skinsButtonY = buttonY;
+
+      ctx.drawImage(
+        this.skinsButton,
+        this.skinsButtonX,
+        this.skinsButtonY,
+        width,
+        height
+      );
+
+      currentY += height + spacing;
+    } else {
+      ctx.font = 'bold 25px Arial';
+      ctx.fillText('Press S to go to skins', centerX, currentY + 25);
+      currentY += 40 + spacing;
+    }
+
+    // Render powerup button
+    if (this.powerupButtonLoaded) {
+      const width: number = this.powerupButton.width * this.scale;
+      const height: number = this.powerupButton.height * this.scale;
+
+      this.powerupButtonX = centerX + gap / 2;
+      this.powerupButtonY = buttonY;
+
+      ctx.drawImage(
+        this.powerupButton,
+        this.powerupButtonX,
+        this.powerupButtonY,
+        width,
+        height
+      );
+
+      currentY += height + spacing;
+    } else {
+      ctx.font = 'bold 25px Arial';
+      ctx.fillText('Press P to go to powerup', centerX, currentY + 25);
+      currentY += 40 + spacing;
+    }
+
+
+    // Render the turboTokens
     const padding: number = 20;
-    const coinSize: number = 32;
+    const tokenSize: number = 32;
 
     ctx.drawImage(
-      this.coinImage,
-      canvas.width - 160,
+      this.turboToken,
+      canvas.width - 120,
       padding,
-      coinSize,
-      coinSize
+      tokenSize,
+      tokenSize
     );
 
     ctx.font = '24px Arial';
@@ -136,8 +258,8 @@ export default class SceneShop extends Scene {
 
     ctx.fillText(
       PlayerData.getCoins().toString(),
-      canvas.width - 115,
-      padding + 4
+      canvas.width - 80,
+      padding + 5
     );
   }
 }

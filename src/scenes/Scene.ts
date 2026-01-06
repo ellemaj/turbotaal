@@ -22,6 +22,10 @@ export default abstract class Scene{
 
   protected canvas: HTMLCanvasElement;
 
+  protected turboToken: HTMLImageElement;
+
+  protected turboCup: HTMLImageElement;
+
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
     this.boardSize = boardSize;
     this.background = new Image();
@@ -32,6 +36,8 @@ export default abstract class Scene{
     this.posY = 0;
     this.mouseListener = new MouseListener(canvas, true);
     this.canvas = canvas;
+    this.turboToken = CanvasRenderer.loadNewImage('./assets/sprites/turbotoken.png');
+    this.turboCup = CanvasRenderer.loadNewImage('./assets/sprites/turbocup.png');
   }
 
   public abstract processInput(

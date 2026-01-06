@@ -4,7 +4,6 @@ import MouseListener, { MouseCoordinates } from '../MouseListener.js';
 import KeyListener from '../KeyListener.js';
 import Scene from './Scene.js';
 import PlayerData from '../data/PlayerData.js';
-import SceneStart from './SceneStart.js';
 import SceneShop from './SceneShop.js';
 
 export default class ScenePowerups extends Scene {
@@ -41,7 +40,7 @@ export default class ScenePowerups extends Scene {
 
   public override getNextScene(): Scene | null {
     if (this.goBack) {
-      return new SceneStart(this.boardSize, this.canvas);
+      return new SceneShop(this.boardSize, this.canvas);
     }
     return null;
   }
