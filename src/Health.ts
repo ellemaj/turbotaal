@@ -31,6 +31,17 @@ export default class Health {
     }
   }
 
+  public getSpeedMultiplier(): number {
+    if (this.carHealth <= 40) {
+      return 0.5;
+    }
+    if (this.carHealth <= 60) {
+      return 0.7;
+    }
+    return 1;
+  }
+
+
   /** if car is below 20 pitstop will become true
    *@returns if car is low
    */
@@ -40,5 +51,4 @@ export default class Health {
     }
     return false;
   }
-
 }
