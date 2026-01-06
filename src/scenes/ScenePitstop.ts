@@ -100,6 +100,10 @@ export default class ScenePitstop extends Scene {
       this.state = 'questions'; // Change the state to questions when the dialog is done
       this.previousScene.update(delta); // Only update racetrack when the dialog is done
     }
+    if (this.state == 'questions') {
+      this.previousScene.getCar().getHealth().Heal(100);
+      this.previousScene.getCar().resetPosition(this.previousScene.getCanvas());
+    }
   }
 
   public override getNextScene(): Scene | null {
