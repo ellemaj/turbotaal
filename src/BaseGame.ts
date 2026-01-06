@@ -256,6 +256,14 @@ export default class BaseGame extends Game {
       const track1: Racetrack1 = this.currentScene as Racetrack1;
       track1.renderLapcount();
       track1.renderTimer();
+      const currentHealth: number = car.getHealth().getHealth();
+      const maxHealth: number = 100;
+      const healthWidth: number = 0.1 * (this.canvas.width);
+      const healthHeight: number = 0.02 * (this.canvas.height);
+      const posX: number = 0.90 * (this.canvas.width);
+      const posY: number = 0.15 * (this.canvas.height);
+      ctx.fillStyle = 'green';
+      ctx.fillRect( posX, posY, currentHealth / maxHealth * healthWidth, healthHeight);
     }
   }
 }

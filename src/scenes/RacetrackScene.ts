@@ -5,6 +5,7 @@ import KeyListener from '../KeyListener.js';
 import Car from '../Car.js';
 import Grid from '../Grid.js';
 import Question from '../Question.js';
+import CanvasRenderer from '../CanvasRenderer.js';
 
 
 export default abstract class RacetrackScene extends Scene {
