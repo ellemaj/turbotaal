@@ -7,7 +7,7 @@ import PlayerData from '../data/PlayerData.js';
 import SceneStart from './SceneStart.js';
 import SceneShop from './SceneShop.js';
 
-export default class SceneGarage extends Scene {
+export default class ScenePowerups extends Scene {
   private goBack: boolean;
 
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
