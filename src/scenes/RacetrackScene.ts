@@ -103,6 +103,8 @@ export default abstract class RacetrackScene extends Scene {
 
   public getCanvas() : HTMLCanvasElement {
     return this.canvas;
+  }
+
   public getQuestion(): Question {
     return this.question;
   }
