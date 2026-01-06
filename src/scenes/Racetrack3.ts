@@ -1,19 +1,26 @@
 import CanvasRenderer from '../CanvasRenderer.js';
 import Vector2 from '../Vector2.js';
-// import MouseListener from '../MouseListener.js';
 import KeyListener from '../KeyListener.js';
 import Scene from './Scene.js';
 import RacetrackScene from './RacetrackScene.js';
-import SceneTrackSelection from './SceneTrackSelection.js';
+import ScenePause from './ScenePause.js';
+import ScenePitstop from './ScenePitstop.js';
 import Grid from '../Grid.js';
+import Camera from '../Camera.js';
 
 export default class Racetrack3 extends RacetrackScene {
-  private goBack: boolean;
+  private camera: Camera;
+
+  private pause: boolean;
+
+  private pitstop: boolean;
 
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement, grid: Grid) {
     super(boardSize, canvas, grid);
-    this.goBack = false;
-    this.background = CanvasRenderer.loadNewImage('./assets/background.png'); // Change to the right background!
+    this.camera = new Camera(canvas.width, canvas.height, this.worldWidth, this.worldHeight);
+    this.background = CanvasRenderer.loadNewImage('assets/racetracks/race3.png');
+    this.pause = false;
+    this.pitstop = false;
   }
 
   /**
@@ -32,14 +39,20 @@ export default class Racetrack3 extends RacetrackScene {
       this.resetRace();
     }
 
-    // Changes the scene to SceneTrackSelection when ESC is being pressed
+    // Pause the race with ESC
     if (keyListener.keyPressed(KeyListener.KEY_ESC)) {
-      this.goBack = true;
+      this.pause = true;
+    }
+
+    // Changes the scene to ScenePitstop when P is pressed
+    // (needs to activate with collision in next version)
+    if (keyListener.keyPressed(KeyListener.KEY_P)) {
+      this.pitstop = true;
     }
   }
 
   /**
-   * Updates the stopwatch with the elapsed time
+   * Updates the Racetrack1 scene
    * @param delta elapsed time
    * @returns time elapsed
    */
@@ -55,20 +68,22 @@ export default class Racetrack3 extends RacetrackScene {
   }
 
   public override getNextScene(): Scene | null {
-    if (this.goBack) {
-      return new SceneTrackSelection(this.boardSize, this.canvas);
+    if (this.pause) {
+      this.pause = false;
+      return new ScenePause(this.boardSize, this.canvas, this);
     }
+
+    if (this.pitstop) {
+      this.pitstop = false;
+      this.pauseTimer();
+      return new ScenePitstop(this.boardSize, this.canvas, this);
+    }
+    if (this.car.getHealth().carIsLow()){
+      this.pitstop = true;
+    }
+
     return null;
   }
-
-  protected override setCarStart(): void { // Change the startposition of the car!
-    this.car.setStartPosition(
-      this.canvas.width * 0.5,
-      this.canvas.height * 0.5,
-      1
-    );
-  }
-
 
   /**
    * Renders everything in Racetrack1
@@ -79,26 +94,41 @@ export default class Racetrack3 extends RacetrackScene {
     const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
     if (!ctx) {
       return;
-    } // Renders the background
-    ctx.drawImage(this.background, 0, 0, canvas.width, canvas.height);
+    }
+    // Renders the background
+    ctx.drawImage(this.background, 0, 0);
 
+    // Renders the car
     this.car.render(canvas);
+  }
 
-    // Renders the text on the screen
-    CanvasRenderer.writeText(
-      canvas,
-      'Racetrack 3', //Press escape to go back to the track selection.',
-      this.boardSize.x / 2,
-      this.boardSize.y / 2);
-
-    // Renders the lapcount
+  /**
+   * Render the lapcount in the left corner of the screen
+   * @returns /
+   */
+  public renderLapcount(): void {
+    const ctx: CanvasRenderingContext2D | null = this.canvas.getContext('2d');
+    if (!ctx) {
+      return;
+    }
     ctx.fillStyle = 'black';
     ctx.font = '30px Arial';
     ctx.textAlign = 'left';
-    ctx.fillText(`Laps: ${this.getLaps()} / ${this.getMaxLaps()}`, 20, 40);
+    ctx.fillText(`Laps: ${this.getLaps()} / ${this.getMaxLaps()}`, 25, 40);
+  }
 
-    // Renders the timer
+  /**
+   * Render the stopwatch in the right corner of the screen
+   * @returns /
+   */
+  public renderTimer(): void {
+    const ctx: CanvasRenderingContext2D | null = this.canvas.getContext('2d');
+    if (!ctx) {
+      return;
+    }
+    ctx.fillStyle = 'black';
+    ctx.font = '30px Arial';
     ctx.textAlign = 'right';
-    ctx.fillText(this.stopwatch.getFormatted(), canvas.width - 20, 40);
+    ctx.fillText(this.stopwatch.getFormatted(), this.canvas.width - 25, 40);
   }
 }
