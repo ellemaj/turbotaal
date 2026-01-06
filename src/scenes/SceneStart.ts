@@ -23,6 +23,8 @@ export default class SceneStart extends Scene {
 
   private shopButton: HTMLImageElement;
 
+  private garageButton: HTMLImageElement;
+
   private tutorialButton: HTMLImageElement;
 
   private logoLoaded: boolean = false;
@@ -31,11 +33,23 @@ export default class SceneStart extends Scene {
 
   private shopButtonLoaded: boolean = false;
 
+  private garageButtonLoaded: boolean = false;
+
   private tutorialButtonLoaded: boolean = false;
+
+  private logoScale: number;
 
   private startScale: number;
 
   private tutorialScale: number;
+
+  private shopX: number = 0;
+
+  private shopY: number = 0;
+
+  private garageX: number = 0;
+
+  private garageY: number = 0;
 
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
     super(boardSize, canvas);
@@ -48,9 +62,11 @@ export default class SceneStart extends Scene {
     this.logo = CanvasRenderer.loadNewImage('./assets/logo.png');
     this.startButton = CanvasRenderer.loadNewImage('./assets/buttons/start.png');
     this.shopButton = CanvasRenderer.loadNewImage('./assets/buttons/shop.png');
+    this.garageButton = CanvasRenderer.loadNewImage('./assets/buttons/garage.png');
     this.tutorialButton = CanvasRenderer.loadNewImage('./assets/buttons/tutorial.png');
 
-    this.scale = 0.5;
+    this.logoScale = 0.5;
+    this.scale = 0.6;
     this.startScale = 1;
     this.tutorialScale = 1;
 
@@ -66,6 +82,10 @@ export default class SceneStart extends Scene {
 
     this.shopButton.onload = (): void => {
       this.shopButtonLoaded = true;
+    };
+
+    this.garageButton.onload = (): void => {
+      this.garageButtonLoaded = true;
     };
 
     this.tutorialButton.onload = (): void => {
@@ -101,20 +121,45 @@ export default class SceneStart extends Scene {
 
   // Looks if the shopbutton is pressed
   private isShopButtonClicked(): boolean {
-    if (!this.startButtonLoaded || !this.shopButtonLoaded) {
+    if (!this.shopButtonLoaded) {
       return false;
     }
+
     const mousePos: MouseCoordinates = this.mouseListener.getMousePosition();
-    const shopX: number = this.posX +
-      (this.startButton.width * this.startScale - this.shopButton.width * this.scale) / 2;
-    const shopY: number = this.posY - this.shopButton.height - 20;
+    const width: number = this.shopButton.width * this.scale;
+    const height: number = this.shopButton.height* this.scale;
+
     const isClicked: boolean =
-      mousePos.x > shopX &&
-      mousePos.y > shopY &&
-      mousePos.x <= shopX + this.shopButton.width * this.scale &&
-      mousePos.y <= shopY + this.shopButton.height * this.scale;
+      mousePos.x >= this.shopX &&
+      mousePos.x <= this.shopX + width &&
+      mousePos.y >= this.shopY &&
+      mousePos.y <= this.shopY + height;
+
     if (isClicked && this.mouseListener.buttonPressed(MouseListener.BUTTON_LEFT)) {
       this.goToShop = true;
+      return true;
+    }
+    return false;
+  }
+
+  // Looks if the garagebutton is pressed
+  private isGarageButtonClicked(): boolean {
+    if (!this.garageButtonLoaded) {
+      return false;
+    }
+
+    const mousePos: MouseCoordinates = this.mouseListener.getMousePosition();
+    const width: number = this.garageButton.width * this.scale;
+    const height: number = this.garageButton.height* this.scale;
+
+    const isClicked: boolean =
+      mousePos.x >= this.garageX &&
+      mousePos.x <= this.garageX + width &&
+      mousePos.y >= this.garageY &&
+      mousePos.y <= this.garageY + height;
+
+    if (isClicked && this.mouseListener.buttonPressed(MouseListener.BUTTON_LEFT)) {
+      this.goToGarage = true;
       return true;
     }
     return false;
@@ -136,10 +181,10 @@ export default class SceneStart extends Scene {
     const y: number = this.canvas.height - height - margin;
 
     const isClicked: boolean =
-    mousePos.x >= x &&
-    mousePos.x <= x + width &&
-    mousePos.y >= y &&
-    mousePos.y <= y + height;
+      mousePos.x >= x &&
+      mousePos.x <= x + width &&
+      mousePos.y >= y &&
+      mousePos.y <= y + height;
 
     if (isClicked && this.mouseListener.buttonPressed(MouseListener.BUTTON_LEFT)) {
       this.goToTutorial = true;
@@ -155,6 +200,7 @@ export default class SceneStart extends Scene {
     if (this.startButtonLoaded || this.shopButtonLoaded || this.tutorialButtonLoaded) {
       this.isStartButtonClicked();
       this.isShopButtonClicked();
+      this.isGarageButtonClicked();
       this.isTutotialButtonPressed();
     }
   }
@@ -169,10 +215,14 @@ export default class SceneStart extends Scene {
     keyListener: KeyListener,
     mouseListener: MouseListener
   ): void {
-    if (keyListener.keyPressed(KeyListener.KEY_T)) {
-      this.goToTutorial = true;
+    if (keyListener.keyPressed(KeyListener.KEY_ENTER)) {
+      this.goToTrackSelection = true;
+    } else if (keyListener.keyPressed(KeyListener.KEY_S)) {
+      this.goToShop = true;
     } else if (keyListener.keyPressed(KeyListener.KEY_G)) {
       this.goToGarage = true;
+    } else if (keyListener.keyPressed(KeyListener.KEY_T)) {
+      this.goToTutorial = true;
     }
   }
 
@@ -199,27 +249,95 @@ export default class SceneStart extends Scene {
     }
     ctx.drawImage(this.background, 0, 0, canvas.width, canvas.height);
 
+    const centerX: number = canvas.width / 2;
+    let currentY: number = canvas.height * 0.10;
+    const spacing: number = 10; // Room between the buttons
+
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'black';
+
+    // Render the logo
+    if (this.logoLoaded) {
+      const logoWidth: number = this.logo.width * this.logoScale;
+      const logoHeight: number = this.logo.height * this.logoScale;
+
+      ctx.drawImage(
+        this.logo,
+        centerX - logoWidth / 2,
+        currentY,
+        logoWidth, logoHeight
+      );
+
+      currentY += logoHeight + spacing;
+    } else {
+      ctx.font = 'bold 100px Arial';
+      ctx.fillText('TurboTaal', centerX, currentY + 80);
+      currentY += 100 + spacing;
+    }
+
     // Render start button
     if (this.startButtonLoaded) {
+      const width: number = this.startButton.width * this.startScale;
+      const height: number = this.startButton.height * this.startScale;
+
+      this.posX = centerX - width / 2;
+      this.posY = currentY;
+
       ctx.drawImage(
         this.startButton,
         this.posX,
         this.posY,
-        this.startButton.width * this.startScale,
-        this.startButton.height * this.startScale
+        width,
+        height
       );
+
+      currentY += height + spacing;
+    } else {
+      ctx.font = 'bold 25px Arial';
+      ctx.fillText('Press ENTER to start', centerX, currentY + 25);
+      currentY += 40 + spacing;
     }
 
     // Render shop button
-    if (this.startButtonLoaded && this.shopButtonLoaded) {
-      const shopX: number = this.posX +
-        (this.startButton.width * this.startScale - this.shopButton.width * this.scale) / 2;
-      const shopY: number = this.posY - this.shopButton.height * this.scale - 20;
+    if (this.shopButtonLoaded) {
+      const width: number = this.shopButton.width * this.scale;
+      const height: number = this.shopButton.height * this.scale;
+
+      this.shopX = centerX - width / 2;
+      this.shopY = currentY;
+
       ctx.drawImage(
-        this.shopButton, shopX, shopY,
-        this.shopButton.width * this.scale,
-        this.shopButton.height * this.scale
+        this.shopButton,
+        this.shopX,
+        this.shopY,
+        width,
+        height
       );
+
+      currentY += height + spacing;
+    } else {
+      ctx.fillText('Press S for the shop', centerX, currentY + 25);
+      currentY += 40 + spacing;
+    }
+
+    // Render garage button
+    if (this.garageButtonLoaded) {
+      const width: number = this.garageButton.width * this.scale;
+      const height: number = this.garageButton.height * this.scale;
+
+      this.garageX = centerX - width / 2;
+      this.garageY = currentY;
+
+      ctx.drawImage(
+        this.garageButton,
+        this.garageX,
+        this.garageY,
+        width,
+        height
+      );
+    } else {
+      ctx.fillText('Press G for the garage', centerX, currentY + 25);
+      currentY += 40 + spacing;
     }
 
     // Render tutorial button
@@ -238,27 +356,8 @@ export default class SceneStart extends Scene {
         height
       );
     } else {
-      ctx.fillStyle = 'black';
-      ctx.font = 'bold 50px Arial';
-      ctx.textAlign = 'center';
-      ctx.fillText('Press T for the tutorial', this.canvas.width / 2, this.canvas.height / 2);
-    }
-
-    // Render the logo
-    if (this.logoLoaded) {
-      const logoX: number = this.posX +
-        (this.startButton.width * this.startScale - this.logo.width * this.scale) / 2;
-      const logoY: number = this.posY - this.logo.height * this.scale - 80;
-      ctx.drawImage(
-        this.logo, logoX, logoY,
-        this.logo.width * this.scale,
-        this.logo.height * this.scale
-      );
-    } else {
-      ctx.fillStyle = 'black';
-      ctx.font = 'bold 100px Arial';
-      ctx.textAlign = 'center';
-      ctx.fillText('TurboTaal', this.canvas.width / 2, this.canvas.height / 4);
+      ctx.fillText('Press T for the tutorial', centerX, currentY + 25);
+      currentY += 40 + spacing;
     }
   }
 }
