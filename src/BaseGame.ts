@@ -261,9 +261,24 @@ export default class BaseGame extends Game {
       const healthWidth: number = 0.1 * (this.canvas.width);
       const healthHeight: number = 0.02 * (this.canvas.height);
       const posX: number = 0.90 * (this.canvas.width);
-      const posY: number = 0.15 * (this.canvas.height);
-      ctx.fillStyle = 'green';
-      ctx.fillRect( posX, posY, currentHealth / maxHealth * healthWidth, healthHeight);
+      const posY: number = 0.10 * (this.canvas.height);
+      ctx.fillStyle = '#f2f2f2';
+      ctx.fillRect(posX, posY, healthWidth, healthHeight);
+      if (currentHealth > 70) {
+        ctx.fillStyle = '#4caf50';
+        ctx.fillRect( posX, posY, currentHealth / maxHealth * healthWidth, healthHeight);
+        CanvasRenderer.writeText(this.canvas, 'Je auto is heel!', posX + (0.05 * this.canvas.width), posY - (0.01 * this.canvas.height), 'center', 'Arial', 24 , '#f5f5f5');
+      }
+      if (currentHealth < 70 && currentHealth > 43) {
+        ctx.fillStyle = '#fbc02d';
+        ctx.fillRect( posX, posY, currentHealth / maxHealth * healthWidth, healthHeight);
+        CanvasRenderer.writeText(this.canvas, 'Je auto heeft lichte schade', posX + (0.03 * this.canvas.width), posY - (0.01 * this.canvas.height), 'center', 'Arial', 24 , '#f5f5f5');
+      }
+      if (currentHealth < 43 && currentHealth > 20) {
+        ctx.fillStyle = '#e53935';
+        ctx.fillRect( posX, posY, currentHealth / maxHealth * healthWidth, healthHeight);
+        CanvasRenderer.writeText(this.canvas, 'Je auto is bijna kapot, bereid je voor op de pitstop!', posX - (0.03 * this.canvas.width), posY - (0.01 * this.canvas.height), 'center', 'Arial', 24 , '#f5f5f5');
+      }
     }
   }
 }
