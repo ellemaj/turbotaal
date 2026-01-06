@@ -21,6 +21,8 @@ export default class Racetrack3 extends RacetrackScene {
     this.background = CanvasRenderer.loadNewImage('assets/racetracks/race3.png');
     this.pause = false;
     this.pitstop = false;
+
+    this.setCarStart(canvas.width * 0.5, canvas.height * 0.775, -1.6);
   }
 
   /**

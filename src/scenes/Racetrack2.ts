@@ -21,6 +21,8 @@ export default class Racetrack2 extends RacetrackScene {
     this.pause = false;
     this.pitstop = false;
     this.camera = new Camera(canvas.width, canvas.height, this.worldWidth, this.worldHeight);
+
+    this.setCarStart(canvas.width * 0.2, canvas.height * 0.2, 1.6);
   }
 
   /**

@@ -1,7 +1,7 @@
-export const COLUMNS: number = 30;
-export const ROWS: number = 20;
+export const COLUMNS2: number = 30;
+export const ROWS2: number = 20;
 
-export const COLLISIONS: number[] =
+export const COLLISIONS2: number[] =
   [
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1,

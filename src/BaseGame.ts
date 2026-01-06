@@ -11,8 +11,12 @@ import Question from './Question.js';
 import { verkleinwoorden } from './questions/verkleinwoorden.js';
 import Camera from './Camera.js';
 import Grid from './Grid.js';
-import { COLUMNS, ROWS, COLLISIONS } from './scenes/CollisionDataTrack1.js';
+import { COLUMNS1, ROWS1, COLLISIONS1 } from './scenes/CollisionDataTrack1.js';
+import { COLUMNS2, ROWS2, COLLISIONS2 } from './scenes/CollisionDataTrack2.js';
+import { COLUMNS3, ROWS3, COLLISIONS3 } from './scenes/CollisionDataTrack3.js';
 import Racetrack1 from './scenes/Racetrack1.js';
+import Racetrack2 from './scenes/Racetrack2.js';
+import Racetrack3 from './scenes/Racetrack3.js';
 
 export default class BaseGame extends Game {
   private canvas: HTMLCanvasElement;
@@ -26,8 +30,6 @@ export default class BaseGame extends Game {
   private question: Question;
 
   private grid: Grid;
-
-  private racetrack1: Racetrack1;
 
   private lastMessage: string | null = null;
 
@@ -60,12 +62,12 @@ export default class BaseGame extends Game {
     // position the question once (centered)
     this.question.setPosition(this.canvas.width / 2, 100);
 
-    this.grid = new Grid(COLUMNS, ROWS, COLLISIONS);
-    this.racetrack1 = new Racetrack1(new Vector2(canvas.width, canvas.height), canvas, this.grid);
-
     this.currentScene = new SceneStart(
       new Vector2(this.canvas.width, this.canvas.height),
       this.canvas);
+
+    // Initialize grid to a default, gets chosen later by the grid-chooser-inator
+    this.grid = new Grid(0, 0, []);
 
     this.camera = new Camera(
       this.canvas.width,
@@ -203,6 +205,14 @@ export default class BaseGame extends Game {
     const nextScene: Scene | null = this.currentScene.getNextScene();
     if (nextScene) {
       this.currentScene = nextScene;
+      // Grid-chooser-inator
+      if (this.currentScene instanceof Racetrack1) {
+        this.grid = new Grid(COLUMNS1, ROWS1, COLLISIONS1);
+      } else if (this.currentScene instanceof Racetrack2) {
+        this.grid = new Grid(COLUMNS2, ROWS2, COLLISIONS2);
+      } else if (this.currentScene instanceof Racetrack3) {
+        this.grid = new Grid(COLUMNS3, ROWS3, COLLISIONS3);
+      }
     }
     return true;
   }
@@ -266,18 +276,18 @@ export default class BaseGame extends Game {
       ctx.fillRect(posX, posY, healthWidth, healthHeight);
       if (currentHealth > 70) {
         ctx.fillStyle = '#4caf50';
-        ctx.fillRect( posX, posY, currentHealth / maxHealth * healthWidth, healthHeight);
-        CanvasRenderer.writeText(this.canvas, 'Je auto is heel!', posX + (0.05 * this.canvas.width), posY - (0.01 * this.canvas.height), 'center', 'Arial', 24 , '#f5f5f5');
+        ctx.fillRect(posX, posY, currentHealth / maxHealth * healthWidth, healthHeight);
+        CanvasRenderer.writeText(this.canvas, 'Je auto is heel!', posX + (0.05 * this.canvas.width), posY - (0.01 * this.canvas.height), 'center', 'Arial', 24, '#f5f5f5');
       }
       if (currentHealth < 70 && currentHealth > 43) {
         ctx.fillStyle = '#fbc02d';
-        ctx.fillRect( posX, posY, currentHealth / maxHealth * healthWidth, healthHeight);
-        CanvasRenderer.writeText(this.canvas, 'Je auto heeft lichte schade', posX + (0.03 * this.canvas.width), posY - (0.01 * this.canvas.height), 'center', 'Arial', 24 , '#f5f5f5');
+        ctx.fillRect(posX, posY, currentHealth / maxHealth * healthWidth, healthHeight);
+        CanvasRenderer.writeText(this.canvas, 'Je auto heeft lichte schade', posX + (0.03 * this.canvas.width), posY - (0.01 * this.canvas.height), 'center', 'Arial', 24, '#f5f5f5');
       }
       if (currentHealth < 43 && currentHealth > 20) {
         ctx.fillStyle = '#e53935';
-        ctx.fillRect( posX, posY, currentHealth / maxHealth * healthWidth, healthHeight);
-        CanvasRenderer.writeText(this.canvas, 'Je auto is bijna kapot, bereid je voor op de pitstop!', posX - (0.03 * this.canvas.width), posY - (0.01 * this.canvas.height), 'center', 'Arial', 24 , '#f5f5f5');
+        ctx.fillRect(posX, posY, currentHealth / maxHealth * healthWidth, healthHeight);
+        CanvasRenderer.writeText(this.canvas, 'Je auto is bijna kapot, bereid je voor op de pitstop!', posX - (0.03 * this.canvas.width), posY - (0.01 * this.canvas.height), 'center', 'Arial', 24, '#f5f5f5');
       }
     }
   }
