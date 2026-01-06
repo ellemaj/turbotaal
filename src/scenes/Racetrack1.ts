@@ -22,7 +22,7 @@ export default class Racetrack1 extends RacetrackScene {
     this.camera = new Camera(canvas.width, canvas.height, this.worldWidth, this.worldHeight);
     this.background = CanvasRenderer.loadNewImage('./assets/racetracks/race1UPDATED.png');
 
-    this.setCarStart(canvas.width * 0.5, canvas.height * 0.65, -1.5);
+    this.setCarStart(canvas.width * 0.5, canvas.height * 0.97, -1.55);
   }
 
 
@@ -80,6 +80,10 @@ export default class Racetrack1 extends RacetrackScene {
       this.pitstop = false;
       this.pauseTimer();
       return new ScenePitstop(this.boardSize, this.canvas, this);
+    }
+    if (this.car.pitstopTriggered) {
+      this.car.pitstopTriggered = false;
+      this.pitstop = true;
     }
     if (this.car.getHealth().carIsLow()){
       this.pitstop = true;

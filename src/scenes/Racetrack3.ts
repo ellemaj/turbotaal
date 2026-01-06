@@ -22,7 +22,7 @@ export default class Racetrack3 extends RacetrackScene {
     this.pause = false;
     this.pitstop = false;
 
-    this.setCarStart(canvas.width * 0.5, canvas.height * 0.775, -1.6);
+    this.setCarStart(canvas.width * 0.75, canvas.height * 1.08, -1.6);
   }
 
   /**
@@ -79,6 +79,10 @@ export default class Racetrack3 extends RacetrackScene {
       this.pitstop = false;
       this.pauseTimer();
       return new ScenePitstop(this.boardSize, this.canvas, this);
+    }
+    if (this.car.pitstopTriggered) {
+      this.car.pitstopTriggered = false;
+      this.pitstop = true;
     }
     if (this.car.getHealth().carIsLow()){
       this.pitstop = true;
