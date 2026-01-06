@@ -11,8 +11,12 @@ import Question from './Question.js';
 import { verkleinwoorden } from './questions/verkleinwoorden.js';
 import Camera from './Camera.js';
 import Grid from './Grid.js';
-import { COLUMNS, ROWS, COLLISIONS } from './scenes/CollisionDataTrack1.js';
+import { COLUMNS1, ROWS1, COLLISIONS1 } from './scenes/CollisionDataTrack1.js';
+import { COLUMNS2, ROWS2, COLLISIONS2 } from './scenes/CollisionDataTrack2.js';
+import { COLUMNS3, ROWS3, COLLISIONS3 } from './scenes/CollisionDataTrack3.js';
 import Racetrack1 from './scenes/Racetrack1.js';
+import Racetrack2 from './scenes/Racetrack2.js';
+import Racetrack3 from './scenes/Racetrack3.js';
 
 export default class BaseGame extends Game {
   private canvas: HTMLCanvasElement;
@@ -26,8 +30,6 @@ export default class BaseGame extends Game {
   private question: Question;
 
   private grid: Grid;
-
-  private racetrack1: Racetrack1;
 
   private lastMessage: string | null = null;
 
@@ -60,12 +62,12 @@ export default class BaseGame extends Game {
     // position the question once (centered)
     this.question.setPosition(this.canvas.width / 2, 100);
 
-    this.grid = new Grid(COLUMNS, ROWS, COLLISIONS);
-    this.racetrack1 = new Racetrack1(new Vector2(canvas.width, canvas.height), canvas, this.grid);
-
     this.currentScene = new SceneStart(
       new Vector2(this.canvas.width, this.canvas.height),
       this.canvas);
+
+    // Initialize grid to a default, gets chosen later by the grid-chooser-inator
+    this.grid = new Grid(0, 0, []);
 
     this.camera = new Camera(
       this.canvas.width,
@@ -205,6 +207,14 @@ export default class BaseGame extends Game {
     const nextScene: Scene | null = this.currentScene.getNextScene();
     if (nextScene) {
       this.currentScene = nextScene;
+      // Grid-chooser-inator
+      if (this.currentScene instanceof Racetrack1) {
+        this.grid = new Grid(COLUMNS1, ROWS1, COLLISIONS1);
+      } else if (this.currentScene instanceof Racetrack2) {
+        this.grid = new Grid(COLUMNS2, ROWS2, COLLISIONS2);
+      } else if (this.currentScene instanceof Racetrack3) {
+        this.grid = new Grid(COLUMNS3, ROWS3, COLLISIONS3);
+      }
     }
     return true;
   }

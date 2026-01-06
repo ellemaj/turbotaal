@@ -1,6 +1,6 @@
 import CanvasRenderer from '../CanvasRenderer.js';
 import Vector2 from '../Vector2.js';
-import MouseListener, { MouseCoordinates } from '../MouseListener.js';
+// import MouseListener, { MouseCoordinates } from '../MouseListener.js';
 import KeyListener from '../KeyListener.js';
 import Scene from './Scene.js';
 import PlayerData from '../data/PlayerData.js';
@@ -65,8 +65,7 @@ export default class SceneGarage extends Scene {
    * @param mouseListener mouselistener
    */
   public override processInput(
-    keyListener: KeyListener,
-    mouseListener: MouseListener
+    keyListener: KeyListener
   ): void {
     if (keyListener.keyPressed(KeyListener.KEY_ESC)) {
       this.goBack = true;
@@ -147,7 +146,7 @@ export default class SceneGarage extends Scene {
     const previewWidth: number = skin.straight.width * scale;
     const previewHeight: number = skin.straight.height * scale;
 
-    const previewX: number = canvas.width / 2 - previewWidth / 2;
+    // const previewX: number = canvas.width / 2 - previewWidth / 2;
     const previewY: number = canvas.height / 2 - previewHeight / 2;
 
     ctx.save();
