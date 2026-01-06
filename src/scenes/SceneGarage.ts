@@ -6,24 +6,24 @@ import Scene from './Scene.js';
 import PlayerData from '../data/PlayerData.js';
 import { getCarSkin } from '../data/CarSkins.js';
 import { CarSkin } from '../data/CarSkin.js';
+import { tryBuySkin } from '../data/CarSkins.js';
 import SceneStart from './SceneStart.js';
-import SceneShop from './SceneShop.js';
 
 export default class SceneGarage extends Scene {
-  private goToShop: boolean;
-
   private goBack: boolean;
 
   private reset: boolean;
 
   private rotationAngle: number = 0;
 
+  private coinImage: HTMLImageElement;
+
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
     super(boardSize, canvas);
-    this.goToShop = false;
     this.goBack = false;
     this.reset = false;
 
+    this.coinImage = CanvasRenderer.loadNewImage('./assets/sprites/turbotoken.png');
     this.background = CanvasRenderer.loadNewImage('./assets/backgrounds/garage.png');
   }
 
@@ -36,7 +36,7 @@ export default class SceneGarage extends Scene {
   }
 
   /**
-   * processinput
+   * Process input
    *
    * @param keyListener keylistener
    * @param mouseListener mouselistener
@@ -59,11 +59,14 @@ export default class SceneGarage extends Scene {
       PlayerData.nextSkin();
     }
 
-    if (keyListener.keyPressed(KeyListener.KEY_ESC)) {
-      const skin: CarSkin = getCarSkin(PlayerData.getSkinIndex());
+    if (keyListener.keyPressed(KeyListener.KEY_ENTER)) {
+      const index: number = PlayerData.getSkinIndex();
+      const skin: CarSkin = getCarSkin(index);
 
       if (skin.unlocked) {
         this.goBack = true;
+      } else {
+        tryBuySkin(index);
       }
     }
   }
@@ -71,8 +74,6 @@ export default class SceneGarage extends Scene {
   public override getNextScene(): Scene | null {
     if (this.goBack) {
       return new SceneStart(this.boardSize, this.canvas);
-    } else if (this.goToShop) {
-      return new SceneShop(this.boardSize, this.canvas);
     }
     return null;
   }
@@ -86,6 +87,29 @@ export default class SceneGarage extends Scene {
       return;
     }
     ctx.drawImage(this.background, 0, 0, canvas.width, canvas.height);
+
+    // Render the coins
+    const padding: number = 20;
+    const coinSize: number = 32;
+
+    ctx.drawImage(
+      this.coinImage,
+      canvas.width - 160,
+      padding,
+      coinSize,
+      coinSize
+    );
+
+    ctx.font = '24px Arial';
+    ctx.fillStyle = 'white';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+
+    ctx.fillText(
+      PlayerData.getCoins().toString(),
+      canvas.width - 115,
+      padding + 4
+    );
 
     // Render the skin preview
     const skin: CarSkin = getCarSkin(PlayerData.getSkinIndex());
@@ -145,6 +169,13 @@ export default class SceneGarage extends Scene {
         'LOCKED - Press ENTER to buy',
         canvas.width / 2,
         previewY + previewHeight + 80
+      );
+
+      ctx.font = '20px Arial';
+      ctx.fillText(
+        `Price: ${skin.price}`,
+        canvas.width / 2,
+        previewY + previewHeight + 115
       );
     }
   }

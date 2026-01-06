@@ -3,6 +3,8 @@ import CarSkins from './CarSkins.js';
 export default class PlayerData {
   private static skinIndex: number = 0;
 
+  private static coins: number = 500;
+
   public static getSkinIndex(): number {
     return this.skinIndex;
   }
@@ -31,5 +33,13 @@ export default class PlayerData {
 
   public static getCurrentSkinUnlocked(): boolean {
     return CarSkins[this.skinIndex]?.unlocked ?? false;
+  }
+
+  public static getCoins(): number {
+    return this.coins;
+  }
+
+  public static addCoins(amount: number): void {
+    this.coins += amount;
   }
 }
