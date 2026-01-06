@@ -47,6 +47,7 @@ export default class Car extends CanvasItem {
     return this.position;
   }
 
+
   /**
    * Updates the car
    *
@@ -55,6 +56,7 @@ export default class Car extends CanvasItem {
    */
   public update(delta: number, canvas: HTMLCanvasElement, grid: Grid): void {
     const skin: CarSkin = getCarSkin(PlayerData.getSkinIndex());
+    const speedMultiplier: number = this.health.getSpeedMultiplier();
 
     // Change skins when steering
     if (this.movingLeft && !this.movingRight) {
