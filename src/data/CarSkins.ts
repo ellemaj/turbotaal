@@ -1,7 +1,7 @@
 import CanvasRenderer from '../CanvasRenderer.js';
 import { CarSkin } from './CarSkin.js';
 
-const CarSkins: CarSkin[] = [
+const carSkins: CarSkin[] = [
   {
     id: 0,
     name: 'Default - Red Racer',
@@ -28,13 +28,19 @@ const CarSkins: CarSkin[] = [
   },
 ];
 
+/**
+ * What skin is selected?
+ *
+ * @param index number of the skin
+ * @returns the skin that is selected
+ */
 export function getCarSkin(index: number): CarSkin {
-  const skin: CarSkin | undefined = CarSkins[index];
+  const skin: CarSkin | undefined = carSkins[index];
   if (skin) {
     return skin;
   }
 
-  return CarSkins[0]!;
+  return carSkins[0]!;
 }
 
-export default CarSkins;
+export default carSkins;
