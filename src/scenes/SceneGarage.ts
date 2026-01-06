@@ -10,6 +10,8 @@ import { tryBuySkin } from '../data/CarSkins.js';
 import SceneStart from './SceneStart.js';
 
 export default class SceneGarage extends Scene {
+  private returnScene: Scene;
+
   private goBack: boolean;
 
   private reset: boolean;
@@ -24,8 +26,9 @@ export default class SceneGarage extends Scene {
 
   private messageType: 'success' | 'error' | null = null;
 
-  public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
+  public constructor(boardSize: Vector2, canvas: HTMLCanvasElement, returnScene: Scene) {
     super(boardSize, canvas);
+    this.returnScene = returnScene;
     this.goBack = false;
     this.reset = false;
 
@@ -101,7 +104,7 @@ export default class SceneGarage extends Scene {
 
   public override getNextScene(): Scene | null {
     if (this.goBack) {
-      return new SceneStart(this.boardSize, this.canvas);
+      return this.returnScene;
     }
     return null;
   }

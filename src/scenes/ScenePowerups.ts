@@ -41,7 +41,7 @@ export default class ScenePowerups extends Scene {
 
   public override getNextScene(): Scene | null {
     if (this.goBack) {
-      return new SceneStart(this.boardSize, this.canvas);
+      return new SceneShop(this.boardSize, this.canvas);
     }
     return null;
   }
