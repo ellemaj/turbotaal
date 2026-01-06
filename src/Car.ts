@@ -25,6 +25,15 @@ export default class Car extends CanvasItem {
 
   public turnSpeed: number = 4;
 
+  public pitstopTriggered: boolean = false;
+
+  private pitstopCollisionHandled: boolean = false;
+
+  public resetPitstopFlags(): void {
+    this.pitstopTriggered = false;
+    this.pitstopCollisionHandled = false;
+  }
+
   private position: Vector2;
 
   private previousPosition: Vector2;
@@ -115,7 +124,7 @@ export default class Car extends CanvasItem {
     const topTile: number = Math.floor(top / tileSize);
     const bottomTile: number = Math.floor(bottom / tileSize);
 
-    // check all tiles of which the car is currently colliding with (holy engels)
+    // check all tiles of which the car is currently colliding with for grass tiles (holy engels)
     let collision: boolean = false;
     for (let col: number = leftTile; col <= rightTile; col++) {
       for (let row: number = topTile; row <= bottomTile; row++) {
@@ -124,6 +133,8 @@ export default class Car extends CanvasItem {
           break;
         }
       }
+
+      //health boogaboo
       if (collision) {
         this.health.setColliding(true);
         this.health.updateHealth();
@@ -132,37 +143,46 @@ export default class Car extends CanvasItem {
       }
     }
 
-
+    //sets your speed and position if you collide
     if (collision) {
       this.position = this.previousPosition.clone();
       this.speed = 0;
     }
 
-    const tilePos: { col: number; row: number } =
-      this.getTilePosition(tileSize);
-
-    if (grid.getCollision(tilePos.col, tilePos.row)) {
-      // revert to last pos pluh
-      this.position = this.previousPosition.clone();
-      this.speed = 0;
+    //check all tiles of which the car is currently colliding with for pitstop tiles
+    let collisionpitstop: boolean = false;
+    for (let col: number = leftTile; col <= rightTile; col++) {
+      for (let row: number = topTile; row <= bottomTile; row++) {
+        if (grid.getCollisionPitStop(col, row)) {
+          collisionpitstop = true;
+          break;
+        }
+      }
     }
-    // // Ensures that te car cannot drive out of your screen
-    // const carWidth: number = this.image.width * this.scale;
-    // const carHeight: number = this.image.height * this.scale;
-
-    // if (this.posX < 0) {
-    //   this.posX = 0;
-    // }
-    // if (this.posY < 0) {
-    //   this.posY = 0;
-    // }
-    // if (this.posX + carWidth > canvas.width) {
-    //   this.posX = canvas.width - carWidth;
-    // }
-    // if (this.posY + carHeight > canvas.height) {
-    //   this.posY = canvas.height - carHeight;
-    // }
+    if (collisionpitstop && !this.pitstopCollisionHandled) {
+      this.pitstopTriggered = true;
+      this.pitstopCollisionHandled = true;
+    } else if (!collisionpitstop) {
+      this.pitstopCollisionHandled = false;
+    }
   }
+
+  // // Ensures that te car cannot drive out of your screen
+  // const carWidth: number = this.image.width * this.scale;
+  // const carHeight: number = this.image.height * this.scale;
+
+  // if (this.posX < 0) {
+  //   this.posX = 0;
+  // }
+  // if (this.posY < 0) {
+  //   this.posY = 0;
+  // }
+  // if (this.posX + carWidth > canvas.width) {
+  //   this.posX = canvas.width - carWidth;
+  // }
+  // if (this.posY + carHeight > canvas.height) {
+  //   this.posY = canvas.height - carHeight;
+  // }
 
   /**
    * Render the car
@@ -206,6 +226,29 @@ export default class Car extends CanvasItem {
     this.speed = 0;
   }
 
+  // position for car to get after taking a pitstop for the 3 races different positions
+  public setPitstopPosition1(canvas: HTMLCanvasElement): void {
+    this.position.x = canvas.width * 0.5;
+    this.position.y = canvas.height * 1.18;
+    this.rotation = -1.55;
+    this.speed = 0;
+  }
+
+  public setPitstopPosition2(canvas: HTMLCanvasElement): void {
+    this.position.x = canvas.width * 0.25;
+    this.position.y = canvas.height * 0.1;
+    this.rotation = 1.55;
+    this.speed = 0;
+  }
+
+  public setPitstopPosition3(canvas: HTMLCanvasElement): void {
+    this.position.x = canvas.width * 0.75;
+    this.position.y = canvas.height * 1.22;
+    this.rotation = -1.55;
+    this.speed = 0;
+  }
+
+  //position if you click 'r'
   public resetPosition(canvas: HTMLCanvasElement): void {
     this.position.x = canvas.width * 0.5;
     this.position.y = canvas.height * 0.285;
