@@ -18,6 +18,12 @@ export default class SceneGarage extends Scene {
 
   private coinImage: HTMLImageElement;
 
+  private message: string | null = null;
+
+  private messageTimer: number = 0;
+
+  private messageType: 'success' | 'error' | null = null;
+
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
     super(boardSize, canvas);
     this.goBack = false;
@@ -33,6 +39,23 @@ export default class SceneGarage extends Scene {
   public override update(delta: number): void {
     // 0.0015 is the rotationspeed
     this.rotationAngle += delta * 0.0015;
+
+    if (this.messageTimer > 0) {
+      this.messageTimer -= delta;
+      if (this.messageTimer <= 0) {
+        this.message = null;
+        this.messageType = null;
+      }
+    }
+  }
+
+  private showMessage(
+    text: string,
+    type: 'success' | 'error'
+  ): void {
+    this.message = text;
+    this.messageType = type;
+    this.messageTimer = 2000; // ms
   }
 
   /**
@@ -64,9 +87,15 @@ export default class SceneGarage extends Scene {
       const skin: CarSkin = getCarSkin(index);
 
       if (skin.unlocked) {
-        this.goBack = true;
+        PlayerData.selectSkin(index);
+        this.showMessage('Skin geselecteerd!', 'success');
       } else {
-        tryBuySkin(index);
+        const succes: boolean = tryBuySkin(index);
+        if (succes) {
+          this.showMessage('🎉 Skin ontgrendeld!', 'success');
+        } else {
+          this.showMessage('Niet genoeg TurboTokens!', 'error');
+        }
       }
     }
   }
@@ -144,6 +173,19 @@ export default class SceneGarage extends Scene {
     // Restore canvas
     ctx.restore();
 
+    // Selected or not?
+    if (PlayerData.getSelectedSkin() === PlayerData.getSkinIndex()) {
+      ctx.fillStyle = 'lightgreen';
+      ctx.font = '22px Arial';
+      ctx.textAlign = 'center';
+
+      ctx.fillText(
+        '✓ GESELECTEERD',
+        canvas.width / 2,
+        previewY - 20
+      );
+    }
+
     // Skin name
     ctx.fillStyle = 'white';
     ctx.font = '24px Arial';
@@ -176,6 +218,20 @@ export default class SceneGarage extends Scene {
         `Price: ${skin.price}`,
         canvas.width / 2,
         previewY + previewHeight + 115
+      );
+    }
+
+    if (this.message) {
+      ctx.font = '30px Arial';
+      ctx.textAlign = 'center';
+
+      ctx.fillStyle =
+        this.messageType === 'success' ? 'lightgreen' : 'orange';
+
+      ctx.fillText(
+        this.message,
+        canvas.width / 2,
+        canvas.height - 60
       );
     }
   }

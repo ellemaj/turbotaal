@@ -3,7 +3,9 @@ import CarSkins from './CarSkins.js';
 export default class PlayerData {
   private static skinIndex: number = 0;
 
-  private static coins: number = 500;
+  private static selectedSkinIndex: number = 0;
+
+  private static coins: number = 500; // Only for testing!!!! Default = 0
 
   public static getSkinIndex(): number {
     return this.skinIndex;
@@ -39,7 +41,28 @@ export default class PlayerData {
     return this.coins;
   }
 
+  /**
+   * Add the coins to the playerdata
+   *
+   * @param amount amount of coins
+   */
   public static addCoins(amount: number): void {
     this.coins += amount;
+    if (this.coins < 0) {
+      this.coins = 0;
+    }
+  }
+
+  public static getSelectedSkin(): number {
+    return this.selectedSkinIndex;
+  }
+
+  /**
+   * Index of the selected skin
+   *
+   * @param index the index of the skin
+   */
+  public static selectSkin(index: number): void {
+    this.selectedSkinIndex = index;
   }
 }
