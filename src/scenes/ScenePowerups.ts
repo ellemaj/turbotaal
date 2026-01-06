@@ -4,7 +4,6 @@ import MouseListener, { MouseCoordinates } from '../MouseListener.js';
 import KeyListener from '../KeyListener.js';
 import Scene from './Scene.js';
 import PlayerData from '../data/PlayerData.js';
-import SceneStart from './SceneStart.js';
 import SceneShop from './SceneShop.js';
 
 export default class ScenePowerups extends Scene {

@@ -15,8 +15,6 @@ export default class SceneShop extends Scene {
 
   private goToPowerups: boolean;
 
-  private coinImage: HTMLImageElement;
-
   private logo: HTMLImageElement;
 
   private skinsButton: HTMLImageElement;
@@ -45,7 +43,6 @@ export default class SceneShop extends Scene {
     this.goToSkins = false;
     this.goToPowerups = false;
 
-    this.coinImage = CanvasRenderer.loadNewImage('./assets/sprites/turbotoken.png');
     this.background = CanvasRenderer.loadNewImage('./assets/backgrounds/shop.png');
     this.logo = CanvasRenderer.loadNewImage('./assets/shoplogo.png');
     this.skinsButton = CanvasRenderer.loadNewImage('./assets/buttons/skins.png');
@@ -242,16 +239,16 @@ export default class SceneShop extends Scene {
     }
 
 
-    // Render the coins
+    // Render the turboTokens
     const padding: number = 20;
-    const coinSize: number = 32;
+    const tokenSize: number = 32;
 
     ctx.drawImage(
-      this.coinImage,
-      canvas.width - 160,
+      this.turboToken,
+      canvas.width - 120,
       padding,
-      coinSize,
-      coinSize
+      tokenSize,
+      tokenSize
     );
 
     ctx.font = '24px Arial';
@@ -261,8 +258,8 @@ export default class SceneShop extends Scene {
 
     ctx.fillText(
       PlayerData.getCoins().toString(),
-      canvas.width - 115,
-      padding + 4
+      canvas.width - 80,
+      padding + 5
     );
   }
 }
