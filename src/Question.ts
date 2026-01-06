@@ -28,10 +28,16 @@ export default class Question extends CanvasItem {
     this.selectedAnswerIndex = 0;
   }
 
+  /**
+   *
+   */
   public checkDifficulty(): number {
     return this.difficulty;
   }
 
+  /**
+   *
+   */
   public draw(canvas: HTMLCanvasElement): void {
     // center text
     const centerX: number = canvas.width / 2;
@@ -47,25 +53,11 @@ export default class Question extends CanvasItem {
       const labelText: string = `${i + 1}. ${ans.getText()}`;
       CanvasRenderer.writeText(canvas, labelText, centerX, textY, 'center', 'Arial', 18, 'black');
     });
-
-    // // draw 3 boxes (1-3 antwoorden)
-    // const boxWidth: number = 30;
-    // const boxHeight: number = 30;
-    // const spacing: number = 300;
-    // const totalWidth: number = 3 * boxWidth + 2 * spacing;
-    // const startX: number = centerX - totalWidth / 2;
-    // const boxesY: number = questionY + 30 + this.answers.length * lineHeight + 20;
-
-    // this.answers.forEach((ans: Answer, i: number) => {
-    //   const x: number = startX + i * (boxWidth + spacing);
-    //   const y: number = boxesY;
-
-    //   // draw answerbox (positions in setPosition())
-    //   CanvasRenderer.drawAnswerBox(
-    // canvas, x, y, boxWidth, boxHeight, 'blue', `${i + 1}`, 'white', '20px Arial');
-    // });
   }
 
+  /**
+   *
+   */
   public spawnBoxes(canvas: HTMLCanvasElement, camera: Camera): void {
     const boxWidth: number = 40;
     const boxHeight: number = 40;
@@ -91,11 +83,13 @@ export default class Question extends CanvasItem {
           'white',
           '20px Arial'
         );
-        console.log('boxes', x, y);
       };
     });
   }
 
+  /**
+   *
+   */
   public loadFromData(question: QuestionType): void {
     this.questionText = question.question;
     this.answers = question.answers.map((text: string, i: number) => {
@@ -115,6 +109,9 @@ export default class Question extends CanvasItem {
     return this.answers[index];
   }
 
+  /**
+   *
+   */
   public checkAnswerAt(index: number): boolean {
     return this.answers[index]?.isCorrectAnswer() ?? false;
   }

@@ -83,8 +83,10 @@ export default class BaseGame extends Game {
     // Let the current scene process the input
     this.currentScene.processInput(this.keyListener, this.mouseListener);
 
+
     if (this.currentScene instanceof RacetrackScene) {
       const car: Car = this.currentScene.getCar();
+      const currentHealth: number = car.getHealth().getHealth();
       // only accept answers when not locked
       if (!this.answerLocked) {
         if (this.keyListener.keyPressed(KeyListener.KEY_1)) {
@@ -208,6 +210,10 @@ export default class BaseGame extends Game {
   }
 
   /**
+   *slow the car down if low health
+   */
+
+  /**
    * Render all the elements in the screen.
    */
   public render(): void {
@@ -256,6 +262,7 @@ export default class BaseGame extends Game {
       const track1: Racetrack1 = this.currentScene as Racetrack1;
       track1.renderLapcount();
       track1.renderTimer();
+      //rendering the healthbar
       const currentHealth: number = car.getHealth().getHealth();
       const maxHealth: number = 100;
       const healthWidth: number = 0.1 * (this.canvas.width);
@@ -264,20 +271,21 @@ export default class BaseGame extends Game {
       const posY: number = 0.10 * (this.canvas.height);
       ctx.fillStyle = '#f2f2f2';
       ctx.fillRect(posX, posY, healthWidth, healthHeight);
+      // if statements to check which healthbar and text
       if (currentHealth > 70) {
         ctx.fillStyle = '#4caf50';
         ctx.fillRect( posX, posY, currentHealth / maxHealth * healthWidth, healthHeight);
-        CanvasRenderer.writeText(this.canvas, 'Je auto is heel!', posX + (0.05 * this.canvas.width), posY - (0.01 * this.canvas.height), 'center', 'Arial', 24 , '#f5f5f5');
+        CanvasRenderer.writeText(this.canvas, 'Je auto is heel!', posX + (0.05 * this.canvas.width), posY - (0.01 * this.canvas.height), 'center', 'Arial', 24, '#f5f5f5');
       }
       if (currentHealth < 70 && currentHealth > 43) {
         ctx.fillStyle = '#fbc02d';
         ctx.fillRect( posX, posY, currentHealth / maxHealth * healthWidth, healthHeight);
-        CanvasRenderer.writeText(this.canvas, 'Je auto heeft lichte schade', posX + (0.03 * this.canvas.width), posY - (0.01 * this.canvas.height), 'center', 'Arial', 24 , '#f5f5f5');
+        CanvasRenderer.writeText(this.canvas, 'Je auto heeft lichte schade', posX + (0.03 * this.canvas.width), posY - (0.01 * this.canvas.height), 'center', 'Arial', 24, '#f5f5f5');
       }
       if (currentHealth < 43 && currentHealth > 20) {
         ctx.fillStyle = '#e53935';
         ctx.fillRect( posX, posY, currentHealth / maxHealth * healthWidth, healthHeight);
-        CanvasRenderer.writeText(this.canvas, 'Je auto is bijna kapot, bereid je voor op de pitstop!', posX - (0.03 * this.canvas.width), posY - (0.01 * this.canvas.height), 'center', 'Arial', 24 , '#f5f5f5');
+        CanvasRenderer.writeText(this.canvas, 'Je auto is bijna kapot, bereid je voor op de pitstop!', posX - (0.03 * this.canvas.width), posY - (0.01 * this.canvas.height), 'center', 'Arial', 24, '#f5f5f5');
       }
     }
   }
