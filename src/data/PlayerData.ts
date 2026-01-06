@@ -16,7 +16,7 @@ export default class PlayerData {
    */
   public static nextSkin(): void {
     if (this.skinIndex < CarSkins.length - 1) {
-      this.skinIndex++;
+      this.skinIndex = this.skinIndex + 1;
     }
   }
 
@@ -25,7 +25,7 @@ export default class PlayerData {
    */
   public static previousSkin(): void {
     if (this.skinIndex > 0) {
-      this.skinIndex--;
+      this.skinIndex = this.skinIndex - 1;
     }
   }
 
