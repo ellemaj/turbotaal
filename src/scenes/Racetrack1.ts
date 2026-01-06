@@ -133,8 +133,6 @@ export default class Racetrack1 extends RacetrackScene {
     // Renders the background
     ctx.drawImage(this.background, 0, 0);
 
-    // Renders the car
-    this.car.render(canvas);
 
     this.question.spawnBoxes(canvas, this.camera);
   }

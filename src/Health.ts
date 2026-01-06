@@ -14,7 +14,6 @@ export default class Health {
   public updateHealth(): void {
     if (this.isColliding) {
       this.carHealth = (this.carHealth - 0.05);
-      console.log(this.carHealth);
     }
   }
 
@@ -41,4 +40,5 @@ export default class Health {
     }
     return false;
   }
+
 }
