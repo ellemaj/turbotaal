@@ -6,6 +6,7 @@ import Car from '../Car.js';
 import Grid from '../Grid.js';
 import Question from '../Question.js';
 
+
 export default abstract class RacetrackScene extends Scene {
   private laps: number = 0;
 

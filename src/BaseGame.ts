@@ -72,7 +72,7 @@ export default class BaseGame extends Game {
       this.canvas.height,
       1920,
       1280,
-      1.5
+      1.8
     );
   }
 
