@@ -1,0 +1,151 @@
+import CanvasRenderer from '../CanvasRenderer.js';
+import Vector2 from '../Vector2.js';
+import MouseListener, { MouseCoordinates } from '../MouseListener.js';
+import KeyListener from '../KeyListener.js';
+import Scene from './Scene.js';
+import PlayerData from '../data/PlayerData.js';
+import { getCarSkin } from '../data/CarSkins.js';
+import { CarSkin } from '../data/CarSkin.js';
+import SceneStart from './SceneStart.js';
+import SceneShop from './SceneShop.js';
+
+export default class SceneGarage extends Scene {
+  private goToShop: boolean;
+
+  private goBack: boolean;
+
+  private reset: boolean;
+
+  private rotationAngle: number = 0;
+
+  public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
+    super(boardSize, canvas);
+    this.goToShop = false;
+    this.goBack = false;
+    this.reset = false;
+
+    this.background = CanvasRenderer.loadNewImage('./assets/backgrounds/garage.png');
+  }
+
+  /**
+   * Update function
+   */
+  public override update(delta: number): void {
+    // 0.0015 is the rotationspeed
+    this.rotationAngle += delta * 0.0015;
+  }
+
+  /**
+   * processinput
+   *
+   * @param keyListener keylistener
+   * @param mouseListener mouselistener
+   */
+  public override processInput(
+    keyListener: KeyListener,
+    mouseListener: MouseListener
+  ): void {
+    if (keyListener.keyPressed(KeyListener.KEY_ESC)) {
+      this.goBack = true;
+    }
+
+    if (keyListener.keyPressed(KeyListener.KEY_LEFT) ||
+    keyListener.keyPressed(KeyListener.KEY_A)) {
+      PlayerData.previousSkin();
+    }
+
+    if (keyListener.keyPressed(KeyListener.KEY_RIGHT) ||
+      keyListener.keyPressed(KeyListener.KEY_D)) {
+      PlayerData.nextSkin();
+    }
+
+    if (keyListener.keyPressed(KeyListener.KEY_ESC)) {
+      const skin: CarSkin = getCarSkin(PlayerData.getSkinIndex());
+
+      if (skin.unlocked) {
+        this.goBack = true;
+      }
+    }
+  }
+
+  public override getNextScene(): Scene | null {
+    if (this.goBack) {
+      return new SceneStart(this.boardSize, this.canvas);
+    } else if (this.goToShop) {
+      return new SceneShop(this.boardSize, this.canvas);
+    }
+    return null;
+  }
+
+  /**
+   * Render
+   */
+  public override render(canvas: HTMLCanvasElement): void {
+    const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
+    if (!ctx) {
+      return;
+    }
+    ctx.drawImage(this.background, 0, 0, canvas.width, canvas.height);
+
+    // Render the skin preview
+    const skin: CarSkin = getCarSkin(PlayerData.getSkinIndex());
+
+    const scale: number = 0.8;
+    const previewWidth: number = skin.straight.width * scale;
+    const previewHeight: number = skin.straight.height * scale;
+
+    const previewX: number = canvas.width / 2 - previewWidth / 2;
+    const previewY: number = canvas.height / 2 - previewHeight / 2;
+
+    ctx.save();
+
+    // Move the car to the middle
+    ctx.translate(
+      canvas.width / 2,
+      canvas.height / 2
+    );
+
+    // Rotate the car
+    ctx.rotate(this.rotationAngle);
+
+    // Render the car
+    ctx.drawImage(
+      skin.straight,
+      -previewWidth / 2,
+      -previewHeight / 2,
+      previewWidth,
+      previewHeight
+    );
+
+    // Restore canvas
+    ctx.restore();
+
+    // Skin name
+    ctx.fillStyle = 'white';
+    ctx.font = '24px Arial';
+    ctx.textAlign = 'center';
+
+    ctx.fillText(
+      skin.name,
+      canvas.width / 2,
+      previewY + previewHeight + 40
+    );
+
+    // Locked or unlocked
+    if (skin.unlocked) {
+      ctx.fillStyle = 'lightgreen';
+      ctx.fillText(
+        'Press ENTER to select',
+        canvas.width / 2,
+        previewY + previewHeight + 80
+      );
+    } else {
+      ctx.fillStyle = 'orange';
+      ctx.fillText(
+        'LOCKED - Press ENTER to buy',
+        canvas.width / 2,
+        previewY + previewHeight + 80
+      );
+    }
+  }
+}

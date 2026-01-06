@@ -6,6 +6,7 @@ import Scene from './Scene.js';
 import SceneTrackSelection from './SceneTrackSelection.js';
 import SceneShop from './SceneShop.js';
 import SceneTutorial from './SceneTutorial.js';
+import SceneGarage from './SceneGarage.js';
 
 export default class SceneStart extends Scene {
   private goToTrackSelection: boolean;
@@ -13,6 +14,8 @@ export default class SceneStart extends Scene {
   private goToShop: boolean;
 
   private goToTutorial: boolean;
+
+  private goToGarage: boolean;
 
   private logo: HTMLImageElement;
 
@@ -39,6 +42,7 @@ export default class SceneStart extends Scene {
     this.goToTrackSelection = false;
     this.goToShop = false;
     this.goToTutorial = false;
+    this.goToGarage = false;
 
     this.background = CanvasRenderer.loadNewImage('./assets/backgrounds/start.png');
     this.logo = CanvasRenderer.loadNewImage('./assets/logo.png');
@@ -167,6 +171,8 @@ export default class SceneStart extends Scene {
   ): void {
     if (keyListener.keyPressed(KeyListener.KEY_T)) {
       this.goToTutorial = true;
+    } else if (keyListener.keyPressed(KeyListener.KEY_G)) {
+      this.goToGarage = true;
     }
   }
 
@@ -177,6 +183,8 @@ export default class SceneStart extends Scene {
       return new SceneShop(this.boardSize, this.canvas);
     } else if (this.goToTutorial) {
       return new SceneTutorial(this.boardSize, this.canvas);
+    } else if (this.goToGarage) {
+      return new SceneGarage(this.boardSize, this.canvas);
     }
     return null;
   }
@@ -233,7 +241,7 @@ export default class SceneStart extends Scene {
       ctx.fillStyle = 'black';
       ctx.font = 'bold 50px Arial';
       ctx.textAlign = 'center';
-      ctx.fillText('Press T for the tutorial', this.canvas.width / 2, this.canvas.height / 4);
+      ctx.fillText('Press T for the tutorial', this.canvas.width / 2, this.canvas.height / 2);
     }
 
     // Render the logo
