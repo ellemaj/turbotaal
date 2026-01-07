@@ -127,6 +127,8 @@ export default class KeyListener {
 
   public static readonly Key_Slash: string = 'Slash';
 
+  public static readonly KEY_BACKSPACE: string = 'Backspace';
+
 
   /**
    * Record that holds a boolean for each keycode. The keycode is the index of

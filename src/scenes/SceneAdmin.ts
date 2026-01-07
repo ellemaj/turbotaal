@@ -1,0 +1,90 @@
+import Scene from './Scene.js';
+import KeyListener from '../KeyListener.js';
+import Vector2 from '../Vector2.js';
+import PlayerData from '../data/PlayerData.js';
+import SceneStart from './SceneStart.js';
+import MouseListener from '../MouseListener.js';
+
+// Admin function for debugging
+export default class SceneAdmin extends Scene {
+  private input: string = '';
+
+  private loggedIn: boolean = false;
+
+  private readonly ADMIN_CODE: string = 'turboadmin123';
+
+  public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
+    super(boardSize, canvas);
+  }
+
+  /**
+   * Process input
+   * @param keyListener keylistener that is used
+   * @param mouseListener mouselistener that is used
+   */
+  public override processInput(keyListener: KeyListener, mouseListener: MouseListener): void {
+    // Letters and numbers
+    for (const key of [
+      KeyListener.KEY_A, KeyListener.KEY_D, KeyListener.KEY_M, KeyListener.KEY_I, KeyListener.KEY_N,
+      KeyListener.KEY_T, KeyListener.KEY_U, KeyListener.KEY_R, KeyListener.KEY_B, KeyListener.KEY_O,
+      KeyListener.KEY_1, KeyListener.KEY_2, KeyListener.KEY_3
+    ]) {
+      if (keyListener.keyPressed(key)) {
+        this.input += key.replace('Key', '').replace('Digit', '').toLowerCase();
+      }
+    }
+
+    // Backspace
+    if (keyListener.keyPressed(KeyListener.KEY_BACKSPACE)) {
+      this.input = this.input.slice(0, -1);
+    }
+
+    // Enter = login check
+    if (keyListener.keyPressed(KeyListener.KEY_ENTER)) {
+      if (this.input === this.ADMIN_CODE) {
+        PlayerData.addCups(999);
+        PlayerData.addCoins(999);
+        this.loggedIn = true;
+      }
+    }
+  }
+
+  /**
+   * Update
+   * @param _ yes
+   */
+  public override update(_: number): void {}
+
+  public override getNextScene(): Scene | null {
+    if (this.loggedIn) {
+      return new SceneStart(this.boardSize, this.canvas);
+    }
+    return null;
+  }
+
+  /**
+   * Render
+   * @param canvas canvas it needs to be rendered on
+   * @returns yes
+   */
+  public override render(canvas: HTMLCanvasElement): void {
+    const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
+    if (!ctx) {
+      return;
+    }
+
+    ctx.fillStyle = '#111';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = 'white';
+    ctx.font ='40px Arial';
+    ctx.textAlign = 'center';
+
+    ctx.fillText('ADMIN LOGIN', canvas.width / 2, 150);
+    ctx.fillText('Code:', canvas.width / 2, 250);
+    ctx.fillText(this.input.replace(/./g, '*'), canvas.width / 2, 320);
+
+    ctx.font = '24px Arial';
+    ctx.fillText('Druk ENTER om in te loggen', canvas.width / 2, 400);
+  }
+}
