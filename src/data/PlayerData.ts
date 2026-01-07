@@ -5,9 +5,9 @@ export default class PlayerData {
 
   private static selectedSkinIndex: number = 0;
 
-  private static coins: number = 500; // Only for testing!!!! Default = 0
+  private static coins: number = 0;
 
-  private static cups: number = 5; // Only for testing!!!! Default = 0
+  private static cups: number = 0;
 
   public static getSkinIndex(): number {
     return this.skinIndex;

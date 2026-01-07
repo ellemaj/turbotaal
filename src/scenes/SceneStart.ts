@@ -7,6 +7,7 @@ import SceneTrackSelection from './SceneTrackSelection.js';
 import SceneShop from './SceneShop.js';
 import SceneTutorial from './SceneTutorial.js';
 import SceneGarage from './SceneGarage.js';
+import SceneAdmin from './SceneAdmin.js';
 
 export default class SceneStart extends Scene {
   private goToTrackSelection: boolean;
@@ -16,6 +17,8 @@ export default class SceneStart extends Scene {
   private goToTutorial: boolean;
 
   private goToGarage: boolean;
+
+  private goToAdmin: boolean;
 
   private logo: HTMLImageElement;
 
@@ -57,6 +60,7 @@ export default class SceneStart extends Scene {
     this.goToShop = false;
     this.goToTutorial = false;
     this.goToGarage = false;
+    this.goToAdmin = false;
 
     this.background = CanvasRenderer.loadNewImage('./assets/backgrounds/start.png');
     this.logo = CanvasRenderer.loadNewImage('./assets/logo.png');
@@ -223,6 +227,8 @@ export default class SceneStart extends Scene {
       this.goToGarage = true;
     } else if (keyListener.keyPressed(KeyListener.KEY_T)) {
       this.goToTutorial = true;
+    } else if (keyListener.keyPressed(KeyListener.KEY_A)) {
+      this.goToAdmin = true;
     }
   }
 
@@ -239,6 +245,9 @@ export default class SceneStart extends Scene {
     } else if (this.goToGarage) {
       this.goToGarage = false;
       return new SceneGarage(this.boardSize, this.canvas, this);
+    } else if (this.goToAdmin) {
+      this.goToAdmin = false;
+      return new SceneAdmin(this.boardSize, this.canvas);
     }
     return null;
   }
