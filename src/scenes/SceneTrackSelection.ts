@@ -11,6 +11,9 @@ import PlayerData from '../data/PlayerData.js';
 import MouseListener, { MouseCoordinates } from '../MouseListener.js';
 
 export default class SceneTrackSelection extends Scene {
+  // Number of TurboCups needed to unlock the racetrack
+  private readonly TRACK_REQUIREMENTS: number[] = [0, 5, 10];
+
   private raceTrack1: boolean;
 
   private raceTrack2: boolean;
@@ -30,12 +33,6 @@ export default class SceneTrackSelection extends Scene {
   private racetrack3Button: HTMLImageElement;
 
   private logoLoaded: boolean = false;
-
-  private racetrack1ButtonLoaded: boolean = false;
-
-  private racetrack2ButtonLoaded: boolean = false;
-
-  private racetrack3ButtonLoaded: boolean = false;
 
   private logoScale: number;
 
@@ -62,18 +59,14 @@ export default class SceneTrackSelection extends Scene {
     this.logo.onload = (): void => {
       this.logoLoaded = true;
     };
+  }
 
-    this.racetrack1Button.onload = (): void => {
-      this.racetrack1ButtonLoaded = true;
-    };
-
-    this.racetrack2Button.onload = (): void => {
-      this.racetrack2ButtonLoaded = true;
-    };
-
-    this.racetrack3Button.onload = (): void => {
-      this.racetrack3ButtonLoaded = true;
-    };
+  private isTrackUnlocked(index: number): boolean {
+    const required: number | undefined = this.TRACK_REQUIREMENTS[index];
+    if (required === undefined) {
+      return false;
+    }
+    return PlayerData.getCups() >= required;
   }
 
   /**
@@ -84,9 +77,9 @@ export default class SceneTrackSelection extends Scene {
   public override processInput(keyListener: KeyListener, mouseListener: MouseListener): void {
     if (keyListener.keyPressed(KeyListener.KEY_1)) {
       this.raceTrack1 = true;
-    } else if (keyListener.keyPressed(KeyListener.KEY_2)) {
+    } else if (keyListener.keyPressed(KeyListener.KEY_2) && this.isTrackUnlocked(1)) {
       this.raceTrack2 = true;
-    } else if (keyListener.keyPressed(KeyListener.KEY_3)) {
+    } else if (keyListener.keyPressed(KeyListener.KEY_3) && this.isTrackUnlocked(2)) {
       this.raceTrack3 = true;
     } else if (keyListener.keyPressed(KeyListener.KEY_ESC)) {
       this.goBack = true;
@@ -96,9 +89,9 @@ export default class SceneTrackSelection extends Scene {
     if (mouseListener.buttonPressed(MouseListener.BUTTON_LEFT)) {
       if (this.hoveredButton === 0) {
         this.raceTrack1 = true;
-      } else if (this.hoveredButton === 1) {
+      } else if (this.hoveredButton === 1 && this.isTrackUnlocked(1)) {
         this.raceTrack2 = true;
-      } else if (this.hoveredButton === 2) {
+      } else if (this.hoveredButton === 2 && this.isTrackUnlocked(2)) {
         this.raceTrack3 = true;
       }
     }
@@ -127,7 +120,7 @@ export default class SceneTrackSelection extends Scene {
   }
 
   /**
-   * //
+   * Render the things on the TrackSelection scene
    *
    * @param canvas the canvas it needs to be rendered on
    */
@@ -136,6 +129,7 @@ export default class SceneTrackSelection extends Scene {
     if (!ctx) {
       return;
     }
+    // Render the background
     ctx.drawImage(this.background, 0, 0, canvas.width, canvas.height);
 
     const centerX: number = canvas.width / 2;
@@ -176,6 +170,9 @@ export default class SceneTrackSelection extends Scene {
       this.racetrack3Button,
     ];
 
+    const trackRequirements: number[] = [0, 5, 10];
+    const cups: number = PlayerData.getCups();
+
     const totalWidth: number = buttons.length * buttonWidth + (buttons.length - 1) * gap;
     const startX: number = centerX - totalWidth / 2;
 
@@ -186,7 +183,11 @@ export default class SceneTrackSelection extends Scene {
       const x: number = startX + i * (buttonWidth + gap);
       const y: number = buttonY;
 
+      const required: number | undefined = trackRequirements[i];
+      const unlocked: boolean = required !== undefined && cups >= required;
+
       const isHover: boolean =
+      unlocked &&
       mouse.x >= x &&
       mouse.x <= x + buttonWidth &&
       mouse.y >= y &&
@@ -196,10 +197,14 @@ export default class SceneTrackSelection extends Scene {
         this.hoveredButton = i;
       }
 
+      // Locked = transparent
+      ctx.globalAlpha = unlocked ? 1 : 0.4;
+
       // Hoveranimation
       const scale: number = isHover ? 1.1 : 1;
       const w: number = buttonWidth * scale;
       const h: number = buttonHeight * scale;
+
       const img: HTMLImageElement | undefined = buttons[i];
       if (!img) {
         continue;
@@ -212,6 +217,20 @@ export default class SceneTrackSelection extends Scene {
         w,
         h
       );
+
+      // Locked text
+      if (!unlocked) {
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = 'white';
+        ctx.font = '25px Arial';
+        ctx.fillText(
+          `${trackRequirements[i]} TurboCups nodig`,
+          x + buttonWidth / 2,
+          y + buttonHeight + 20
+        );
+      }
+
+      ctx.globalAlpha = 1;
     }
 
     // Render the turbocups
