@@ -14,6 +14,14 @@ export default class SceneFinish extends Scene {
 
   private raceAgain: boolean;
 
+  private confetti: {
+    x: number;
+    y: number;
+    speed: number;
+    size: number;
+    color: string;
+  }[] = [];
+
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
     super(boardSize, canvas);
     this.goToTrackselection = false;
@@ -21,12 +29,32 @@ export default class SceneFinish extends Scene {
     this.raceAgain = false;
 
     this.background = CanvasRenderer.loadNewImage('./assets/backgrounds/background.png');
+
+    const colors: string[] = ['#FFD700', '#FF5252', '#40C4FF', '#69F0AE'];
+
+    for (let i: number = 0; i < 80; i += 1) {
+      this.confetti.push({
+        x: Math.random() * this.boardSize.x,
+        y: Math.random() * this.boardSize.y,
+        speed: 2 + Math.random() * 4,
+        size: 6 + Math.random() * 6,
+        color: colors[i % colors.length] ?? '#FFFFFF',
+      });
+    }
   }
 
   /**
    * Update function
    */
   public override update(delta: number): void {
+    for (const piece of this.confetti) {
+      piece.y += piece.speed;
+
+      if (piece.y > this.boardSize.y) {
+        piece.y = -20;
+        piece.x = Math.random() * this.boardSize.x;
+      }
+    }
   }
 
   /**
@@ -59,52 +87,43 @@ export default class SceneFinish extends Scene {
     if (!ctx) {
       return;
     }
+    // Render the background
     ctx.drawImage(this.background, 0, 0, canvas.width, canvas.height);
 
-    // Render the turboTokens
-    let padding: number = 20;
-    const tokenSize: number = 32;
+    const centerX: number = canvas.width / 2;
 
-    ctx.drawImage(
-      this.turboToken,
-      canvas.width - 120,
-      padding,
-      tokenSize,
-      tokenSize
-    );
+    // Confetti effect
+    for (const piece of this.confetti) {
+      ctx.fillStyle = piece.color;
+      ctx.fillRect(piece.x, piece.y, piece.size, piece.size * 1.8);
+    }
 
-    ctx.font = '24px Arial';
+    // Finish title
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    ctx.font = 'bold 90px Arial';
+    ctx.fillStyle = 'rgba(255, 215, 0, 0.4)';
+    ctx.fillText('FINISH!', centerX + 4, canvas.height * 0.18 + 4);
+
+    ctx.fillStyle = '#FFD700';
+    ctx.fillText('FINISH!', centerX, canvas.height * 0.18);
+
+    // Stats
+    let y: number = canvas.height * 0.35;
+
+    ctx.font = 'bold 36px Arial';
     ctx.fillStyle = 'white';
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'top';
 
-    ctx.fillText(
-      PlayerData.getCoins().toString(),
-      canvas.width - 80,
-      padding + 5
-    );
+    // TurboCups
+    ctx.drawImage(this.turboCup, centerX - 140, y - 24, 48, 48);
+    ctx.fillText(`TurboCups: ${PlayerData.getCups()}`, centerX, y);
 
-    // Render the turboCups
-    padding = 60;
-    const cupSize: number = 32;
+    // TurboTokens
+    y += 70;
+    ctx.drawImage(this.turboToken, centerX - 140, y - 24, 48, 48);
+    ctx.fillText(`TurboTokens: ${PlayerData.getCoins()}`, centerX, y);
 
-    ctx.drawImage(
-      this.turboCup,
-      canvas.width - 120,
-      padding,
-      cupSize,
-      cupSize
-    );
-
-    ctx.font = '24px Arial';
-    ctx.fillStyle = 'white';
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'top';
-
-    ctx.fillText(
-      PlayerData.getCups().toString(),
-      canvas.width - 80,
-      padding + 5
-    );
+    // Buttons
   }
 }
