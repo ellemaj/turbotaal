@@ -6,6 +6,7 @@ import Scene from './Scene.js';
 import PlayerData from '../data/PlayerData.js';
 import SceneTrackSelection from './SceneTrackSelection.js';
 import SceneStart from './SceneStart.js';
+import RacetrackScene from './RacetrackScene.js';
 
 export default class SceneFinish extends Scene {
   private goToTrackselection: boolean;
@@ -13,6 +14,8 @@ export default class SceneFinish extends Scene {
   private goToStart: boolean;
 
   private raceAgain: boolean;
+
+  private racetrack: RacetrackScene;
 
   private confetti: {
     x: number;
@@ -22,8 +25,10 @@ export default class SceneFinish extends Scene {
     color: string;
   }[] = [];
 
-  public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
+  public constructor(boardSize: Vector2, canvas: HTMLCanvasElement, racetrack: RacetrackScene) {
     super(boardSize, canvas);
+    this.racetrack = racetrack;
+
     this.goToTrackselection = false;
     this.goToStart = false;
     this.raceAgain = false;
@@ -66,6 +71,13 @@ export default class SceneFinish extends Scene {
   public override processInput(
     keyListener: KeyListener
   ): void {
+    if (keyListener.keyPressed(KeyListener.KEY_R)) {
+      this.raceAgain = true;
+    } else if (keyListener.keyPressed(KeyListener.KEY_ENTER)) {
+      this.goToTrackselection = true;
+    } else if (keyListener.keyPressed(KeyListener.KEY_ESC)) {
+      this.goToStart = true;
+    }
   }
 
   public override getNextScene(): Scene | null {
@@ -74,7 +86,8 @@ export default class SceneFinish extends Scene {
     } else if (this.goToStart) {
       return new SceneStart(this.boardSize, this.canvas);
     } else if (this.raceAgain) {
-      // return new Racetrack1(this.boardSize, this.canvas, this.grid);
+      this.racetrack.resetRace();
+      return this.racetrack;
     }
     return null;
   }

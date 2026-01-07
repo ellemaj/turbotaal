@@ -11,6 +11,8 @@ export default abstract class RacetrackScene extends Scene {
 
   private maxLaps: number = 5;
 
+  protected finished: boolean = false;
+
   protected stopwatch: Stopwatch = new Stopwatch();
 
   protected raceStarted: boolean = false;
@@ -146,6 +148,10 @@ export default abstract class RacetrackScene extends Scene {
    * checks for collisions with checkpoints and finish line
    */
   protected checkTriggers(): void {
+    if (this.finished) {
+      return;
+    }
+
     const carPos: Vector2 = this.car.getPosition();
     const carSize: number = 32;
 

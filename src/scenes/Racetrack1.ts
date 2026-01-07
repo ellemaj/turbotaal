@@ -5,6 +5,7 @@ import Scene from './Scene.js';
 import RacetrackScene from './RacetrackScene.js';
 import ScenePause from './ScenePause.js';
 import ScenePitstop from './ScenePitstop.js';
+import SceneFinish from './SceneFinish.js';
 import Grid from '../Grid.js';
 import Camera from '../Camera.js';
 
@@ -72,6 +73,10 @@ export default class Racetrack1 extends RacetrackScene {
    * @returns time elapsed
    */
   public override update(delta: number): void {
+    if (this.finished) {
+      return;
+    }
+
     this.car.update(delta, this.canvas, this.grid);
 
     this.checkTriggers(); //for the lapcount
@@ -79,7 +84,8 @@ export default class Racetrack1 extends RacetrackScene {
     this.stopwatch.update(delta);
 
     // Stopwatch stops when LapCount = 5
-    if (this.isFinished()) {
+    if (this.isFinished() && !this.finished) {
+      this.finished = true;
       this.stopwatch.stop();
     }
   }
@@ -101,6 +107,9 @@ export default class Racetrack1 extends RacetrackScene {
     }
     if (this.car.getHealth().carIsLow()){
       this.pitstop = true;
+    }
+    if (this.finished) {
+      return new SceneFinish(this.boardSize, this.canvas, this);
     }
 
     return null;
