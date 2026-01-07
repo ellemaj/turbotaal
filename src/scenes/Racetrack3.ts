@@ -23,6 +23,22 @@ export default class Racetrack3 extends RacetrackScene {
     this.pitstop = false;
 
     this.setCarStart(canvas.width * 0.75, canvas.height * 1.08, -1.6);
+
+    this.loadTriggers();
+  }
+
+  private loadTriggers(): void {
+    // Hardcoded from race1UPDATEDtest.json
+    this.checkpoints = [
+      { x: 64, y: 896, width: 192, height: 64, index: 0 },
+      { x: 256, y: 64, width: 64, height: 192, index: 1 },
+      { x: 384, y: 640, width: 192, height: 64, index: 2 },
+      { x: 1280, y: 576, width: 192, height: 64, index: 3 },
+      { x: 1024, y: 192, width: 192, height: 64, index: 4 },
+      { x: 1408, y: 0, width: 64, height: 192, index: 5 },
+      { x: 1664, y: 512, width: 192, height: 64, index: 6 }
+    ];
+    this.finish = { x: 896, y: 960, width: 64, height: 320 };
   }
 
   /**
@@ -60,6 +76,8 @@ export default class Racetrack3 extends RacetrackScene {
    */
   public override update(delta: number): void {
     this.car.update(delta, this.canvas, this.grid);
+
+    this.checkTriggers(); //for the lapcount
 
     this.stopwatch.update(delta);
 

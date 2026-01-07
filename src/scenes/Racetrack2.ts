@@ -23,6 +23,20 @@ export default class Racetrack2 extends RacetrackScene {
     this.camera = new Camera(canvas.width, canvas.height, this.worldWidth, this.worldHeight);
 
     this.setCarStart(canvas.width * 0.3, canvas.height * 0.25, 1.6);
+
+    this.loadTriggers();
+  }
+
+  private loadTriggers(): void {
+    // Hardcoded from race2UPDATED.json
+    this.checkpoints = [
+      { x: 1664, y: 512, width: 192, height: 64, index: 0 },
+      { x: 1088, y: 1024, width: 64, height: 192, index: 1 },
+      { x: 448, y: 896, width: 192, height: 64, index: 2 },
+      { x: 64, y: 1024, width: 192, height: 64, index: 3 },
+      { x: 64, y: 384, width: 192, height: 64, index: 4 }
+    ];
+    this.finish = { x: 960, y: 64, width: 64, height: 320 };
   }
 
   /**
@@ -60,6 +74,8 @@ export default class Racetrack2 extends RacetrackScene {
    */
   public override update(delta: number): void {
     this.car.update(delta, this.canvas, this.grid);
+
+    this.checkTriggers(); //for the lapcount
 
     this.stopwatch.update(delta);
 
