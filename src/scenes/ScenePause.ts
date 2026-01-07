@@ -5,6 +5,7 @@ import KeyListener from '../KeyListener.js';
 import MouseListener from '../MouseListener.js';
 import Vector2 from '../Vector2.js';
 import CanvasRenderer from '../CanvasRenderer.js';
+import PlayerData from '../data/PlayerData.js';
 
 export default class ScenePause extends Scene {
   private previousScene: Scene;
@@ -174,6 +175,52 @@ export default class ScenePause extends Scene {
       'Arial',
       24,
       menuColor
+    );
+
+    // Render the turboTokens
+    let padding: number = 20;
+    const tokenSize: number = 32;
+
+    ctx.drawImage(
+      this.turboToken,
+      canvas.width - 120,
+      padding,
+      tokenSize,
+      tokenSize
+    );
+
+    ctx.font = '24px Arial';
+    ctx.fillStyle = 'white';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+
+    ctx.fillText(
+      PlayerData.getCoins().toString(),
+      canvas.width - 80,
+      padding + 5
+    );
+
+    // Render the turboCups
+    padding = 60;
+    const cupSize: number = 32;
+
+    ctx.drawImage(
+      this.turboCup,
+      canvas.width - 120,
+      padding,
+      cupSize,
+      cupSize
+    );
+
+    ctx.font = '24px Arial';
+    ctx.fillStyle = 'white';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+
+    ctx.fillText(
+      PlayerData.getCups().toString(),
+      canvas.width - 80,
+      padding + 5
     );
   }
 }

@@ -7,16 +7,15 @@ import PlayerData from '../data/PlayerData.js';
 import { getCarSkin } from '../data/CarSkins.js';
 import { CarSkin } from '../data/CarSkin.js';
 import { tryBuySkin } from '../data/CarSkins.js';
-import SceneStart from './SceneStart.js';
 
 export default class SceneGarage extends Scene {
+  private returnScene: Scene;
+
   private goBack: boolean;
 
   private reset: boolean;
 
   private rotationAngle: number = 0;
-
-  private coinImage: HTMLImageElement;
 
   private message: string | null = null;
 
@@ -24,12 +23,12 @@ export default class SceneGarage extends Scene {
 
   private messageType: 'success' | 'error' | null = null;
 
-  public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
+  public constructor(boardSize: Vector2, canvas: HTMLCanvasElement, returnScene: Scene) {
     super(boardSize, canvas);
+    this.returnScene = returnScene;
     this.goBack = false;
     this.reset = false;
 
-    this.coinImage = CanvasRenderer.loadNewImage('./assets/sprites/turbotoken.png');
     this.background = CanvasRenderer.loadNewImage('./assets/backgrounds/garage.png');
   }
 
@@ -101,7 +100,7 @@ export default class SceneGarage extends Scene {
 
   public override getNextScene(): Scene | null {
     if (this.goBack) {
-      return new SceneStart(this.boardSize, this.canvas);
+      return this.returnScene;
     }
     return null;
   }
@@ -116,16 +115,16 @@ export default class SceneGarage extends Scene {
     }
     ctx.drawImage(this.background, 0, 0, canvas.width, canvas.height);
 
-    // Render the coins
+    // Render the turboTokens
     const padding: number = 20;
-    const coinSize: number = 32;
+    const tokenSize: number = 32;
 
     ctx.drawImage(
-      this.coinImage,
+      this.turboToken,
       canvas.width - 160,
       padding,
-      coinSize,
-      coinSize
+      tokenSize,
+      tokenSize
     );
 
     ctx.font = '24px Arial';

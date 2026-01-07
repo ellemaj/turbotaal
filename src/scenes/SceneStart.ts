@@ -228,13 +228,17 @@ export default class SceneStart extends Scene {
 
   public override getNextScene(): Scene | null {
     if (this.goToTrackSelection) {
+      this.goToTrackSelection = false;
       return new SceneTrackSelection(this.boardSize, this.canvas);
     } else if (this.goToShop) {
+      this.goToShop = false;
       return new SceneShop(this.boardSize, this.canvas);
     } else if (this.goToTutorial) {
+      this.goToTutorial = false;
       return new SceneTutorial(this.boardSize, this.canvas);
     } else if (this.goToGarage) {
-      return new SceneGarage(this.boardSize, this.canvas);
+      this.goToGarage = false;
+      return new SceneGarage(this.boardSize, this.canvas, this);
     }
     return null;
   }

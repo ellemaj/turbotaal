@@ -7,6 +7,8 @@ export default class PlayerData {
 
   private static coins: number = 500; // Only for testing!!!! Default = 0
 
+  private static cups: number = 5; // Only for testing!!!! Default = 0
+
   public static getSkinIndex(): number {
     return this.skinIndex;
   }
@@ -41,6 +43,10 @@ export default class PlayerData {
     return this.coins;
   }
 
+  public static getCups(): number {
+    return this.cups;
+  }
+
   /**
    * Add the coins to the playerdata
    *
@@ -50,6 +56,18 @@ export default class PlayerData {
     this.coins += amount;
     if (this.coins < 0) {
       this.coins = 0;
+    }
+  }
+
+  /**
+   * Add the cups to the playerdata
+   *
+   * @param amount amount of cups
+   */
+  public static addCups(amount: number): void {
+    this.cups += amount;
+    if (this.cups < 0) {
+      this.cups = 0;
     }
   }
 

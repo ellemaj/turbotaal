@@ -1,10 +1,12 @@
 import Scene from './Scene.js';
 import KeyListener from '../KeyListener.js';
-import MouseListener from '../MouseListener.js';
 import Vector2 from '../Vector2.js';
 import CanvasRenderer from '../CanvasRenderer.js';
 import ScenePause from './ScenePause.js';
 import RacetrackScene from './RacetrackScene.js';
+import Racetrack1 from './Racetrack1.js';
+import Racetrack2 from './Racetrack2.js';
+import Racetrack3 from './Racetrack3.js';
 
 export default class ScenePitstop extends Scene {
   private previousScene: RacetrackScene;
@@ -19,7 +21,7 @@ export default class ScenePitstop extends Scene {
     'Beantwoord 3 vragen juist om je auto te maken!',
   ];
 
-  private questions: {text: string; missing: string}[] = [
+  private questions: { text: string; missing: string }[] = [
     { text: 'Er moet een leesteken in deze zin', missing: '.' },
     { text: 'Tijd om te racen', missing: '!' },
     { text: 'We zijn bijna klaar, toch', missing: '?' },
@@ -68,7 +70,7 @@ export default class ScenePitstop extends Scene {
    * @param keyListener keylistener that is being used
    * @param mouseListener mouselistener that is being used
    */
-  public override processInput(keyListener: KeyListener, mouseListener: MouseListener): void {
+  public override processInput(keyListener: KeyListener): void {
     // Pause when ESC is pressed
     if (keyListener.keyPressed(KeyListener.KEY_ESC)) {
       this.pause = true;
@@ -91,9 +93,9 @@ export default class ScenePitstop extends Scene {
       }
       if
       (
-        (currentQuestion.missing == '!') && keyListener.keyPressed(KeyListener.KEY_1) && keyListener.keyPressed(KeyListener.KEY_SHIFT_LEFT)||
-        (currentQuestion.missing == '?') && keyListener.keyPressed(KeyListener.Key_Slash) && keyListener.keyPressed(KeyListener.KEY_SHIFT_LEFT,)||
-        (currentQuestion.missing == '.') && keyListener.keyPressed(KeyListener.Key_Period)||
+        (currentQuestion.missing == '!') && keyListener.keyPressed(KeyListener.KEY_1) && keyListener.keyPressed(KeyListener.KEY_SHIFT_LEFT) ||
+        (currentQuestion.missing == '?') && keyListener.keyPressed(KeyListener.Key_Slash) && keyListener.keyPressed(KeyListener.KEY_SHIFT_LEFT,) ||
+        (currentQuestion.missing == '.') && keyListener.keyPressed(KeyListener.Key_Period) ||
         (currentQuestion.missing == ',') && keyListener.keyPressed(KeyListener.Key_Comma)
       ) {
         this.questionsAnswered += 1;
@@ -121,7 +123,15 @@ export default class ScenePitstop extends Scene {
     }
     if (this.state == 'questions') {
       this.previousScene.getCar().getHealth().Heal(100);
-      this.previousScene.getCar().resetPosition(this.previousScene.getCanvas());
+      if (this.previousScene instanceof Racetrack1) {
+        this.previousScene.getCar().setPitstopPosition1(this.previousScene.getCanvas());
+      }
+      if (this.previousScene instanceof Racetrack2) {
+        this.previousScene.getCar().setPitstopPosition2(this.previousScene.getCanvas());
+      }
+      if (this.previousScene instanceof Racetrack3) {
+        this.previousScene.getCar().setPitstopPosition3(this.previousScene.getCanvas());
+      }
     }
   }
 
@@ -133,6 +143,7 @@ export default class ScenePitstop extends Scene {
 
     if (this.resumeRace) {
       this.resumeRace = false;
+      this.previousScene.getCar().resetPitstopFlags();
       return this.previousScene;
     }
     return null;

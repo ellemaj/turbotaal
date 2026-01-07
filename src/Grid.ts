@@ -43,7 +43,7 @@ export default class Grid {
   }
 
   /**
-   * Check if the given X/Y coordinate would result in a collision.
+   * Check if the given X/Y coordinate would result in a collision for grass.
    *
    * @param col Column (or: X-coordinate)
    * @param row Row (or: Y-coordinate)
@@ -51,6 +51,34 @@ export default class Grid {
    */
   public getCollision(col: number, row: number): boolean {
     if (this.collision[this.columns * row + col] == 1) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Check if the given X/Y coordinate would result in a collision for pitstop.
+   *
+   * @param col Column (or: X-coordinate)
+   * @param row Row (or: Y-coordinate)
+   * @returns true if cell is solid, false if passable
+   */
+  public getCollisionPitStop(col: number, row: number): boolean {
+    if (this.collision[this.columns * row + col] == 2) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Check if the given X/Y coordinate would result in a collision for mariokart checkpoint system.
+   *
+   * @param col Column (or: X-coordinate)
+   * @param row Row (or: Y-coordinate)
+   * @returns true if cell is solid, false if passable
+   */
+  public getCollisionCheckpoint(col: number, row: number): boolean {
+    if (this.collision[this.columns * row + col] == 3) {
       return true;
     }
     return false;
