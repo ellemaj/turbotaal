@@ -5,13 +5,11 @@ import KeyListener from '../KeyListener.js';
 import Car from '../Car.js';
 import Grid from '../Grid.js';
 import Question from '../Question.js';
-import CanvasRenderer from '../CanvasRenderer.js';
-
 
 export default abstract class RacetrackScene extends Scene {
   private laps: number = 0;
 
-  private maxLaps: number = 3;
+  private maxLaps: number = 5;
 
   protected stopwatch: Stopwatch = new Stopwatch();
 
@@ -20,6 +18,13 @@ export default abstract class RacetrackScene extends Scene {
   protected car: Car;
 
   protected question: Question;
+
+  protected checkpoints: {x: number, y: number,
+    width: number, height: number, index: number}[] = [];
+
+  protected finish: {x: number, y: number, width: number, height: number} | null = null;
+
+  protected passedCheckpoints: Set<number> = new Set();
 
   protected worldWidth: number = this.canvas.width * 2;
 
@@ -137,12 +142,47 @@ export default abstract class RacetrackScene extends Scene {
     this.car.setStartPosition(x, y, rotation);
   }
 
+  /**
+   * checks for collisions with checkpoints and finish line
+   */
+  protected checkTriggers(): void {
+    const carPos: Vector2 = this.car.getPosition();
+    const carSize: number = 32;
+
+    // check checkpoints
+    for (const checkpoint of this.checkpoints) {
+      if (!this.passedCheckpoints.has(checkpoint.index) &&
+          carPos.x < checkpoint.x + checkpoint.width &&
+          carPos.x + carSize > checkpoint.x &&
+          carPos.y < checkpoint.y + checkpoint.height &&
+          carPos.y + carSize > checkpoint.y) {
+        this.passedCheckpoints.add(checkpoint.index);
+      }
+    }
+
+    // check finish
+    if (this.finish &&
+        carPos.x < this.finish.x + this.finish.width &&
+        carPos.x + carSize > this.finish.x &&
+        carPos.y < this.finish.y + this.finish.height &&
+        carPos.y + carSize > this.finish.y) {
+      // check if all checkpoints have been passed
+      const allPassed: boolean = this.checkpoints.every((cp:{x: number, y: number,
+        width: number, height: number, index: number}) => this.passedCheckpoints.has(cp.index));
+      if (allPassed) {
+        this.addLap();
+        this.passedCheckpoints.clear(); //reset for next
+      }
+    }
+  }
+
   // Resets the stopwatch, car position and lapcount when pressed
   public resetRace(): void {
     this.stopwatch.stop();
     this.stopwatch = new Stopwatch();
 
     this.resetLaps();
+    this.passedCheckpoints.clear();
     this.raceStarted = false;
 
     this.car.resetPosition(this.canvas);

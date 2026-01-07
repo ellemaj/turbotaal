@@ -20,11 +20,23 @@ export default class Racetrack1 extends RacetrackScene {
     this.pause = false;
     this.pitstop = false;
     this.camera = new Camera(canvas.width, canvas.height, this.worldWidth, this.worldHeight);
-    this.background = CanvasRenderer.loadNewImage('./assets/racetracks/race1UPDATED.png');
+    this.background = CanvasRenderer.loadNewImage('./assets/racetracks/race1.png');
 
     this.setCarStart(canvas.width * 0.5, canvas.height * 0.97, -1.55);
+
+    this.loadTriggers();
   }
 
+  private loadTriggers(): void {
+    // Hardcoded from race1UPDATEDtest.json
+    this.checkpoints = [
+      { x: 128, y: 320, width: 256, height: 64, index: 0 },
+      { x: 832, y: 320, width: 64, height: 256, index: 1 },
+      { x: 1536, y: 64, width: 64, height: 256, index: 2 },
+      { x: 1280, y: 768, width: 64, height: 320, index: 3 }
+    ];
+    this.finish = { x: 704, y: 832, width: 64, height: 384 };
+  }
 
   /**
    * Processes the input
@@ -62,9 +74,11 @@ export default class Racetrack1 extends RacetrackScene {
   public override update(delta: number): void {
     this.car.update(delta, this.canvas, this.grid);
 
+    this.checkTriggers(); //for the lapcount
+
     this.stopwatch.update(delta);
 
-    // Stopwatch stops when LapCount = 3
+    // Stopwatch stops when LapCount = 5
     if (this.isFinished()) {
       this.stopwatch.stop();
     }
