@@ -1,233 +1,110 @@
-// import CanvasRenderer from '../CanvasRenderer.js';
-// import Vector2 from '../Vector2.js';
-// // import MouseListener, { MouseCoordinates } from '../MouseListener.js';
-// import KeyListener from '../KeyListener.js';
-// import Scene from './Scene.js';
-// import PlayerData from '../data/PlayerData.js';
+import CanvasRenderer from '../CanvasRenderer.js';
+import Vector2 from '../Vector2.js';
+import MouseListener, { MouseCoordinates } from '../MouseListener.js';
+import KeyListener from '../KeyListener.js';
+import Scene from './Scene.js';
+import PlayerData from '../data/PlayerData.js';
+import SceneTrackSelection from './SceneTrackSelection.js';
+import SceneStart from './SceneStart.js';
 
-// export default class SceneFinish extends Scene {
-//   private returnScene: Scene;
+export default class SceneFinish extends Scene {
+  private goToTrackselection: boolean;
 
-//   private goBack: boolean;
+  private goToStart: boolean;
 
-//   private reset: boolean;
+  private raceAgain: boolean;
 
-//   private rotationAngle: number = 0;
+  public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
+    super(boardSize, canvas);
+    this.goToTrackselection = false;
+    this.goToStart = false;
+    this.raceAgain = false;
 
-//   private message: string | null = null;
+    this.background = CanvasRenderer.loadNewImage('./assets/backgrounds/background.png');
+  }
 
-//   private messageTimer: number = 0;
+  /**
+   * Update function
+   */
+  public override update(delta: number): void {
+  }
 
-//   private messageType: 'success' | 'error' | null = null;
+  /**
+   * Process input
+   *
+   * @param keyListener keylistener
+   * @param mouseListener mouselistener
+   */
+  public override processInput(
+    keyListener: KeyListener
+  ): void {
+  }
 
-//   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement, returnScene: Scene) {
-//     super(boardSize, canvas);
-//     this.returnScene = returnScene;
-//     this.goBack = false;
-//     this.reset = false;
+  public override getNextScene(): Scene | null {
+    if (this.goToTrackselection) {
+      return new SceneTrackSelection(this.boardSize, this.canvas);
+    } else if (this.goToStart) {
+      return new SceneStart(this.boardSize, this.canvas);
+    } else if (this.raceAgain) {
+      // return new Racetrack1(this.boardSize, this.canvas, this.grid);
+    }
+    return null;
+  }
 
-//     this.background = CanvasRenderer.loadNewImage('./assets/backgrounds/garage.png');
-//   }
+  /**
+   * Render
+   */
+  public override render(canvas: HTMLCanvasElement): void {
+    const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
+    if (!ctx) {
+      return;
+    }
+    ctx.drawImage(this.background, 0, 0, canvas.width, canvas.height);
 
-//   /**
-//    * Update function
-//    */
-//   public override update(delta: number): void {
-//     // 0.0015 is the rotationspeed
-//     this.rotationAngle += delta * 0.0015;
+    // Render the turboTokens
+    let padding: number = 20;
+    const tokenSize: number = 32;
 
-//     if (this.messageTimer > 0) {
-//       this.messageTimer -= delta;
-//       if (this.messageTimer <= 0) {
-//         this.message = null;
-//         this.messageType = null;
-//       }
-//     }
-//   }
+    ctx.drawImage(
+      this.turboToken,
+      canvas.width - 120,
+      padding,
+      tokenSize,
+      tokenSize
+    );
 
-//   private showMessage(
-//     text: string,
-//     type: 'success' | 'error'
-//   ): void {
-//     this.message = text;
-//     this.messageType = type;
-//     this.messageTimer = 2000; // ms
-//   }
+    ctx.font = '24px Arial';
+    ctx.fillStyle = 'white';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
 
-//   /**
-//    * Process input
-//    *
-//    * @param keyListener keylistener
-//    * @param mouseListener mouselistener
-//    */
-//   public override processInput(
-//     keyListener: KeyListener
-//   ): void {
-//     if (keyListener.keyPressed(KeyListener.KEY_ESC)) {
-//       this.goBack = true;
-//     }
+    ctx.fillText(
+      PlayerData.getCoins().toString(),
+      canvas.width - 80,
+      padding + 5
+    );
 
-//     if (keyListener.keyPressed(KeyListener.KEY_LEFT) ||
-//     keyListener.keyPressed(KeyListener.KEY_A)) {
-//       PlayerData.previousSkin();
-//     }
+    // Render the turboCups
+    padding = 60;
+    const cupSize: number = 32;
 
-//     if (keyListener.keyPressed(KeyListener.KEY_RIGHT) ||
-//       keyListener.keyPressed(KeyListener.KEY_D)) {
-//       PlayerData.nextSkin();
-//     }
+    ctx.drawImage(
+      this.turboCup,
+      canvas.width - 120,
+      padding,
+      cupSize,
+      cupSize
+    );
 
-//     if (keyListener.keyPressed(KeyListener.KEY_ENTER)) {
-//       const index: number = PlayerData.getSkinIndex();
-//       const skin: CarSkin = getCarSkin(index);
+    ctx.font = '24px Arial';
+    ctx.fillStyle = 'white';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
 
-//       if (skin.unlocked) {
-//         PlayerData.selectSkin(index);
-//         this.showMessage('Skin geselecteerd!', 'success');
-//       } else {
-//         const succes: boolean = tryBuySkin(index);
-//         if (succes) {
-//           this.showMessage('🎉 Skin ontgrendeld!', 'success');
-//         } else {
-//           this.showMessage('Niet genoeg TurboTokens!', 'error');
-//         }
-//       }
-//     }
-//   }
-
-//   public override getNextScene(): Scene | null {
-//     if (this.goBack) {
-//       return this.returnScene;
-//     }
-//     return null;
-//   }
-
-//   /**
-//    * Render
-//    */
-//   public override render(canvas: HTMLCanvasElement): void {
-//     const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
-//     if (!ctx) {
-//       return;
-//     }
-//     ctx.drawImage(this.background, 0, 0, canvas.width, canvas.height);
-
-//     // Render the turboTokens
-//     const padding: number = 20;
-//     const tokenSize: number = 32;
-
-//     ctx.drawImage(
-//       this.turboToken,
-//       canvas.width - 160,
-//       padding,
-//       tokenSize,
-//       tokenSize
-//     );
-
-//     ctx.font = '24px Arial';
-//     ctx.fillStyle = 'white';
-//     ctx.textAlign = 'left';
-//     ctx.textBaseline = 'top';
-
-//     ctx.fillText(
-//       PlayerData.getCoins().toString(),
-//       canvas.width - 115,
-//       padding + 4
-//     );
-
-//     // Render the skin preview
-//     const skin: CarSkin = getCarSkin(PlayerData.getSkinIndex());
-
-//     const scale: number = 0.8;
-//     const previewWidth: number = skin.straight.width * scale;
-//     const previewHeight: number = skin.straight.height * scale;
-
-//     // const previewX: number = canvas.width / 2 - previewWidth / 2;
-//     const previewY: number = canvas.height / 2 - previewHeight / 2;
-
-//     ctx.save();
-
-//     // Move the car to the middle
-//     ctx.translate(
-//       canvas.width / 2,
-//       canvas.height / 2
-//     );
-
-//     // Rotate the car
-//     ctx.rotate(this.rotationAngle);
-
-//     // Render the car
-//     ctx.drawImage(
-//       skin.straight,
-//       -previewWidth / 2,
-//       -previewHeight / 2,
-//       previewWidth,
-//       previewHeight
-//     );
-
-//     // Restore canvas
-//     ctx.restore();
-
-//     // Selected or not?
-//     if (PlayerData.getSelectedSkin() === PlayerData.getSkinIndex()) {
-//       ctx.fillStyle = 'lightgreen';
-//       ctx.font = '22px Arial';
-//       ctx.textAlign = 'center';
-
-//       ctx.fillText(
-//         '✓ GESELECTEERD',
-//         canvas.width / 2,
-//         previewY - 20
-//       );
-//     }
-
-//     // Skin name
-//     ctx.fillStyle = 'white';
-//     ctx.font = '24px Arial';
-//     ctx.textAlign = 'center';
-
-//     ctx.fillText(
-//       skin.name,
-//       canvas.width / 2,
-//       previewY + previewHeight + 40
-//     );
-
-//     // Locked or unlocked
-//     if (skin.unlocked) {
-//       ctx.fillStyle = 'lightgreen';
-//       ctx.fillText(
-//         'Press ENTER to select',
-//         canvas.width / 2,
-//         previewY + previewHeight + 80
-//       );
-//     } else {
-//       ctx.fillStyle = 'orange';
-//       ctx.fillText(
-//         'LOCKED - Press ENTER to buy',
-//         canvas.width / 2,
-//         previewY + previewHeight + 80
-//       );
-
-//       ctx.font = '20px Arial';
-//       ctx.fillText(
-//         `Price: ${skin.price}`,
-//         canvas.width / 2,
-//         previewY + previewHeight + 115
-//       );
-//     }
-
-//     if (this.message) {
-//       ctx.font = '30px Arial';
-//       ctx.textAlign = 'center';
-
-//       ctx.fillStyle =
-//         this.messageType === 'success' ? 'lightgreen' : 'orange';
-
-//       ctx.fillText(
-//         this.message,
-//         canvas.width / 2,
-//         canvas.height - 60
-//       );
-//     }
-//   }
-// }
+    ctx.fillText(
+      PlayerData.getCups().toString(),
+      canvas.width - 80,
+      padding + 5
+    );
+  }
+}
