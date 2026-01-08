@@ -5,6 +5,7 @@ import Scene from './Scene.js';
 import RacetrackScene from './RacetrackScene.js';
 import ScenePause from './ScenePause.js';
 import ScenePitstop from './ScenePitstop.js';
+import SceneFinish from './SceneFinish.js';
 import Grid from '../Grid.js';
 import Camera from '../Camera.js';
 
@@ -79,8 +80,9 @@ export default class Racetrack2 extends RacetrackScene {
 
     this.stopwatch.update(delta);
 
-    // Stopwatch stops when LapCount = 3
-    if (this.isFinished()) {
+    // Stopwatch stops when LapCount = 5
+    if (this.isFinished() && !this.finished) {
+      this.finished = true;
       this.stopwatch.stop();
     }
   }
@@ -100,8 +102,11 @@ export default class Racetrack2 extends RacetrackScene {
       this.car.pitstopTriggered = false;
       this.pitstop = true;
     }
-    if (this.car.getHealth().carIsLow()){
+    if (this.car.getHealth().carIsLow()) {
       this.pitstop = true;
+    }
+    if (this.finished) {
+      return new SceneFinish(this.boardSize, this.canvas, this);
     }
 
     return null;
