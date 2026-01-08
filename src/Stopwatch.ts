@@ -52,4 +52,18 @@ export default class Stopwatch {
       .toString()
       .padStart(3, '0')}`;
   }
+
+  /**
+   * Returns the elapsed time in ms
+   *
+   * @returns the elapsed time in ms
+   */
+  public getTime(): number {
+    return this.elapsed;
+  }
+
+  public reset(): void {
+    this.elapsed = 0;
+    this.running = false;
+  }
 }

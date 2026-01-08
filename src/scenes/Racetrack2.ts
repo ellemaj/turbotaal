@@ -6,6 +6,7 @@ import RacetrackScene from './RacetrackScene.js';
 import ScenePause from './ScenePause.js';
 import ScenePitstop from './ScenePitstop.js';
 import SceneFinish from './SceneFinish.js';
+import RaceResult from '../data/RaceResult.js';
 import Grid from '../Grid.js';
 import Camera from '../Camera.js';
 
@@ -16,12 +17,22 @@ export default class Racetrack2 extends RacetrackScene {
 
   private pitstop: boolean;
 
+  private totalTime: number;
+
+  private pitstops: number;
+
+  private pitstopPenaltyTime: number;
+
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement, grid: Grid) {
     super(boardSize, canvas, grid);
     this.background = CanvasRenderer.loadNewImage('./assets/racetracks/race2.png');
     this.pause = false;
     this.pitstop = false;
     this.camera = new Camera(canvas.width, canvas.height, this.worldWidth, this.worldHeight);
+
+    this.totalTime = 0;
+    this.pitstops = 0;
+    this.pitstopPenaltyTime = 0;
 
     this.setCarStart(canvas.width * 0.3, canvas.height * 0.25, 1.6);
 
@@ -84,6 +95,8 @@ export default class Racetrack2 extends RacetrackScene {
     if (this.isFinished() && !this.finished) {
       this.finished = true;
       this.stopwatch.stop();
+
+      this.totalTime = this.stopwatch.getTime();
     }
   }
 
@@ -106,7 +119,18 @@ export default class Racetrack2 extends RacetrackScene {
       this.pitstop = true;
     }
     if (this.finished) {
-      return new SceneFinish(this.boardSize, this.canvas, this);
+      const raceResult: RaceResult = {
+        totalTime: this.totalTime,
+        pitstopCount: this.pitstops,
+        pitstopPenaltyTime: this.pitstopPenaltyTime,
+      };
+
+      return new SceneFinish(
+        this.boardSize,
+        this.canvas,
+        raceResult,
+        () => new Racetrack2(this.boardSize, this.canvas, this.grid)
+      );
     }
 
     return null;

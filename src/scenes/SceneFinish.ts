@@ -6,7 +6,9 @@ import Scene from './Scene.js';
 import PlayerData from '../data/PlayerData.js';
 import SceneTrackSelection from './SceneTrackSelection.js';
 import SceneStart from './SceneStart.js';
-import RacetrackScene from './RacetrackScene.js';
+import RaceResult from '../data/RaceResult.js';
+
+type SceneFactory = () => Scene;
 
 export default class SceneFinish extends Scene {
   private goToTrackselection: boolean;
@@ -15,7 +17,13 @@ export default class SceneFinish extends Scene {
 
   private raceAgain: boolean;
 
-  private racetrack: RacetrackScene;
+  private earnedTurboTokens: number = 0;
+
+  private earnedTurboCups: number = 0;
+
+  private raceResult: RaceResult;
+
+  private restartRace: SceneFactory;
 
   private confetti: {
     x: number;
@@ -25,9 +33,17 @@ export default class SceneFinish extends Scene {
     color: string;
   }[] = [];
 
-  public constructor(boardSize: Vector2, canvas: HTMLCanvasElement, racetrack: RacetrackScene) {
+  public constructor(boardSize: Vector2,
+    canvas: HTMLCanvasElement,
+    raceResult: RaceResult,
+    restartRace: SceneFactory
+  ) {
     super(boardSize, canvas);
-    this.racetrack = racetrack;
+    this.raceResult = raceResult;
+    this.restartRace = restartRace;
+
+    this.calculateRewards();
+    this.saveRewards();
 
     this.goToTrackselection = false;
     this.goToStart = false;
@@ -86,8 +102,7 @@ export default class SceneFinish extends Scene {
     } else if (this.goToStart) {
       return new SceneStart(this.boardSize, this.canvas);
     } else if (this.raceAgain) {
-      this.racetrack.resetRace();
-      return this.racetrack;
+      return this.restartRace();
     }
     return null;
   }
@@ -138,5 +153,36 @@ export default class SceneFinish extends Scene {
     ctx.fillText(`TurboTokens: ${PlayerData.getTurboTokens()}`, centerX, y);
 
     // Buttons
+  }
+
+  private calculateRewards(): void {
+    const time: number = this.raceResult.totalTime;
+
+    // Number of TurboTokens earned based on the racetime
+    if (time < 60_000) {
+      this.earnedTurboTokens = 120;
+    } else if (time < 75_000) {
+      this.earnedTurboTokens = 90;
+    } else if (time < 95_000) {
+      this.earnedTurboTokens = 60;
+    } else {
+      this.earnedTurboTokens = 20;
+    }
+
+    // Number of TurboCups earned based on the racetime
+    if (time < 65_000) {
+      this.earnedTurboCups = 3;
+    } else if (time < 80_000) {
+      this.earnedTurboCups = 2;
+    } else if (time < 95_000) {
+      this.earnedTurboCups = 1;
+    } else {
+      this.earnedTurboCups = 0;
+    }
+  }
+
+  private saveRewards(): void {
+    PlayerData.addTurboTokens(this.earnedTurboTokens);
+    PlayerData.addTurboCups(this.earnedTurboCups);
   }
 }
