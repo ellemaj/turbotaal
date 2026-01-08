@@ -5,12 +5,14 @@ import KeyListener from '../KeyListener.js';
 import Car from '../Car.js';
 import Grid from '../Grid.js';
 import Question from '../Question.js';
-import CanvasRenderer from '../CanvasRenderer.js';
+import PlayerData from '../data/PlayerData.js';
 
 export default abstract class RacetrackScene extends Scene {
   private laps: number = 0;
 
-  private maxLaps: number = 5;
+  private get maxLaps(): number {
+    return PlayerData.getMaxLaps();
+  }
 
   protected finished: boolean = false;
 

@@ -171,12 +171,12 @@ export default class SceneFinish extends Scene {
     ctx.fillStyle = 'white';
 
     // TurboCups(totaal)
-    ctx.drawImage(this.turboCup, centerX - 140, y - 24, 48, 48);
+    ctx.drawImage(this.turboCup, centerX - 200, y - 24, 48, 48);
     ctx.fillText(`TurboCups: ${PlayerData.getTurboCups()}`, centerX, y);
 
     // TurboTokens(totaal)
     y += 70;
-    ctx.drawImage(this.turboToken, centerX - 140, y - 24, 48, 48);
+    ctx.drawImage(this.turboToken, centerX - 210, y - 24, 48, 48);
     ctx.fillText(`TurboTokens: ${PlayerData.getTurboTokens()}`, centerX, y);
 
     // Earned rewards (this race)

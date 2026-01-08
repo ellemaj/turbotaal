@@ -1,6 +1,8 @@
 import CarSkins from './CarSkins.js';
 
 export default class PlayerData {
+  private static maxLaps: number = 5;
+
   private static skinIndex: number = 0;
 
   private static selectedSkinIndex: number = 0;
@@ -8,6 +10,14 @@ export default class PlayerData {
   private static turboTokens: number = 0;
 
   private static turboCups: number = 0;
+
+  public static setMaxLaps(laps: number): void {
+    this.maxLaps = Math.max(1, laps);
+  }
+
+  public static getMaxLaps(): number {
+    return this.maxLaps;
+  }
 
   public static getSkinIndex(): number {
     return this.skinIndex;
