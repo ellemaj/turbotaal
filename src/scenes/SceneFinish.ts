@@ -140,19 +140,59 @@ export default class SceneFinish extends Scene {
     // Stats
     let y: number = canvas.height * 0.35;
 
+    ctx.font = '28px Arial';
+    ctx.fillStyle = 'white';
+
+    ctx.fillText(
+      `Total time: ${this.formatTime(this.raceResult.totalTime)}`,
+      centerX,
+      y
+    );
+
+    y += 40;
+    ctx.fillText(`Aantal pitstops: ${this.raceResult.pitstopCount}`, centerX, y);
+
+    y += 40;
+    ctx.fillText(
+      `Pitstop-tijd: +${this.formatTime(this.raceResult.pitstopPenaltyTime)}`,
+      centerX,
+      y
+    );
+
+    y += 60;
+
     ctx.font = 'bold 36px Arial';
     ctx.fillStyle = 'white';
 
-    // TurboCups
+    // TurboCups(totaal)
     ctx.drawImage(this.turboCup, centerX - 140, y - 24, 48, 48);
     ctx.fillText(`TurboCups: ${PlayerData.getTurboCups()}`, centerX, y);
 
-    // TurboTokens
+    // TurboTokens(totaal)
     y += 70;
     ctx.drawImage(this.turboToken, centerX - 140, y - 24, 48, 48);
     ctx.fillText(`TurboTokens: ${PlayerData.getTurboTokens()}`, centerX, y);
 
+    // Earned rewards (this race)
+    y += 50;
+
+    ctx.font = 'bold 30px Arial';
+    ctx.fillStyle = '#FFD700';
+    ctx.fillText(`+${this.earnedTurboTokens} TurboTokens`, centerX, y);
+
+    y += 40;
+    ctx.fillStyle = '#40C4FF';
+    ctx.fillText(`+${this.earnedTurboCups} TurboCups`, centerX, y);
+
     // Buttons
+    const buttonY: number = canvas.height * 0.78;
+
+    ctx.font = '28px Arial';
+    ctx.fillStyle = 'white';
+
+    ctx.fillText('[R] Race opnieuw', centerX, buttonY);
+    ctx.fillText('[ENTER] Trackselectie', centerX, buttonY + 45);
+    ctx.fillText('[ESC] Main menu', centerX, buttonY + 90);
   }
 
   private calculateRewards(): void {
@@ -184,5 +224,16 @@ export default class SceneFinish extends Scene {
   private saveRewards(): void {
     PlayerData.addTurboTokens(this.earnedTurboTokens);
     PlayerData.addTurboCups(this.earnedTurboCups);
+  }
+
+  private formatTime(ms: number): string {
+    const totalSeconds: number = Math.floor(ms / 1000);
+    const minutes: number = Math.floor(totalSeconds / 60);
+    const seconds: number = totalSeconds % 60;
+    const millis: number = ms % 1000;
+
+    return `${minutes}:${seconds.toString().padStart(2, '0')}.${millis
+      .toString()
+      .padStart(3, '0')}`;
   }
 }
