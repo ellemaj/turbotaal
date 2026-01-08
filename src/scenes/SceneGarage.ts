@@ -133,7 +133,7 @@ export default class SceneGarage extends Scene {
     ctx.textBaseline = 'top';
 
     ctx.fillText(
-      PlayerData.getCoins().toString(),
+      PlayerData.getTurboTokens().toString(),
       canvas.width - 115,
       padding + 4
     );

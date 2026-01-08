@@ -66,7 +66,7 @@ export default class SceneTrackSelection extends Scene {
     if (required === undefined) {
       return false;
     }
-    return PlayerData.getCups() >= required;
+    return PlayerData.getTurboCups() >= required;
   }
 
   /**
@@ -171,7 +171,7 @@ export default class SceneTrackSelection extends Scene {
     ];
 
     const trackRequirements: number[] = [0, 5, 10];
-    const cups: number = PlayerData.getCups();
+    const cups: number = PlayerData.getTurboCups();
 
     const totalWidth: number = buttons.length * buttonWidth + (buttons.length - 1) * gap;
     const startX: number = centerX - totalWidth / 2;
@@ -251,7 +251,7 @@ export default class SceneTrackSelection extends Scene {
     ctx.textBaseline = 'top';
 
     ctx.fillText(
-      PlayerData.getCups().toString(),
+      PlayerData.getTurboCups().toString(),
       canvas.width - 65,
       padding + 8
     );

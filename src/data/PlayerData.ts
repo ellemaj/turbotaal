@@ -5,9 +5,9 @@ export default class PlayerData {
 
   private static selectedSkinIndex: number = 0;
 
-  private static coins: number = 0;
+  private static turboTokens: number = 0;
 
-  private static cups: number = 0;
+  private static turboCups: number = 0;
 
   public static getSkinIndex(): number {
     return this.skinIndex;
@@ -39,35 +39,35 @@ export default class PlayerData {
     return CarSkins[this.skinIndex]?.unlocked ?? false;
   }
 
-  public static getCoins(): number {
-    return this.coins;
+  public static getTurboTokens(): number {
+    return this.turboTokens;
   }
 
-  public static getCups(): number {
-    return this.cups;
+  public static getTurboCups(): number {
+    return this.turboCups;
   }
 
   /**
-   * Add the coins to the playerdata
+   * Add the TurboTokens to the playerdata
    *
-   * @param amount amount of coins
+   * @param amount amount of tokens
    */
-  public static addCoins(amount: number): void {
-    this.coins += amount;
-    if (this.coins < 0) {
-      this.coins = 0;
+  public static addTurboTokens(amount: number): void {
+    this.turboTokens += amount;
+    if (this.turboTokens < 0) {
+      this.turboTokens = 0;
     }
   }
 
   /**
-   * Add the cups to the playerdata
+   * Add the Turbocups to the playerdata
    *
    * @param amount amount of cups
    */
-  public static addCups(amount: number): void {
-    this.cups += amount;
-    if (this.cups < 0) {
-      this.cups = 0;
+  public static addTurboCups(amount: number): void {
+    this.turboCups += amount;
+    if (this.turboCups < 0) {
+      this.turboCups = 0;
     }
   }
 

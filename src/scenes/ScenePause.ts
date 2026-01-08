@@ -195,7 +195,7 @@ export default class ScenePause extends Scene {
     ctx.textBaseline = 'top';
 
     ctx.fillText(
-      PlayerData.getCoins().toString(),
+      PlayerData.getTurboTokens().toString(),
       canvas.width - 80,
       padding + 5
     );
@@ -218,7 +218,7 @@ export default class ScenePause extends Scene {
     ctx.textBaseline = 'top';
 
     ctx.fillText(
-      PlayerData.getCups().toString(),
+      PlayerData.getTurboCups().toString(),
       canvas.width - 80,
       padding + 5
     );

@@ -130,12 +130,12 @@ export default class SceneFinish extends Scene {
 
     // TurboCups
     ctx.drawImage(this.turboCup, centerX - 140, y - 24, 48, 48);
-    ctx.fillText(`TurboCups: ${PlayerData.getCups()}`, centerX, y);
+    ctx.fillText(`TurboCups: ${PlayerData.getTurboCups()}`, centerX, y);
 
     // TurboTokens
     y += 70;
     ctx.drawImage(this.turboToken, centerX - 140, y - 24, 48, 48);
-    ctx.fillText(`TurboTokens: ${PlayerData.getCoins()}`, centerX, y);
+    ctx.fillText(`TurboTokens: ${PlayerData.getTurboTokens()}`, centerX, y);
 
     // Buttons
   }

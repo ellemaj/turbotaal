@@ -42,8 +42,8 @@ export default class SceneAdmin extends Scene {
     // Enter = login check
     if (keyListener.keyPressed(KeyListener.KEY_ENTER)) {
       if (this.input === this.ADMIN_CODE) {
-        PlayerData.addCups(999);
-        PlayerData.addCoins(999);
+        PlayerData.addTurboCups(999);
+        PlayerData.addTurboTokens(999);
         this.loggedIn = true;
       }
     }
