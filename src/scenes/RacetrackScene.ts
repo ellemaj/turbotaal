@@ -5,11 +5,14 @@ import KeyListener from '../KeyListener.js';
 import Car from '../Car.js';
 import Grid from '../Grid.js';
 import Question from '../Question.js';
+import PlayerData from '../data/PlayerData.js';
 
 export default abstract class RacetrackScene extends Scene {
   private laps: number = 0;
 
-  private maxLaps: number = 5;
+  private get maxLaps(): number {
+    return PlayerData.getMaxLaps();
+  }
 
   protected finished: boolean = false;
 
@@ -33,6 +36,8 @@ export default abstract class RacetrackScene extends Scene {
   protected worldHeight: number = this.canvas.height * 2;
 
   protected grid: Grid;
+
+  protected trackBackground: HTMLImageElement = new Image();
 
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement, grid: Grid) {
     super(boardSize, canvas);
@@ -192,5 +197,9 @@ export default abstract class RacetrackScene extends Scene {
     this.raceStarted = false;
 
     this.car.resetPosition(this.canvas);
+  }
+
+  public getTrackBackground(): HTMLImageElement {
+    return this.trackBackground;
   }
 }

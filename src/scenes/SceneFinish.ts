@@ -6,7 +6,9 @@ import Scene from './Scene.js';
 import PlayerData from '../data/PlayerData.js';
 import SceneTrackSelection from './SceneTrackSelection.js';
 import SceneStart from './SceneStart.js';
-import RacetrackScene from './RacetrackScene.js';
+import RaceResult from '../data/RaceResult.js';
+
+type SceneFactory = () => Scene;
 
 export default class SceneFinish extends Scene {
   private goToTrackselection: boolean;
@@ -15,7 +17,13 @@ export default class SceneFinish extends Scene {
 
   private raceAgain: boolean;
 
-  private racetrack: RacetrackScene;
+  private earnedTurboTokens: number = 0;
+
+  private earnedTurboCups: number = 0;
+
+  private raceResult: RaceResult;
+
+  private restartRace: SceneFactory;
 
   private confetti: {
     x: number;
@@ -25,15 +33,25 @@ export default class SceneFinish extends Scene {
     color: string;
   }[] = [];
 
-  public constructor(boardSize: Vector2, canvas: HTMLCanvasElement, racetrack: RacetrackScene) {
+  public constructor(boardSize: Vector2,
+    canvas: HTMLCanvasElement,
+    raceResult: RaceResult,
+    restartRace: SceneFactory,
+    trackBackground: HTMLImageElement
+  ) {
     super(boardSize, canvas);
-    this.racetrack = racetrack;
+    this.background = trackBackground;
+    this.raceResult = raceResult;
+    this.restartRace = restartRace;
+
+    this.calculateRewards();
+    this.saveRewards();
 
     this.goToTrackselection = false;
     this.goToStart = false;
     this.raceAgain = false;
 
-    this.background = CanvasRenderer.loadNewImage('./assets/backgrounds/background.png');
+    this.background = trackBackground;
 
     const colors: string[] = ['#FFD700', '#FF5252', '#40C4FF', '#69F0AE'];
 
@@ -86,8 +104,7 @@ export default class SceneFinish extends Scene {
     } else if (this.goToStart) {
       return new SceneStart(this.boardSize, this.canvas);
     } else if (this.raceAgain) {
-      this.racetrack.resetRace();
-      return this.racetrack;
+      return this.restartRace();
     }
     return null;
   }
@@ -102,6 +119,10 @@ export default class SceneFinish extends Scene {
     }
     // Render the background
     ctx.drawImage(this.background, 0, 0, canvas.width, canvas.height);
+
+    // Dark overlay to fade the background
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     const centerX: number = canvas.width / 2;
 
@@ -125,18 +146,100 @@ export default class SceneFinish extends Scene {
     // Stats
     let y: number = canvas.height * 0.35;
 
+    ctx.font = '28px Arial';
+    ctx.fillStyle = 'white';
+
+    ctx.fillText(
+      `Totale tijd: ${this.formatTime(this.raceResult.totalTime)}`,
+      centerX,
+      y
+    );
+
+    y += 40;
+    ctx.fillText(`Aantal pitstops: ${this.raceResult.pitstopCount}`, centerX, y);
+
+    y += 40;
+    ctx.fillText(
+      `Pitstop-tijd: +${this.formatTime(this.raceResult.pitstopPenaltyTime)}`,
+      centerX,
+      y
+    );
+
+    y += 60;
+
     ctx.font = 'bold 36px Arial';
     ctx.fillStyle = 'white';
 
-    // TurboCups
-    ctx.drawImage(this.turboCup, centerX - 140, y - 24, 48, 48);
-    ctx.fillText(`TurboCups: ${PlayerData.getCups()}`, centerX, y);
+    // TurboCups(totaal)
+    ctx.drawImage(this.turboCup, centerX - 200, y - 24, 48, 48);
+    ctx.fillText(`TurboCups: ${PlayerData.getTurboCups()}`, centerX, y);
 
-    // TurboTokens
+    // TurboTokens(totaal)
     y += 70;
-    ctx.drawImage(this.turboToken, centerX - 140, y - 24, 48, 48);
-    ctx.fillText(`TurboTokens: ${PlayerData.getCoins()}`, centerX, y);
+    ctx.drawImage(this.turboToken, centerX - 210, y - 24, 48, 48);
+    ctx.fillText(`TurboTokens: ${PlayerData.getTurboTokens()}`, centerX, y);
+
+    // Earned rewards (this race)
+    y += 50;
+
+    ctx.font = 'bold 30px Arial';
+    ctx.fillStyle = '#FFD700';
+    ctx.fillText(`+${this.earnedTurboTokens} TurboTokens`, centerX, y);
+
+    y += 40;
+    ctx.fillStyle = '#40C4FF';
+    ctx.fillText(`+${this.earnedTurboCups} TurboCups`, centerX, y);
 
     // Buttons
+    const buttonY: number = canvas.height * 0.78;
+
+    ctx.font = '28px Arial';
+    ctx.fillStyle = 'white';
+
+    ctx.fillText('[R] Race opnieuw', centerX, buttonY);
+    ctx.fillText('[ENTER] Trackselectie', centerX, buttonY + 45);
+    ctx.fillText('[ESC] Main menu', centerX, buttonY + 90);
+  }
+
+  private calculateRewards(): void {
+    const time: number = this.raceResult.totalTime;
+
+    // Number of TurboTokens earned based on the racetime
+    if (time < 60_000) {
+      this.earnedTurboTokens = 120;
+    } else if (time < 75_000) {
+      this.earnedTurboTokens = 90;
+    } else if (time < 95_000) {
+      this.earnedTurboTokens = 60;
+    } else {
+      this.earnedTurboTokens = 20;
+    }
+
+    // Number of TurboCups earned based on the racetime
+    if (time < 65_000) {
+      this.earnedTurboCups = 3;
+    } else if (time < 80_000) {
+      this.earnedTurboCups = 2;
+    } else if (time < 95_000) {
+      this.earnedTurboCups = 1;
+    } else {
+      this.earnedTurboCups = 0;
+    }
+  }
+
+  private saveRewards(): void {
+    PlayerData.addTurboTokens(this.earnedTurboTokens);
+    PlayerData.addTurboCups(this.earnedTurboCups);
+  }
+
+  private formatTime(ms: number): string {
+    const totalSeconds: number = ms / 1000;
+    const minutes: number = Math.floor(totalSeconds / 60);
+    const seconds: number = Math.floor(totalSeconds % 60);
+    const millis: number = Math.floor(ms % 1000);
+
+    return `${minutes}:${seconds.toString().padStart(2, '0')}.${millis
+      .toString()
+      .padStart(3, '0')}`;
   }
 }

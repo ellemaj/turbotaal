@@ -64,11 +64,11 @@ export function tryBuySkin(index: number): boolean {
     return true;
   }
 
-  if (PlayerData.getCoins() < skin.price) {
+  if (PlayerData.getTurboTokens() < skin.price) {
     return false;
   }
 
-  PlayerData.addCoins(-skin.price);
+  PlayerData.addTurboTokens(-skin.price);
   skin.unlocked = true;
   return true;
 }

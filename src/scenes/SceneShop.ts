@@ -257,7 +257,7 @@ export default class SceneShop extends Scene {
     ctx.textBaseline = 'top';
 
     ctx.fillText(
-      PlayerData.getCoins().toString(),
+      PlayerData.getTurboTokens().toString(),
       canvas.width - 80,
       padding + 5
     );
