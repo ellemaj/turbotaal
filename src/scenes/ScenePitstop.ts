@@ -36,7 +36,7 @@ export default class ScenePitstop extends Scene {
     {text: 'Hoelang duurt jouw pitstop', missing: '?'},
     {text: 'Op uw plaatsen...Start', missing: '!'},
     {text: 'Ben je er klaar voor', missing: '?'},
-    {text: 'Ik weet nog niet wat ik vandaag ga doen', missing: '!'},
+    {text: 'Ik weet nog niet wat ik vandaag ga doen', missing: '.'},
     {text: 'Het regent buiten', missing: '.'},
     {text: 'Het kind riep: ik ben gestoken door een wesp', missing: '!'},
     {text:'Ik vind gym en geschiedenis gemiddelde vakken', missing: '.'},
