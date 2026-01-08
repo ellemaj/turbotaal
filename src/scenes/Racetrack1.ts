@@ -28,7 +28,9 @@ export default class Racetrack1 extends RacetrackScene {
     this.pause = false;
     this.pitstop = false;
     this.camera = new Camera(canvas.width, canvas.height, this.worldWidth, this.worldHeight);
-    this.background = CanvasRenderer.loadNewImage('./assets/racetracks/race1.png');
+
+    this.trackBackground = CanvasRenderer.loadNewImage('./assets/racetracks/race1.png');
+    this.background = this.trackBackground;
 
     this.totalTime = 0;
     this.pitstops = 0;
@@ -132,7 +134,8 @@ export default class Racetrack1 extends RacetrackScene {
         this.boardSize,
         this.canvas,
         raceResult,
-        () => new Racetrack1(this.boardSize, this.canvas, this.grid)
+        () => new Racetrack1(this.boardSize, this.canvas, this.grid),
+        this.trackBackground
       );
     }
 

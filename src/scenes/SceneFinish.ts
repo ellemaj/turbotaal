@@ -36,9 +36,11 @@ export default class SceneFinish extends Scene {
   public constructor(boardSize: Vector2,
     canvas: HTMLCanvasElement,
     raceResult: RaceResult,
-    restartRace: SceneFactory
+    restartRace: SceneFactory,
+    trackBackground: HTMLImageElement
   ) {
     super(boardSize, canvas);
+    this.background = trackBackground;
     this.raceResult = raceResult;
     this.restartRace = restartRace;
 
@@ -49,7 +51,7 @@ export default class SceneFinish extends Scene {
     this.goToStart = false;
     this.raceAgain = false;
 
-    this.background = CanvasRenderer.loadNewImage('./assets/backgrounds/background.png');
+    this.background = trackBackground;
 
     const colors: string[] = ['#FFD700', '#FF5252', '#40C4FF', '#69F0AE'];
 
@@ -118,6 +120,10 @@ export default class SceneFinish extends Scene {
     // Render the background
     ctx.drawImage(this.background, 0, 0, canvas.width, canvas.height);
 
+    // Dark overlay to fade the background
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
     const centerX: number = canvas.width / 2;
 
     // Confetti effect
@@ -144,7 +150,7 @@ export default class SceneFinish extends Scene {
     ctx.fillStyle = 'white';
 
     ctx.fillText(
-      `Total time: ${this.formatTime(this.raceResult.totalTime)}`,
+      `Totale tijd: ${this.formatTime(this.raceResult.totalTime)}`,
       centerX,
       y
     );
@@ -227,10 +233,10 @@ export default class SceneFinish extends Scene {
   }
 
   private formatTime(ms: number): string {
-    const totalSeconds: number = Math.floor(ms / 1000);
+    const totalSeconds: number = ms / 1000;
     const minutes: number = Math.floor(totalSeconds / 60);
-    const seconds: number = totalSeconds % 60;
-    const millis: number = ms % 1000;
+    const seconds: number = Math.floor(totalSeconds % 60);
+    const millis: number = Math.floor(ms % 1000);
 
     return `${minutes}:${seconds.toString().padStart(2, '0')}.${millis
       .toString()

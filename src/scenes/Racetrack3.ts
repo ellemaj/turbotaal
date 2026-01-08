@@ -26,9 +26,11 @@ export default class Racetrack3 extends RacetrackScene {
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement, grid: Grid) {
     super(boardSize, canvas, grid);
     this.camera = new Camera(canvas.width, canvas.height, this.worldWidth, this.worldHeight);
-    this.background = CanvasRenderer.loadNewImage('assets/racetracks/race3.png');
     this.pause = false;
     this.pitstop = false;
+
+    this.trackBackground = CanvasRenderer.loadNewImage('./assets/racetracks/race3.png');
+    this.background = this.trackBackground;
 
     this.totalTime = 0;
     this.pitstops = 0;
@@ -131,7 +133,8 @@ export default class Racetrack3 extends RacetrackScene {
         this.boardSize,
         this.canvas,
         raceResult,
-        () => new Racetrack3(this.boardSize, this.canvas, this.grid)
+        () => new Racetrack3(this.boardSize, this.canvas, this.grid),
+        this.trackBackground
       );
     }
 
