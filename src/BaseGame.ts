@@ -17,6 +17,7 @@ import { COLUMNS3, ROWS3, COLLISIONS3 } from './scenes/CollisionDataTrack3.js';
 import Racetrack1 from './scenes/Racetrack1.js';
 import Racetrack2 from './scenes/Racetrack2.js';
 import Racetrack3 from './scenes/Racetrack3.js';
+import { AnswerBox } from './data/Answerbox.js';
 
 export default class BaseGame extends Game {
   private canvas: HTMLCanvasElement;
@@ -44,6 +45,8 @@ export default class BaseGame extends Game {
   private savedTurnSpeed: number | null = null;
 
   private camera: Camera;
+
+  protected answerBoxes: AnswerBox[] = [];
 
   public constructor(canvas: HTMLCanvasElement) {
     super();
@@ -91,13 +94,13 @@ export default class BaseGame extends Game {
       const currentHealth: number = car.getHealth().getHealth();
       // only accept answers when not locked
       if (!this.answerLocked) {
-        if (this.keyListener.keyPressed(KeyListener.KEY_1)) {
+        console.log('basegame', car.collisionBox1);
+        if (car.collisionBox1) {
           const correct: boolean = this.question.checkAnswerAt(0);
           this.lastMessage = correct ? 'Correct!' : 'Fout';
           this.lastMessageTTL = 10;
           // 10 sec boost :)
-          this.answerLocked = true;
-          this.effectTimer = 5;
+          this.effectTimer = 2;
           this.savedMaxSpeed = car.maxSpeed;
           this.savedTurnSpeed = car.turnSpeed;
           if (correct) {
@@ -107,13 +110,15 @@ export default class BaseGame extends Game {
             car.maxSpeed = this.savedMaxSpeed - 0.075;
             car.turnSpeed = this.savedTurnSpeed + 0.5;
           }
+          car.collisionBox1 = false;
+          this.answerLocked = true;
         }
-        if (this.keyListener.keyPressed(KeyListener.KEY_2)) {
+        if (car.getCollisionBox2()) {
           const correct: boolean = this.question.checkAnswerAt(1);
           this.lastMessage = correct ? 'Correct!' : 'Fout';
           this.lastMessageTTL = 10;
           this.answerLocked = true;
-          this.effectTimer = 5;
+          this.effectTimer = 2;
           this.savedMaxSpeed = car.maxSpeed;
           this.savedTurnSpeed = car.turnSpeed;
           if (correct) {
@@ -124,12 +129,12 @@ export default class BaseGame extends Game {
             car.turnSpeed = this.savedTurnSpeed + 0.5;
           }
         }
-        if (this.keyListener.keyPressed(KeyListener.KEY_3)) {
+        if (car.getCollisionBox3()) {
           const correct: boolean = this.question.checkAnswerAt(2);
           this.lastMessage = correct ? 'Correct!' : 'Fout';
           this.lastMessageTTL = 10;
           this.answerLocked = true;
-          this.effectTimer = 5;
+          this.effectTimer = 2;
           this.savedMaxSpeed = car.maxSpeed;
           this.savedTurnSpeed = car.turnSpeed;
           if (correct) {
@@ -158,7 +163,7 @@ export default class BaseGame extends Game {
     // Only update the car in Racetrack-scenes
     if (this.currentScene instanceof RacetrackScene) {
       const car: Car = this.currentScene.getCar();
-      car.update(delta, this.canvas, this.grid);
+      car.update(delta, this.canvas, this.grid, this.answerBoxes);
     }
 
     if (this.currentScene instanceof RacetrackScene) {

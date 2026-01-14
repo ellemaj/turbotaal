@@ -39,6 +39,8 @@ export default class Racetrack1 extends RacetrackScene {
     this.setCarStart(canvas.width * 0.5, canvas.height * 0.97, -1.55);
 
     this.loadTriggers();
+
+    this.createAnswerBoxes();
   }
 
   private loadTriggers(): void {
@@ -90,7 +92,7 @@ export default class Racetrack1 extends RacetrackScene {
       return;
     }
 
-    this.car.update(delta, this.canvas, this.grid);
+    this.car.update(delta, this.canvas, this.grid, this.answerBoxes);
 
     this.checkTriggers(); //for the lapcount
 
@@ -120,7 +122,7 @@ export default class Racetrack1 extends RacetrackScene {
       this.car.pitstopTriggered = false;
       this.pitstop = true;
     }
-    if (this.car.getHealth().carIsLow()){
+    if (this.car.getHealth().carIsLow()) {
       this.pitstop = true;
     }
     if (this.finished) {
@@ -155,8 +157,19 @@ export default class Racetrack1 extends RacetrackScene {
     // Renders the background
     ctx.drawImage(this.background, 0, 0);
 
-
-    this.question.spawnBoxes(canvas, this.camera);
+    for (const box of this.answerBoxes) {
+      CanvasRenderer.drawAnswerBox(
+        canvas,
+        box.x - this.camera.position.x,
+        box.y - this.camera.position.y,
+        box.width,
+        box.height,
+        'gold',
+        `${box.index + 1}`,
+        'white',
+        '20px Arial'
+      );
+    }
   }
 
   /**

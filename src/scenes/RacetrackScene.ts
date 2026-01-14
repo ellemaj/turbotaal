@@ -6,6 +6,7 @@ import Car from '../Car.js';
 import Grid from '../Grid.js';
 import Question from '../Question.js';
 import PlayerData from '../data/PlayerData.js';
+import { AnswerBox } from '../data/Answerbox.js';
 
 export default abstract class RacetrackScene extends Scene {
   private laps: number = 0;
@@ -24,10 +25,12 @@ export default abstract class RacetrackScene extends Scene {
 
   protected question: Question;
 
-  protected checkpoints: {x: number, y: number,
-    width: number, height: number, index: number}[] = [];
+  protected checkpoints: {
+    x: number, y: number,
+    width: number, height: number, index: number
+  }[] = [];
 
-  protected finish: {x: number, y: number, width: number, height: number} | null = null;
+  protected finish: { x: number, y: number, width: number, height: number } | null = null;
 
   protected passedCheckpoints: Set<number> = new Set();
 
@@ -38,6 +41,8 @@ export default abstract class RacetrackScene extends Scene {
   protected grid: Grid;
 
   protected trackBackground: HTMLImageElement = new Image();
+
+  protected answerBoxes: AnswerBox[] = [];
 
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement, grid: Grid) {
     super(boardSize, canvas);
@@ -114,7 +119,7 @@ export default abstract class RacetrackScene extends Scene {
     return this.car;
   }
 
-  public getCanvas() : HTMLCanvasElement {
+  public getCanvas(): HTMLCanvasElement {
     return this.canvas;
   }
 
@@ -163,23 +168,25 @@ export default abstract class RacetrackScene extends Scene {
     // check checkpoints
     for (const checkpoint of this.checkpoints) {
       if (!this.passedCheckpoints.has(checkpoint.index) &&
-          carPos.x < checkpoint.x + checkpoint.width &&
-          carPos.x + carSize > checkpoint.x &&
-          carPos.y < checkpoint.y + checkpoint.height &&
-          carPos.y + carSize > checkpoint.y) {
+        carPos.x < checkpoint.x + checkpoint.width &&
+        carPos.x + carSize > checkpoint.x &&
+        carPos.y < checkpoint.y + checkpoint.height &&
+        carPos.y + carSize > checkpoint.y) {
         this.passedCheckpoints.add(checkpoint.index);
       }
     }
 
     // check finish
     if (this.finish &&
-        carPos.x < this.finish.x + this.finish.width &&
-        carPos.x + carSize > this.finish.x &&
-        carPos.y < this.finish.y + this.finish.height &&
-        carPos.y + carSize > this.finish.y) {
+      carPos.x < this.finish.x + this.finish.width &&
+      carPos.x + carSize > this.finish.x &&
+      carPos.y < this.finish.y + this.finish.height &&
+      carPos.y + carSize > this.finish.y) {
       // check if all checkpoints have been passed
-      const allPassed: boolean = this.checkpoints.every((cp:{x: number, y: number,
-        width: number, height: number, index: number}) => this.passedCheckpoints.has(cp.index));
+      const allPassed: boolean = this.checkpoints.every((cp: {
+        x: number, y: number,
+        width: number, height: number, index: number
+      }) => this.passedCheckpoints.has(cp.index));
       if (allPassed) {
         this.addLap();
         this.passedCheckpoints.clear(); //reset for next
@@ -201,5 +208,31 @@ export default abstract class RacetrackScene extends Scene {
 
   public getTrackBackground(): HTMLImageElement {
     return this.trackBackground;
+  }
+
+  protected createAnswerBoxes(): void {
+    const boxWidth: number = 40;
+    const boxHeight: number = 40;
+    const spacing: number = 30;
+
+    const spawnCoordinates: [number, number][] = [
+      [160, 600],
+      [1630, 375],
+      [612, 265],
+    ];
+
+    this.answerBoxes = [];
+
+    spawnCoordinates.forEach(([baseX, baseY]: [number, number]) => {
+      for (let i: number = 0; i < 3; i++) {
+        this.answerBoxes.push({
+          x: baseX + i * (boxWidth + spacing),
+          y: baseY,
+          width: boxWidth,
+          height: boxHeight,
+          index: i,
+        });
+      }
+    });
   }
 }

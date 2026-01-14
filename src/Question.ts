@@ -54,42 +54,6 @@ export default class Question extends CanvasItem {
       CanvasRenderer.writeText(canvas, labelText, centerX, textY, 'center', 'Arial', 18, 'black');
     });
   }
-
-  /**
-   *
-   */
-  public spawnBoxes(canvas: HTMLCanvasElement, camera: Camera): void {
-    const boxWidth: number = 40;
-    const boxHeight: number = 40;
-    const spacing: number = 30;
-    const spawncoordinates: [number, number][] = [
-      [160, 600],
-      [1630, 375],
-      [612, 265]
-    ];
-    spawncoordinates.forEach(([baseX, baseY]: [number, number]) => {
-      for (let i: number = 0; i < 3; i++) {
-        const x: number = baseX + i * (boxWidth + spacing);
-        const y: number = baseY;
-
-        CanvasRenderer.drawAnswerBox(
-          canvas,
-          x - camera.position.x,
-          y - camera.position.y,
-          boxWidth,
-          boxHeight,
-          'gold',
-          `${i + 1}`,
-          'white',
-          '20px Arial'
-        );
-      };
-    });
-  }
-
-  /**
-   *
-   */
   public loadFromData(question: QuestionType): void {
     this.questionText = question.question;
     this.answers = question.answers.map((text: string, i: number) => {
