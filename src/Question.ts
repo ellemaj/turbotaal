@@ -54,6 +54,7 @@ export default class Question extends CanvasItem {
       CanvasRenderer.writeText(canvas, labelText, centerX, textY, 'center', 'Arial', 18, 'black');
     });
   }
+
   public loadFromData(question: QuestionType): void {
     this.questionText = question.question;
     this.answers = question.answers.map((text: string, i: number) => {

@@ -41,7 +41,7 @@ export default class Car extends CanvasItem {
 
   private health: Health;
 
-  public collisionBox1: boolean = false;
+  private collisionBox1: boolean = false;
 
   private collisionBox2: boolean = false;
 
@@ -72,6 +72,8 @@ export default class Car extends CanvasItem {
   public update(delta: number, canvas: HTMLCanvasElement, grid: Grid, answerBoxes: AnswerBox[]): void {
     const skin: CarSkin = getCarSkin(PlayerData.getSkinIndex());
     const speedMultiplier: number = this.health.getSpeedMultiplier();
+
+    console.log(this.speed);
 
     // Change skins when steering
     if (this.movingLeft && !this.movingRight) {

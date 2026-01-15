@@ -2,7 +2,7 @@ import CanvasRenderer from '../CanvasRenderer.js';
 import Vector2 from '../Vector2.js';
 import KeyListener from '../KeyListener.js';
 import Scene from './Scene.js';
-import RacetrackScene from './RacetrackScene.js';
+import RacetrackScene, { AnswerBoxSpawn } from './RacetrackScene.js';
 import ScenePause from './ScenePause.js';
 import ScenePitstop from './ScenePitstop.js';
 import SceneFinish from './SceneFinish.js';
@@ -36,11 +36,9 @@ export default class Racetrack1 extends RacetrackScene {
     this.pitstops = 0;
     this.pitstopPenaltyTime = 0;
 
-    this.setCarStart(canvas.width * 0.5, canvas.height * 0.97, -1.55);
+    this.setCarStart(800, 925, -1.57);
 
     this.loadTriggers();
-
-    this.createAnswerBoxes();
   }
 
   private loadTriggers(): void {
@@ -200,5 +198,13 @@ export default class Racetrack1 extends RacetrackScene {
     ctx.font = '30px Arial';
     ctx.textAlign = 'right';
     ctx.fillText(this.stopwatch.getFormatted(), this.canvas.width - 25, 40);
+  }
+
+  protected override getAnswerBoxSpawns(): AnswerBoxSpawn[] {
+    return [
+      { x: 160, y: 600, direction: 'horizontal'},
+      { x: 1630, y: 375, direction: 'horizontal'},
+      { x: 940, y: 360, direction: 'vertical'},
+    ];
   }
 }

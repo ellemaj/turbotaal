@@ -94,12 +94,12 @@ export default class BaseGame extends Game {
       const currentHealth: number = car.getHealth().getHealth();
       // only accept answers when not locked
       if (!this.answerLocked) {
-        if (car.collisionBox1) {
+        if (car.getCollisionBox1()) {
           const correct: boolean = this.question.checkAnswerAt(0);
           this.lastMessage = correct ? 'Correct!' : 'Fout';
           this.lastMessageTTL = 3;
-          // 10 sec boost :)
-          this.effectTimer = 2;
+          this.answerLocked = true;
+          this.effectTimer = 3;
           this.savedMaxSpeed = car.maxSpeed;
           this.savedTurnSpeed = car.turnSpeed;
           if (correct) {
@@ -109,15 +109,13 @@ export default class BaseGame extends Game {
             car.maxSpeed = this.savedMaxSpeed - 0.075;
             car.turnSpeed = this.savedTurnSpeed + 0.5;
           }
-          car.collisionBox1 = false;
-          this.answerLocked = true;
         }
         if (car.getCollisionBox2()) {
           const correct: boolean = this.question.checkAnswerAt(1);
           this.lastMessage = correct ? 'Correct!' : 'Fout';
           this.lastMessageTTL = 3;
           this.answerLocked = true;
-          this.effectTimer = 2;
+          this.effectTimer = 3;
           this.savedMaxSpeed = car.maxSpeed;
           this.savedTurnSpeed = car.turnSpeed;
           if (correct) {
@@ -133,7 +131,7 @@ export default class BaseGame extends Game {
           this.lastMessage = correct ? 'Correct!' : 'Fout';
           this.lastMessageTTL = 3;
           this.answerLocked = true;
-          this.effectTimer = 2;
+          this.effectTimer = 3;
           this.savedMaxSpeed = car.maxSpeed;
           this.savedTurnSpeed = car.turnSpeed;
           if (correct) {

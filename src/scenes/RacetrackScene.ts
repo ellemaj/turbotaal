@@ -8,6 +8,12 @@ import Question from '../Question.js';
 import PlayerData from '../data/PlayerData.js';
 import { AnswerBox } from '../data/Answerbox.js';
 
+export type AnswerBoxSpawn = {
+  x: number,
+  y: number,
+  direction: 'horizontal' | 'vertical';
+};
+
 export default abstract class RacetrackScene extends Scene {
   private laps: number = 0;
 
@@ -50,6 +56,8 @@ export default abstract class RacetrackScene extends Scene {
     this.car = new Car();
     this.question = new Question();
     this.grid = grid;
+
+    this.createAnswerBoxes();
   }
 
   // Starts the timer when the player moves for the first time
@@ -210,29 +218,29 @@ export default abstract class RacetrackScene extends Scene {
     return this.trackBackground;
   }
 
+  protected abstract getAnswerBoxSpawns(): AnswerBoxSpawn[];
+
   protected createAnswerBoxes(): void {
     const boxWidth: number = 40;
     const boxHeight: number = 40;
     const spacing: number = 30;
 
-    const spawnCoordinates: [number, number][] = [
-      [160, 600],
-      [1630, 375],
-      [612, 265],
-    ];
-
     this.answerBoxes = [];
 
-    spawnCoordinates.forEach(([baseX, baseY]: [number, number]) => {
+    for (const spawn of this.getAnswerBoxSpawns()) {
       for (let i: number = 0; i < 3; i++) {
         this.answerBoxes.push({
-          x: baseX + i * (boxWidth + spacing),
-          y: baseY,
+          x: spawn.direction === 'horizontal'
+            ? spawn.x + i * (boxWidth + spacing)
+            : spawn.x,
+          y: spawn.direction === 'vertical'
+            ? spawn.y + i * (boxHeight + spacing)
+            : spawn.y,
           width: boxWidth,
           height: boxHeight,
           index: i,
         });
       }
-    });
+    }
   }
 }
