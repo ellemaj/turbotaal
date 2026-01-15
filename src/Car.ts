@@ -6,6 +6,7 @@ import type { CarSkin } from './data/CarSkin.js';
 import { getCarSkin } from './data/CarSkins.js';
 
 import Health from './Health.js';
+import { AnswerBox } from './data/Answerbox.js';
 export default class Car extends CanvasItem {
   private rotation: number = -2;
 
@@ -40,6 +41,12 @@ export default class Car extends CanvasItem {
 
   private health: Health;
 
+  private collisionBox1: boolean = false;
+
+  private collisionBox2: boolean = false;
+
+  private collisionBox3: boolean = false;
+
   public constructor() {
     super();
 
@@ -56,16 +63,17 @@ export default class Car extends CanvasItem {
     return this.position;
   }
 
-
   /**
    * Updates the car
    *
    * @param delta Elapsed time
    * @param canvas The canvas it needs to be rendered on
    */
-  public update(delta: number, canvas: HTMLCanvasElement, grid: Grid): void {
+  public update(delta: number, canvas: HTMLCanvasElement, grid: Grid, answerBoxes: AnswerBox[]): void {
     const skin: CarSkin = getCarSkin(PlayerData.getSkinIndex());
     const speedMultiplier: number = this.health.getSpeedMultiplier();
+
+    console.log(this.speed);
 
     // Change skins when steering
     if (this.movingLeft && !this.movingRight) {
@@ -166,6 +174,35 @@ export default class Car extends CanvasItem {
       this.pitstopCollisionHandled = true;
     } else if (!collisionpitstop) {
       this.pitstopCollisionHandled = false;
+    }
+
+    // Check collisions
+    for (const box of answerBoxes) {
+      const boxLeft: number = box.x;
+      const boxRight: number = box.x + box.width;
+      const boxTop: number = box.y;
+      const boxBottom: number = box.y + box.height;
+
+      const intersects: boolean =
+        left < boxRight &&
+        right > boxLeft &&
+        top < boxBottom &&
+        bottom > boxTop;
+
+      if (intersects) {
+        if (box.index === 0) {
+          this.collisionBox1 = true;
+          setTimeout(() => this.collisionBox1 = false, 50);
+        }
+        if (box.index === 1) {
+          this.collisionBox2 = true;
+          setTimeout(() => this.collisionBox2 = false, 50);
+        }
+        if (box.index === 2) {
+          this.collisionBox3 = true;
+          setTimeout(() => this.collisionBox3 = false, 50);
+        }
+      }
     }
   }
 
@@ -268,5 +305,17 @@ export default class Car extends CanvasItem {
       col: Math.floor(this.position.x / tileSize),
       row: Math.floor(this.position.y / tileSize),
     };
+  }
+
+  public getCollisionBox1(): boolean {
+    return this.collisionBox1;
+  }
+
+  public getCollisionBox2(): boolean {
+    return this.collisionBox2;
+  }
+
+  public getCollisionBox3(): boolean {
+    return this.collisionBox3;
   }
 }

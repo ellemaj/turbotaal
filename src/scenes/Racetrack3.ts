@@ -2,7 +2,7 @@ import CanvasRenderer from '../CanvasRenderer.js';
 import Vector2 from '../Vector2.js';
 import KeyListener from '../KeyListener.js';
 import Scene from './Scene.js';
-import RacetrackScene from './RacetrackScene.js';
+import RacetrackScene, { AnswerBoxSpawn } from './RacetrackScene.js';
 import ScenePause from './ScenePause.js';
 import ScenePitstop from './ScenePitstop.js';
 import SceneFinish from './SceneFinish.js';
@@ -36,7 +36,7 @@ export default class Racetrack3 extends RacetrackScene {
     this.pitstops = 0;
     this.pitstopPenaltyTime = 0;
 
-    this.setCarStart(canvas.width * 0.75, canvas.height * 1.08, -1.6);
+    this.setCarStart(980, 1020, -1.58);
 
     this.loadTriggers();
   }
@@ -89,7 +89,7 @@ export default class Racetrack3 extends RacetrackScene {
    * @returns time elapsed
    */
   public override update(delta: number): void {
-    this.car.update(delta, this.canvas, this.grid);
+    this.car.update(delta, this.canvas, this.grid, this.answerBoxes);
 
     this.checkTriggers(); //for the lapcount
 
@@ -154,6 +154,20 @@ export default class Racetrack3 extends RacetrackScene {
     // Renders the background
     ctx.drawImage(this.background, 0, 0);
 
+    for (const box of this.answerBoxes) {
+      CanvasRenderer.drawAnswerBox(
+        canvas,
+        box.x - this.camera.position.x,
+        box.y - this.camera.position.y,
+        box.width,
+        box.height,
+        'gold',
+        `${box.index + 1}`,
+        'white',
+        '20px Arial'
+      );
+    }
+
     // Renders the car
     this.car.render(canvas);
   }
@@ -186,5 +200,13 @@ export default class Racetrack3 extends RacetrackScene {
     ctx.font = '30px Arial';
     ctx.textAlign = 'right';
     ctx.fillText(this.stopwatch.getFormatted(), this.canvas.width - 25, 40);
+  }
+
+  protected override getAnswerBoxSpawns(): AnswerBoxSpawn[] {
+    return [
+      { x: 70, y: 600, direction: 'horizontal' },
+      { x: 1670, y: 375, direction: 'horizontal' },
+      { x: 900, y: 710, direction: 'vertical' },
+    ];
   }
 }

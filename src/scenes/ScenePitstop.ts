@@ -25,7 +25,7 @@ export default class ScenePitstop extends Scene {
     { text: 'Er moet een leesteken in deze zin', missing: '.' },
     { text: 'Tijd om te racen', missing: '!' },
     { text: 'We zijn bijna klaar, toch', missing: '?' },
-    { text: 'Dit is er belangrijk , schreeuwde hij.', missing: '!' },
+    {text: 'Dit is erg belangrijk , schreeuwde hij', missing: '!' },
     {text: 'Waar ga je heen', missing: '?'},
     {text: 'Leestekens zijn niet altijd makkelijk', missing: '.'},
     {text: 'Je doet het fantastisch', missing:'!'},

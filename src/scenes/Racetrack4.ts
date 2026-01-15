@@ -3,7 +3,7 @@ import Vector2 from '../Vector2.js';
 // import MouseListener from '../MouseListener.js';
 import KeyListener from '../KeyListener.js';
 import Scene from './Scene.js';
-import RacetrackScene from './RacetrackScene.js';
+import RacetrackScene, { AnswerBoxSpawn } from './RacetrackScene.js';
 import SceneTrackSelection from './SceneTrackSelection.js';
 import Grid from '../Grid.js';
 
@@ -44,7 +44,7 @@ export default class Racetrack4 extends RacetrackScene {
    * @returns time elapsed
    */
   public override update(delta: number): void {
-    this.car.update(delta, this.canvas, this.grid);
+    this.car.update(delta, this.canvas, this.grid, this.answerBoxes);
 
     this.stopwatch.update(delta);
 
@@ -100,5 +100,13 @@ export default class Racetrack4 extends RacetrackScene {
     // Renders the timer
     ctx.textAlign = 'right';
     ctx.fillText(this.stopwatch.getFormatted(), canvas.width - 20, 40);
+  }
+
+  protected override getAnswerBoxSpawns(): AnswerBoxSpawn[] {
+    return [
+      { x: 160, y: 600, direction: 'horizontal' },
+      { x: 1630, y: 375, direction: 'horizontal' },
+      { x: 612, y: 265, direction: 'horizontal' },
+    ];
   }
 }
