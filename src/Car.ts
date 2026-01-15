@@ -175,11 +175,6 @@ export default class Car extends CanvasItem {
     }
 
     // Check collisions
-    // Reset collision flags once before checking all boxes, then set
-    // the appropriate flag(s) when an intersection is found. Previously
-    // flags were cleared in the `else` branch for every non-intersecting
-    // box, which overwrote earlier true values.
-
     for (const box of answerBoxes) {
       const boxLeft: number = box.x;
       const boxRight: number = box.x + box.width;
@@ -195,12 +190,15 @@ export default class Car extends CanvasItem {
       if (intersects) {
         if (box.index === 0) {
           this.collisionBox1 = true;
+          setTimeout(() => this.collisionBox1 = false, 50);
         }
         if (box.index === 1) {
           this.collisionBox2 = true;
+          setTimeout(() => this.collisionBox2 = false, 50);
         }
         if (box.index === 2) {
           this.collisionBox3 = true;
+          setTimeout(() => this.collisionBox3 = false, 50);
         }
       }
     }
