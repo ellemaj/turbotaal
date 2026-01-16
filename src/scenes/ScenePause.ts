@@ -1,8 +1,9 @@
 import Scene from './Scene.js';
 import SceneTrackSelection from './SceneTrackSelection.js';
 import SceneStart from './SceneStart.js';
+import SceneTutorial from './SceneTutorial.js';
 import KeyListener from '../KeyListener.js';
-import MouseListener from '../MouseListener.js';
+import MouseListener, { MouseCoordinates } from '../MouseListener.js';
 import Vector2 from '../Vector2.js';
 import CanvasRenderer from '../CanvasRenderer.js';
 import PlayerData from '../data/PlayerData.js';
@@ -18,6 +19,12 @@ export default class ScenePause extends Scene {
 
   private logo: HTMLImageElement;
 
+  private goToTutorial: boolean = false;
+
+  private tutorialButton: HTMLImageElement;
+
+  private tutorialScale: number = 1;
+
   public constructor(
     boardSize: Vector2,
     canvas: HTMLCanvasElement,
@@ -26,6 +33,7 @@ export default class ScenePause extends Scene {
     super(boardSize, canvas);
     this.previousScene = previousScene;
     this.logo = CanvasRenderer.loadNewImage('./assets/logo.png');
+    this.tutorialButton = CanvasRenderer.loadNewImage('./assets/buttons/tutorial.png');
   }
 
   /**
@@ -54,7 +62,30 @@ export default class ScenePause extends Scene {
    * @param delta time elapsed
    */
   public override update(delta: number): void {
-    // Nothing to update during the break
+    this.isTutotialButtonPressed();
+  }
+
+  private isTutotialButtonPressed(): boolean {
+    const mousePos: MouseCoordinates = this.mouseListener.getMousePosition();
+    const margin: number = 30;
+
+    const width: number = this.tutorialButton.width * this.tutorialScale;
+    const height: number = this.tutorialButton.height * this.tutorialScale;
+
+    const x: number = this.canvas.width - width - margin;
+    const y: number = this.canvas.height - height - margin;
+
+    const isClicked: boolean =
+      mousePos.x >= x &&
+      mousePos.x <= x + width &&
+      mousePos.y >= y &&
+      mousePos.y <= y + height;
+
+    if (isClicked && this.mouseListener.buttonPressed(MouseListener.BUTTON_LEFT)) {
+      this.goToTutorial = true;
+      return true;
+    }
+    return false;
   }
 
   // Gives back the right scene
@@ -69,6 +100,9 @@ export default class ScenePause extends Scene {
 
     if (this.quit) {
       return new SceneStart(this.boardSize, this.canvas);
+    } else if (this.goToTutorial) {
+      this.goToTutorial = false;
+      return new SceneTutorial(this.boardSize, this.canvas);
     }
 
     return null;
@@ -221,6 +255,21 @@ export default class ScenePause extends Scene {
       PlayerData.getTurboCups().toString(),
       canvas.width - 80,
       padding + 5
+    );
+
+    // Render tutorialbutton
+    const margin: number = 30;
+    const width: number = this.tutorialButton.width * this.tutorialScale;
+    const height: number = this.tutorialButton.height * this.tutorialScale;
+
+    const tutX: number = canvas.width - width - margin;
+    const tutY: number = canvas.height - height - margin;
+    ctx.drawImage(
+      this.tutorialButton,
+      tutX,
+      tutY,
+      width,
+      height
     );
   }
 }

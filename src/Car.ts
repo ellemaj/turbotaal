@@ -69,7 +69,10 @@ export default class Car extends CanvasItem {
    * @param delta Elapsed time
    * @param canvas The canvas it needs to be rendered on
    */
-  public update(delta: number, canvas: HTMLCanvasElement, grid: Grid, answerBoxes: AnswerBox[]): void {
+  public update(delta: number,
+    canvas: HTMLCanvasElement,
+    grid: Grid,
+    answerBoxes: AnswerBox[]): void {
     const skin: CarSkin = getCarSkin(PlayerData.getSkinIndex());
     const speedMultiplier: number = this.health.getSpeedMultiplier();
 
@@ -190,8 +193,10 @@ export default class Car extends CanvasItem {
         bottom > boxTop;
 
       if (intersects) {
+        // If the car intersects with one of the answerboxes, set that one on true
         if (box.index === 0) {
           this.collisionBox1 = true;
+          // Wait 50ms, then set the collisionbox to false
           setTimeout(() => this.collisionBox1 = false, 50);
         }
         if (box.index === 1) {
@@ -287,7 +292,7 @@ export default class Car extends CanvasItem {
     this.speed = 0;
   }
 
-  //position if you click 'r'
+  // position if you click 'r'
   public resetPosition(canvas: HTMLCanvasElement): void {
     this.position.x = canvas.width * 0.5;
     this.position.y = canvas.height * 0.285;

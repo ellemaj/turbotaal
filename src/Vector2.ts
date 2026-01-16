@@ -15,6 +15,11 @@ export default class Vector2 {
     this.y = y;
   }
 
+  /**
+   * Clone vector2
+   *
+   * @returns new vector2
+   */
   public clone(): Vector2 {
     return new Vector2(this.x, this.y);
   }
@@ -87,6 +92,12 @@ export default class Vector2 {
     return new Vector2(Math.cos(angle), Math.sin(angle));
   }
 
+  /**
+   * Rotates the position
+   *
+   * @param angleRad the rotation in radius
+   * @returns new Vector2
+   */
   public rotate(angleRad: number): Vector2 {
     const cos: number = Math.cos(angleRad);
     const sin: number = Math.sin(angleRad);
@@ -95,7 +106,13 @@ export default class Vector2 {
     return new Vector2(newX, newY);
   }
 
-  // Rotate around an arbitrary pivot point
+  /**
+   * Rotate around an arbitrary pivot point
+   *
+   * @param pivot vector2
+   * @param angleRad rotation in radius
+   * @returns new Vector2
+   */
   public rotateAround(pivot: Vector2, angleRad: number): Vector2 {
     //Translate to pivot
     const translated: Vector2 = new Vector2(this.x - pivot.x, this.y - pivot.y);

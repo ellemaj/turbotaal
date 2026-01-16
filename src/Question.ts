@@ -1,15 +1,9 @@
 import CanvasItem from './CanvasItem.js';
 import Answer from './Answer.js';
-import Car from './Car.js';
 import { Question as QuestionType } from './questions/types.js';
 import CanvasRenderer from './CanvasRenderer.js';
-import Camera from './Camera.js';
 
 export default class Question extends CanvasItem {
-  private isActive: boolean;
-
-  private isResolved: boolean;
-
   private questionText: string;
 
   private difficulty: number; //1 through 3
@@ -20,8 +14,6 @@ export default class Question extends CanvasItem {
 
   public constructor() {
     super();
-    this.isActive = false;
-    this.isResolved = false;
     this.questionText = '';
     this.difficulty = 1;
     this.answers = [];
@@ -29,14 +21,17 @@ export default class Question extends CanvasItem {
   }
 
   /**
-   *
+   * Checks the difficulty of the questions
+   * @returns the difficulty
    */
   public checkDifficulty(): number {
     return this.difficulty;
   }
 
   /**
+   * Render the question and answers
    *
+   * @param canvas: the canvas it needs to render on
    */
   public draw(canvas: HTMLCanvasElement): void {
     // center text
@@ -55,6 +50,11 @@ export default class Question extends CanvasItem {
     });
   }
 
+  /**
+   * Load a new question
+   *
+   * @param question questiontype
+   */
   public loadFromData(question: QuestionType): void {
     this.questionText = question.question;
     this.answers = question.answers.map((text: string, i: number) => {
@@ -75,7 +75,9 @@ export default class Question extends CanvasItem {
   }
 
   /**
+   * Check the answer at the given index
    *
+   * @returns true or false
    */
   public checkAnswerAt(index: number): boolean {
     return this.answers[index]?.isCorrectAnswer() ?? false;
