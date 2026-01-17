@@ -5,8 +5,19 @@ export interface Question {
   correct: number;
 }
 
+export interface PitstopQuestion {
+  question: string;
+  missing: string;
+}
+
 export interface QuizCategory {
   easy: Question[];
   normal: Question[];
   hard: Question[];
+}
+
+export interface PitstopQuiz {
+  easy: PitstopQuestion[];
+  normal: PitstopQuestion[];
+  hard: PitstopQuestion[];
 }
