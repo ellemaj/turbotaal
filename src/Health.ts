@@ -24,7 +24,7 @@ export default class Health {
   /**
    *heals the car
    */
-  public Heal(healing: number): void {
+  public heal(healing: number): void {
     this.carHealth += healing;
     if (this.carHealth > 100) {
       this.carHealth = 100;

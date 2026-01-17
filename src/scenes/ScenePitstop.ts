@@ -122,7 +122,7 @@ export default class ScenePitstop extends Scene {
       this.previousScene.update(delta); // Only update racetrack when the dialog is done
     }
     if (this.state == 'questions') {
-      this.previousScene.getCar().getHealth().Heal(100);
+      this.previousScene.getCar().getHealth().heal(100);
       if (this.previousScene instanceof Racetrack1) {
         this.previousScene.getCar().setPitstopPosition1(this.previousScene.getCanvas());
       }
