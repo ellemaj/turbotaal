@@ -20,15 +20,11 @@ export default class SceneStart extends Scene {
 
   private goToAdmin: boolean;
 
-  private logo: HTMLImageElement;
-
   private startButton: HTMLImageElement;
 
   private shopButton: HTMLImageElement;
 
   private garageButton: HTMLImageElement;
-
-  private tutorialButton: HTMLImageElement;
 
   private logoLoaded: boolean = false;
 
@@ -63,11 +59,9 @@ export default class SceneStart extends Scene {
     this.goToAdmin = false;
 
     this.background = CanvasRenderer.loadNewImage('./assets/backgrounds/start.png');
-    this.logo = CanvasRenderer.loadNewImage('./assets/logo.png');
     this.startButton = CanvasRenderer.loadNewImage('./assets/buttons/start.png');
     this.shopButton = CanvasRenderer.loadNewImage('./assets/buttons/shop.png');
     this.garageButton = CanvasRenderer.loadNewImage('./assets/buttons/garage.png');
-    this.tutorialButton = CanvasRenderer.loadNewImage('./assets/buttons/tutorial.png');
 
     this.logoScale = 0.5;
     this.scale = 0.6;
@@ -200,7 +194,7 @@ export default class SceneStart extends Scene {
   /**
    * Update function
    */
-  public override update(delta: number): void {
+  public override update(): void {
     if (this.startButtonLoaded || this.shopButtonLoaded || this.tutorialButtonLoaded) {
       this.isStartButtonClicked();
       this.isShopButtonClicked();
@@ -216,8 +210,7 @@ export default class SceneStart extends Scene {
    * @param mouseListener mouselistener
    */
   public override processInput(
-    keyListener: KeyListener,
-    mouseListener: MouseListener
+    keyListener: KeyListener
   ): void {
     if (keyListener.keyPressed(KeyListener.KEY_ENTER)) {
       this.goToTrackSelection = true;

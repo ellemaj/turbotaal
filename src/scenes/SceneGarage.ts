@@ -1,6 +1,6 @@
 import CanvasRenderer from '../CanvasRenderer.js';
 import Vector2 from '../Vector2.js';
-// import MouseListener, { MouseCoordinates } from '../MouseListener.js';
+import MouseListener from '../MouseListener.js';
 import KeyListener from '../KeyListener.js';
 import Scene from './Scene.js';
 import PlayerData from '../data/PlayerData.js';
@@ -28,6 +28,7 @@ export default class SceneGarage extends Scene {
     this.returnScene = returnScene;
     this.goBack = false;
     this.reset = false;
+    this.showBackButton = true;
 
     this.background = CanvasRenderer.loadNewImage('./assets/backgrounds/garage.png');
   }
@@ -45,6 +46,11 @@ export default class SceneGarage extends Scene {
         this.message = null;
         this.messageType = null;
       }
+    }
+
+    if (this.backClicked) {
+      this.goBack = true;
+      this.backClicked = false;
     }
   }
 
@@ -64,7 +70,8 @@ export default class SceneGarage extends Scene {
    * @param mouseListener mouselistener
    */
   public override processInput(
-    keyListener: KeyListener
+    keyListener: KeyListener,
+    mouseListener: MouseListener,
   ): void {
     if (keyListener.keyPressed(KeyListener.KEY_ESC)) {
       this.goBack = true;
@@ -96,6 +103,11 @@ export default class SceneGarage extends Scene {
         }
       }
     }
+
+    this.updateBackButton(
+      mouseListener.getMousePosition(),
+      mouseListener.buttonPressed(MouseListener.BUTTON_LEFT)
+    );
   }
 
   public override getNextScene(): Scene | null {
@@ -232,5 +244,8 @@ export default class SceneGarage extends Scene {
         canvas.height - 60
       );
     }
+
+    // Render back button
+    this.renderBackButton(ctx);
   }
 }

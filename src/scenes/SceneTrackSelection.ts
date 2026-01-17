@@ -24,15 +24,11 @@ export default class SceneTrackSelection extends Scene {
 
   private grid: Grid;
 
-  private logo: HTMLImageElement;
-
   private racetrack1Button: HTMLImageElement;
 
   private racetrack2Button: HTMLImageElement;
 
   private racetrack3Button: HTMLImageElement;
-
-  private logoLoaded: boolean = false;
 
   private logoScale: number;
 
@@ -46,7 +42,6 @@ export default class SceneTrackSelection extends Scene {
     this.goBack = false;
 
     this.background = CanvasRenderer.loadNewImage('./assets/backgrounds/trackselection.png');
-    this.logo = CanvasRenderer.loadNewImage('./assets/logo.png');
     this.racetrack1Button = CanvasRenderer.loadNewImage('./assets/buttons/racetrack1.png');
     this.racetrack2Button = CanvasRenderer.loadNewImage('./assets/buttons/racetrack2.png');
     this.racetrack3Button = CanvasRenderer.loadNewImage('./assets/buttons/racetrack3.png');
@@ -56,9 +51,7 @@ export default class SceneTrackSelection extends Scene {
     this.logoScale = 0.4;
     this.scale = 0.35;
 
-    this.logo.onload = (): void => {
-      this.logoLoaded = true;
-    };
+    this.showBackButton = true;
   }
 
   private isTrackUnlocked(index: number): boolean {
@@ -85,6 +78,11 @@ export default class SceneTrackSelection extends Scene {
       this.goBack = true;
     }
 
+    this.updateBackButton(
+      this.mouseListener.getMousePosition(),
+      this.mouseListener.buttonPressed(MouseListener.BUTTON_LEFT)
+    );
+
     // Mouseclick
     if (mouseListener.buttonPressed(MouseListener.BUTTON_LEFT)) {
       if (this.hoveredButton === 0) {
@@ -98,12 +96,13 @@ export default class SceneTrackSelection extends Scene {
   }
 
   /**
-   * /
-   * @param delta /
-   * @returns /
+   * Update the trackselection-scene
    */
-  public override update(delta: number): void {
-    return;
+  public override update(): void {
+    if (this.backClicked) {
+      this.goBack = true;
+      this.backClicked = false;
+    }
   }
 
   public override getNextScene(): Scene | null {
@@ -140,23 +139,16 @@ export default class SceneTrackSelection extends Scene {
     ctx.fillStyle = 'black';
 
     // Render the logo
-    if (this.logoLoaded) {
-      const logoWidth: number = this.logo.width * this.logoScale;
-      const logoHeight: number = this.logo.height * this.logoScale;
+    const logoWidth: number = this.logo.width * this.logoScale;
+    const logoHeight: number = this.logo.height * this.logoScale;
 
-      ctx.drawImage(
-        this.logo,
-        centerX - logoWidth / 2,
-        currentY,
-        logoWidth, logoHeight
-      );
-
-      currentY += logoHeight + spacing;
-    } else {
-      ctx.font = 'bold 100px Arial';
-      ctx.fillText('TurboTaal', centerX, currentY + 80);
-      currentY += 100 + spacing;
-    }
+    ctx.drawImage(
+      this.logo,
+      centerX - logoWidth / 2,
+      currentY,
+      logoWidth, logoHeight
+    );
+    currentY += logoHeight + spacing;
 
     // Render the racetrackbuttons
     const buttonY: number = currentY + 30;
@@ -187,11 +179,11 @@ export default class SceneTrackSelection extends Scene {
       const unlocked: boolean = required !== undefined && cups >= required;
 
       const isHover: boolean =
-      unlocked &&
-      mouse.x >= x &&
-      mouse.x <= x + buttonWidth &&
-      mouse.y >= y &&
-      mouse.y <= y + buttonHeight;
+        unlocked &&
+        mouse.x >= x &&
+        mouse.x <= x + buttonWidth &&
+        mouse.y >= y &&
+        mouse.y <= y + buttonHeight;
 
       if (isHover) {
         this.hoveredButton = i;
@@ -255,5 +247,7 @@ export default class SceneTrackSelection extends Scene {
       canvas.width - 65,
       padding + 8
     );
+
+    this.renderBackButton(ctx);
   }
 }
