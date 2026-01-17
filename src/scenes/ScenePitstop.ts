@@ -7,6 +7,7 @@ import RacetrackScene from './RacetrackScene.js';
 import Racetrack1 from './Racetrack1.js';
 import Racetrack2 from './Racetrack2.js';
 import Racetrack3 from './Racetrack3.js';
+import { pitstopQuestions } from '../questions/pitstopQuestions.js';
 
 export default class ScenePitstop extends Scene {
   private previousScene: RacetrackScene;
@@ -21,27 +22,7 @@ export default class ScenePitstop extends Scene {
     'Beantwoord 3 vragen juist om je auto te maken!',
   ];
 
-  private questions: { text: string; missing: string }[] = [
-    { text: 'Er moet een leesteken in deze zin', missing: '.' },
-    { text: 'Tijd om te racen', missing: '!' },
-    { text: 'We zijn bijna klaar, toch', missing: '?' },
-    {text: 'Dit is erg belangrijk , schreeuwde hij', missing: '!' },
-    {text: 'Waar ga je heen', missing: '?'},
-    {text: 'Leestekens zijn niet altijd makkelijk', missing: '.'},
-    {text: 'Je doet het fantastisch', missing:'!'},
-    {text: 'Wat is je favoriete film', missing: '?'},
-    {text: 'Ik ga morgen verder', missing: '.'},
-    {text: 'Pas op voor die auto', missing: '!'},
-    {text: 'Ik lust geen broccoli', missing: '.'},
-    {text: 'Hoelang duurt jouw pitstop', missing: '?'},
-    {text: 'Op uw plaatsen...Start', missing: '!'},
-    {text: 'Ben je er klaar voor', missing: '?'},
-    {text: 'Ik weet nog niet wat ik vandaag ga doen', missing: '.'},
-    {text: 'Het regent buiten', missing: '.'},
-    {text: 'Het kind riep: ik ben gestoken door een wesp', missing: '!'},
-    {text:'Ik vind gym en geschiedenis gemiddelde vakken', missing: '.'},
-    {text: 'Schiet op', missing: '!'}
-  ];
+  private questions: { question: string; missing: string }[];
 
   private currentQuestionIndex: number;
 
@@ -61,6 +42,8 @@ export default class ScenePitstop extends Scene {
     super(boardSize, canvas);
     this.previousScene = previousScene;
     this.background = CanvasRenderer.loadNewImage('./assets/backgrounds/pitstop.png');
+
+    this.questions = pitstopQuestions.normal;
     this.currentQuestionIndex = Math.floor(Math.random() * this.questions.length);
   }
 
@@ -87,12 +70,12 @@ export default class ScenePitstop extends Scene {
     if (this.state === 'questions') {
       this.previousScene.resumeTimer();
       const currentQuestion:
-        { text: string; missing: string } | undefined = this.questions[this.currentQuestionIndex];
+        { question: string; missing: string } |
+        undefined = this.questions[this.currentQuestionIndex];
       if (!currentQuestion) {
         return;
       }
-      if
-      (
+      if(
         (currentQuestion.missing == '!') && keyListener.keyPressed(KeyListener.KEY_1) && keyListener.keyPressed(KeyListener.KEY_SHIFT_LEFT) ||
         (currentQuestion.missing == '?') && keyListener.keyPressed(KeyListener.Key_Slash) && keyListener.keyPressed(KeyListener.KEY_SHIFT_LEFT,) ||
         (currentQuestion.missing == '.') && keyListener.keyPressed(KeyListener.Key_Period) ||
@@ -167,7 +150,7 @@ export default class ScenePitstop extends Scene {
     // Render the pitstop overlay (Background and Walter)
     ctx.drawImage(this.background, 0, 0, canvas.width, canvas.height);
     ctx.drawImage(this.walter, this.boardSize.x * 0.00001, this.boardSize.y - this.walter.height);
-    const rectWidth:number = this.boardSize.x/ 3;
+    const rectWidth: number = this.boardSize.x / 3;
     const rectHeight: number = this.boardSize.y / 5;
     const rectangleX: number = (canvas.width - rectWidth) / 2;
     const rectangleY: number = this.boardSize.y * 0.1;
@@ -192,12 +175,13 @@ export default class ScenePitstop extends Scene {
     }
     if (this.state == 'questions') {
       const currentQuestion:
-        { text: string; missing: string } | undefined = this.questions[this.currentQuestionIndex];
+        { question: string; missing: string } |
+        undefined = this.questions[this.currentQuestionIndex];
       if (!currentQuestion) {
         return;
       }
-      CanvasRenderer.writeText(canvas, currentQuestion.text, this.boardSize.x / 2, this.boardSize.y / 2 - 350, 'center', 'Arial', 24, 'white');
-      CanvasRenderer.writeText(canvas, 'Typ het ontbrekende leesteken!', this.boardSize.x/2, this.boardSize.y / 3 - 100, 'center', 'Arial', 24, '#9e7070ff');
+      CanvasRenderer.writeText(canvas, currentQuestion.question, this.boardSize.x / 2, this.boardSize.y / 2 - 350, 'center', 'Arial', 24, 'white');
+      CanvasRenderer.writeText(canvas, 'Typ het ontbrekende leesteken!', this.boardSize.x / 2, this.boardSize.y / 3 - 100, 'center', 'Arial', 24, '#9e7070ff');
     }
   }
 }
