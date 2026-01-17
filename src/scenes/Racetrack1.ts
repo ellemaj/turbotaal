@@ -9,6 +9,7 @@ import SceneFinish from './SceneFinish.js';
 import RaceResult from '../data/RaceResult.js';
 import Grid from '../Grid.js';
 import Camera from '../Camera.js';
+import { verkleinwoorden } from '../questions/verkleinwoorden.js';
 
 export default class Racetrack1 extends RacetrackScene {
   private pause: boolean;
@@ -37,8 +38,9 @@ export default class Racetrack1 extends RacetrackScene {
     this.pitstopPenaltyTime = 0;
 
     this.setCarStart(800, 925, -1.57);
-
     this.loadTriggers();
+
+    this.setQuestionData(verkleinwoorden.normal);
   }
 
   private loadTriggers(): void {

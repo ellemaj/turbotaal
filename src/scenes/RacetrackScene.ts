@@ -14,6 +14,12 @@ export type AnswerBoxSpawn = {
   direction: 'horizontal' | 'vertical';
 };
 
+export type QuestionData = {
+  question: string,
+  answers: string[];
+  correct: number
+};
+
 export default abstract class RacetrackScene extends Scene {
   private laps: number = 0;
 
@@ -30,6 +36,8 @@ export default abstract class RacetrackScene extends Scene {
   protected car: Car;
 
   protected question: Question;
+
+  protected questionData: { question: string; answers: string[]; correct: number }[] = [];
 
   protected checkpoints: {
     x: number, y: number,
@@ -240,6 +248,19 @@ export default abstract class RacetrackScene extends Scene {
           height: boxHeight,
           index: i,
         });
+      }
+    }
+  }
+
+  public setQuestionData(data: QuestionData[]): void {
+    this.questionData = data;
+
+    if (this.questionData.length > 0) {
+      const randomIndex: number = Math.floor(Math.random() * this.questionData.length);
+      const randomQuestion: QuestionData | undefined = this.questionData[randomIndex];
+
+      if (randomQuestion) {
+        this.question.loadFromData(randomQuestion);
       }
     }
   }
