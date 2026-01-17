@@ -12,18 +12,6 @@ import Camera from '../Camera.js';
 import { spelling } from '../questions/spelling.js';
 
 export default class Racetrack3 extends RacetrackScene {
-  private camera: Camera;
-
-  private pause: boolean;
-
-  private pitstop: boolean;
-
-  private totalTime: number;
-
-  private pitstops: number;
-
-  private pitstopPenaltyTime: number;
-
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement, grid: Grid) {
     super(boardSize, canvas, grid);
     this.camera = new Camera(canvas.width, canvas.height, this.worldWidth, this.worldHeight);
