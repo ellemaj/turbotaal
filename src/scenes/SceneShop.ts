@@ -15,8 +15,6 @@ export default class SceneShop extends Scene {
 
   private goToPowerups: boolean;
 
-  private logo: HTMLImageElement;
-
   private skinsButton: HTMLImageElement;
 
   private powerupButton: HTMLImageElement;
@@ -47,6 +45,8 @@ export default class SceneShop extends Scene {
     this.logo = CanvasRenderer.loadNewImage('./assets/shoplogo.png');
     this.skinsButton = CanvasRenderer.loadNewImage('./assets/buttons/skins.png');
     this.powerupButton = CanvasRenderer.loadNewImage('./assets/buttons/powerup.png');
+
+    this.showBackButton = true;
 
     this.logoScale = 0.5;
     this.scale = 1.25;
@@ -113,10 +113,15 @@ export default class SceneShop extends Scene {
   /**
    * Update function
    */
-  public override update(delta: number): void {
+  public override update(): void {
     if (this.skinsButtonLoaded || this.powerupButtonLoaded) {
       this.isSkinsButtonClicked();
       this.isPowerupButtonClicked();
+    }
+
+    if (this.backClicked) {
+      this.goBack = true;
+      this.backClicked = false;
     }
   }
 
@@ -137,6 +142,11 @@ export default class SceneShop extends Scene {
     } else if (keyListener.keyPressed(KeyListener.KEY_P)) {
       this.goToPowerups = true;
     }
+
+    this.updateBackButton(
+      mouseListener.getMousePosition(),
+      mouseListener.buttonPressed(MouseListener.BUTTON_LEFT)
+    );
   }
 
   public override getNextScene(): Scene | null {
@@ -261,5 +271,8 @@ export default class SceneShop extends Scene {
       canvas.width - 80,
       padding + 5
     );
+
+    // Render the back button
+    this.renderBackButton(ctx);
   }
 }

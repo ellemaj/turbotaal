@@ -17,11 +17,7 @@ export default class ScenePause extends Scene {
 
   private quit: boolean = false;
 
-  private logo: HTMLImageElement;
-
   private goToTutorial: boolean = false;
-
-  private tutorialButton: HTMLImageElement;
 
   private tutorialScale: number = 1;
 
@@ -32,8 +28,6 @@ export default class ScenePause extends Scene {
   ) {
     super(boardSize, canvas);
     this.previousScene = previousScene;
-    this.logo = CanvasRenderer.loadNewImage('./assets/logo.png');
-    this.tutorialButton = CanvasRenderer.loadNewImage('./assets/buttons/tutorial.png');
   }
 
   /**
