@@ -1,7 +1,7 @@
 import Game from './Game.js';
 import Scene from './scenes/Scene.js';
 import SceneStart from './scenes/SceneStart.js';
-import RacetrackScene from './scenes/RacetrackScene.js';
+import RacetrackScene, { QuestionData } from './scenes/RacetrackScene.js';
 import Vector2 from './Vector2.js';
 import KeyListener from './KeyListener.js';
 import MouseListener from './MouseListener.js';
@@ -58,12 +58,6 @@ export default class BaseGame extends Game {
     this.mouseListener = new MouseListener(canvas);
 
     this.question = new Question();
-    // load a default question so it can be rendered
-    this.question.loadFromData(verkleinwoorden.normal[
-      Math.floor(Math.random() * verkleinwoorden.normal.length)]!);
-
-    // position the question once (centered)
-    this.question.setPosition(this.canvas.width / 2, 100);
 
     this.currentScene = new SceneStart(
       new Vector2(this.canvas.width, this.canvas.height),
@@ -92,10 +86,11 @@ export default class BaseGame extends Game {
     if (this.currentScene instanceof RacetrackScene) {
       const car: Car = this.currentScene.getCar();
       const currentHealth: number = car.getHealth().getHealth();
+      const question: Question = this.currentScene.getQuestion();
       // only accept answers when not locked
       if (!this.answerLocked) {
         if (car.getCollisionBox1()) {
-          const correct: boolean = this.question.checkAnswerAt(0);
+          const correct: boolean = question.checkAnswerAt(0);
           this.lastMessage = correct ? 'Correct!' : 'Fout';
           this.lastMessageTTL = 3;
           this.answerLocked = true;
@@ -111,7 +106,7 @@ export default class BaseGame extends Game {
           }
         }
         if (car.getCollisionBox2()) {
-          const correct: boolean = this.question.checkAnswerAt(1);
+          const correct: boolean = question.checkAnswerAt(1);
           this.lastMessage = correct ? 'Correct!' : 'Fout';
           this.lastMessageTTL = 3;
           this.answerLocked = true;
@@ -127,7 +122,7 @@ export default class BaseGame extends Game {
           }
         }
         if (car.getCollisionBox3()) {
-          const correct: boolean = this.question.checkAnswerAt(2);
+          const correct: boolean = question.checkAnswerAt(2);
           this.lastMessage = correct ? 'Correct!' : 'Fout';
           this.lastMessageTTL = 3;
           this.answerLocked = true;
@@ -161,10 +156,8 @@ export default class BaseGame extends Game {
     if (this.currentScene instanceof RacetrackScene) {
       const car: Car = this.currentScene.getCar();
       car.update(delta, this.canvas, this.grid, this.answerBoxes);
-    }
 
-    if (this.currentScene instanceof RacetrackScene) {
-      const car: Car = this.currentScene.getCar();
+      // Camera follow
       this.camera.follow(car.getPosition());
     }
 
@@ -183,6 +176,7 @@ export default class BaseGame extends Game {
       if (this.effectTimer <= 0) {
         // revert car stats if we saved them
         if (this.currentScene instanceof RacetrackScene) {
+          const scene: RacetrackScene = this.currentScene;
           const car: Car = this.currentScene.getCar();
           if (this.savedMaxSpeed !== null) {
             car.maxSpeed = this.savedMaxSpeed;
@@ -190,16 +184,23 @@ export default class BaseGame extends Game {
           if (this.savedTurnSpeed !== null) {
             car.turnSpeed = this.savedTurnSpeed;
           }
+
+          // Choose a random question
+          const data: QuestionData[] = scene['questionData'];
+          if (data.length > 0) {
+            const randomIndex: number = Math.floor(Math.random() * data.length);
+            const randomQuestion: QuestionData | undefined = data[randomIndex];
+
+            if (randomQuestion) {
+              scene.getQuestion().loadFromData(randomQuestion);
+              scene.getQuestion().setPosition(this.canvas.width / 2, 100);
+            }
+          }
         }
         this.savedMaxSpeed = null;
         this.savedTurnSpeed = null;
         this.effectTimer = 0;
         this.answerLocked = false;
-
-        // load a new random question and position it
-        this.question.loadFromData(verkleinwoorden.normal[
-          Math.floor(Math.random() * verkleinwoorden.normal.length)]!);
-        this.question.setPosition(this.canvas.width / 2, 100);
         this.lastMessage = null;
         this.lastMessageTTL = 0;
       }
@@ -262,12 +263,11 @@ export default class BaseGame extends Game {
     // Render the car and Q&A only in racetrack-scenes
     if (this.currentScene instanceof RacetrackScene) {
       const car: Car = this.currentScene.getCar();
-      const question: Question = this.currentScene.getQuestion();
       car.render(this.canvas);
-      question.draw(this.canvas);
       ctx.restore();
       // NOW ctx restore, so everything after is always on screen and not on the map (UI elements)
-      this.question.draw(this.canvas);
+      (this.currentScene instanceof RacetrackScene ? this.currentScene.getQuestion() :
+        null)?.draw(this.canvas);
       if (this.lastMessage) {
         CanvasRenderer.writeText(this.canvas, this.lastMessage, this.canvas.width / 2, 60, 'center', 'Arial', 36, this.lastMessage === 'Correct!' ? 'green' : 'red');
       }
@@ -286,17 +286,17 @@ export default class BaseGame extends Game {
       // if statements to check which healthbar and text
       if (currentHealth > 70) {
         ctx.fillStyle = '#4caf50';
-        ctx.fillRect( posX, posY, currentHealth / maxHealth * healthWidth, healthHeight);
+        ctx.fillRect(posX, posY, currentHealth / maxHealth * healthWidth, healthHeight);
         CanvasRenderer.writeText(this.canvas, 'Je auto is heel!', posX + (0.05 * this.canvas.width), posY - (0.01 * this.canvas.height), 'center', 'Arial', 24, '#f5f5f5');
       }
       if (currentHealth < 70 && currentHealth > 43) {
         ctx.fillStyle = '#fbc02d';
-        ctx.fillRect( posX, posY, currentHealth / maxHealth * healthWidth, healthHeight);
+        ctx.fillRect(posX, posY, currentHealth / maxHealth * healthWidth, healthHeight);
         CanvasRenderer.writeText(this.canvas, 'Je auto heeft lichte schade', posX + (0.03 * this.canvas.width), posY - (0.01 * this.canvas.height), 'center', 'Arial', 24, '#f5f5f5');
       }
       if (currentHealth < 43 && currentHealth > 20) {
         ctx.fillStyle = '#e53935';
-        ctx.fillRect( posX, posY, currentHealth / maxHealth * healthWidth, healthHeight);
+        ctx.fillRect(posX, posY, currentHealth / maxHealth * healthWidth, healthHeight);
         CanvasRenderer.writeText(this.canvas, 'Je auto is bijna kapot, bereid je voor op de pitstop!', posX - (0.03 * this.canvas.width), posY - (0.01 * this.canvas.height), 'center', 'Arial', 24, '#f5f5f5');
       }
     }

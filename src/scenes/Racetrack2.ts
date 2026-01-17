@@ -9,6 +9,7 @@ import SceneFinish from './SceneFinish.js';
 import RaceResult from '../data/RaceResult.js';
 import Grid from '../Grid.js';
 import Camera from '../Camera.js';
+import { werkwoordspelling } from '../questions/werkwoordspelling.js';
 
 export default class Racetrack2 extends RacetrackScene {
   private camera: Camera;
@@ -37,8 +38,9 @@ export default class Racetrack2 extends RacetrackScene {
     this.pitstopPenaltyTime = 0;
 
     this.setCarStart(900, 250, 1.58);
-
     this.loadTriggers();
+
+    this.setQuestionData(werkwoordspelling.normal);
   }
 
   private loadTriggers(): void {

@@ -6,7 +6,7 @@ import CanvasRenderer from './CanvasRenderer.js';
 export default class Question extends CanvasItem {
   private questionText: string;
 
-  private difficulty: number; //1 through 3
+  private difficulty: number; // 1 through 3
 
   private answers: Answer[];
 
