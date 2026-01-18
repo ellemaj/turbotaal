@@ -12,30 +12,11 @@ import Camera from '../Camera.js';
 import { werkwoordspelling } from '../questions/werkwoordspelling.js';
 
 export default class Racetrack2 extends RacetrackScene {
-  private camera: Camera;
-
-  private pause: boolean;
-
-  private pitstop: boolean;
-
-  private totalTime: number;
-
-  private pitstops: number;
-
-  private pitstopPenaltyTime: number;
-
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement, grid: Grid) {
     super(boardSize, canvas, grid);
-    this.pause = false;
-    this.pitstop = false;
-    this.camera = new Camera(canvas.width, canvas.height, this.worldWidth, this.worldHeight);
 
     this.trackBackground = CanvasRenderer.loadNewImage('./assets/racetracks/race2.png');
     this.background = this.trackBackground;
-
-    this.totalTime = 0;
-    this.pitstops = 0;
-    this.pitstopPenaltyTime = 0;
 
     this.setCarStart(900, 250, 1.58);
     this.loadTriggers();

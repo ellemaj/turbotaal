@@ -8,34 +8,15 @@ import ScenePitstop from './ScenePitstop.js';
 import SceneFinish from './SceneFinish.js';
 import RaceResult from '../data/RaceResult.js';
 import Grid from '../Grid.js';
-import Camera from '../Camera.js';
 import { verkleinwoorden } from '../questions/verkleinwoorden.js';
 
 export default class Racetrack1 extends RacetrackScene {
-  private pause: boolean;
-
-  private pitstop: boolean;
-
-  private camera: Camera;
-
-  private totalTime: number;
-
-  private pitstops: number;
-
-  private pitstopPenaltyTime: number;
-
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement, grid: Grid) {
     super(boardSize, canvas, grid);
-    this.pause = false;
-    this.pitstop = false;
-    this.camera = new Camera(canvas.width, canvas.height, this.worldWidth, this.worldHeight);
+
 
     this.trackBackground = CanvasRenderer.loadNewImage('./assets/racetracks/race1.png');
     this.background = this.trackBackground;
-
-    this.totalTime = 0;
-    this.pitstops = 0;
-    this.pitstopPenaltyTime = 0;
 
     this.setCarStart(800, 925, -1.57);
     this.loadTriggers();

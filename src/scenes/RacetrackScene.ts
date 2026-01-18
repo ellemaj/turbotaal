@@ -7,6 +7,7 @@ import Grid from '../Grid.js';
 import Question from '../Question.js';
 import PlayerData from '../data/PlayerData.js';
 import { AnswerBox } from '../data/Answerbox.js';
+import Camera from '../Camera.js';
 
 export type AnswerBoxSpawn = {
   x: number,
@@ -26,6 +27,18 @@ export default abstract class RacetrackScene extends Scene {
   private get maxLaps(): number {
     return PlayerData.getMaxLaps();
   }
+
+  protected pause: boolean;
+
+  protected totalTime: number;
+
+  protected pitstop: boolean;
+
+  protected pitstops: number;
+
+  protected camera: Camera;
+
+  protected pitstopPenaltyTime: number;
 
   protected finished: boolean = false;
 
@@ -64,6 +77,12 @@ export default abstract class RacetrackScene extends Scene {
     this.car = new Car();
     this.question = new Question();
     this.grid = grid;
+    this.pause = false;
+    this.pitstop = false;
+    this.pitstops = 0;
+    this.camera = new Camera(canvas.width, canvas.height, this.worldWidth, this.worldHeight);
+    this.totalTime = 0;
+    this.pitstopPenaltyTime = 0;
 
     this.createAnswerBoxes();
   }
