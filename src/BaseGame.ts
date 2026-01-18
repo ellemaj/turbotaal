@@ -265,12 +265,27 @@ export default class BaseGame extends Game {
       const car: Car = this.currentScene.getCar();
       car.render(this.canvas);
       ctx.restore();
+
       // NOW ctx restore, so everything after is always on screen and not on the map (UI elements)
-      (this.currentScene instanceof RacetrackScene ? this.currentScene.getQuestion() :
-        null)?.draw(this.canvas);
+      (this.currentScene instanceof RacetrackScene
+        ? this.currentScene.getQuestion()
+        : null
+      )?.draw(this.canvas);
+
       if (this.lastMessage) {
-        CanvasRenderer.writeText(this.canvas, this.lastMessage, this.canvas.width / 2, 60, 'center', 'Arial', 36, this.lastMessage === 'Correct!' ? 'green' : 'red');
+        CanvasRenderer.writeText(
+          this.canvas,
+          this.lastMessage,
+          this.canvas.width / 2,
+          60,
+          'center',
+          'Arial', 36,
+          this.lastMessage === 'Correct!' ? 'green' : 'red'
+        );
       }
+
+      this.currentScene.renderPauseButton(ctx);
+
       const track1: Racetrack1 = this.currentScene as Racetrack1;
       track1.renderLapcount();
       track1.renderTimer();
