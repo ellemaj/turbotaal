@@ -13,8 +13,6 @@ export default class SceneGarage extends Scene {
 
   private goBack: boolean;
 
-  private reset: boolean;
-
   private rotationAngle: number = 0;
 
   private message: string | null = null;
@@ -27,7 +25,6 @@ export default class SceneGarage extends Scene {
     super(boardSize, canvas);
     this.returnScene = returnScene;
     this.goBack = false;
-    this.reset = false;
     this.showBackButton = true;
 
     this.background = CanvasRenderer.loadNewImage('./assets/backgrounds/garage.png');

@@ -105,9 +105,9 @@ export default class SceneAdmin extends Scene {
   }
 
   /**
-   * Render
+   * renders stuff onto the canvas
    * @param canvas canvas it needs to be rendered on
-   * @returns yes
+   * @returns nothing because its void
    */
   public override render(canvas: HTMLCanvasElement): void {
     const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
