@@ -57,14 +57,4 @@ export default class Camera {
     ctx.scale(this.zoom, this.zoom);
     ctx.translate(-this.position.x, -this.position.y);
   }
-
-  public begin(ctx: CanvasRenderingContext2D): void {
-    ctx.save();
-    ctx.scale(this.zoom, this.zoom);
-    ctx.translate(-this.position.x, -this.position.y);
-  }
-
-  public end(ctx: CanvasRenderingContext2D): void {
-    ctx.restore();
-  }
 }

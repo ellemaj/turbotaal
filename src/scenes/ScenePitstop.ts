@@ -77,9 +77,9 @@ export default class ScenePitstop extends Scene {
       }
       if(
         (currentQuestion.missing == '!') && keyListener.keyPressed(KeyListener.KEY_1) && keyListener.keyPressed(KeyListener.KEY_SHIFT_LEFT) ||
-        (currentQuestion.missing == '?') && keyListener.keyPressed(KeyListener.Key_Slash) && keyListener.keyPressed(KeyListener.KEY_SHIFT_LEFT,) ||
-        (currentQuestion.missing == '.') && keyListener.keyPressed(KeyListener.Key_Period) ||
-        (currentQuestion.missing == ',') && keyListener.keyPressed(KeyListener.Key_Comma)
+        (currentQuestion.missing == '?') && keyListener.keyPressed(KeyListener.KEY_SLASH) && keyListener.keyPressed(KeyListener.KEY_SHIFT_LEFT,) ||
+        (currentQuestion.missing == '.') && keyListener.keyPressed(KeyListener.KEY_PERIOD) ||
+        (currentQuestion.missing == ',') && keyListener.keyPressed(KeyListener.KEY_COMMA)
       ) {
         this.questionsAnswered += 1;
         this.currentQuestionIndex += 1;

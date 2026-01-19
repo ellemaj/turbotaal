@@ -74,7 +74,6 @@ export default class Car extends CanvasItem {
     grid: Grid,
     answerBoxes: AnswerBox[]): void {
     const skin: CarSkin = getCarSkin(PlayerData.getSkinIndex());
-    const speedMultiplier: number = this.health.getSpeedMultiplier();
 
     console.log(this.speed);
 
@@ -211,22 +210,6 @@ export default class Car extends CanvasItem {
     }
   }
 
-  // // Ensures that te car cannot drive out of your screen
-  // const carWidth: number = this.image.width * this.scale;
-  // const carHeight: number = this.image.height * this.scale;
-
-  // if (this.posX < 0) {
-  //   this.posX = 0;
-  // }
-  // if (this.posY < 0) {
-  //   this.posY = 0;
-  // }
-  // if (this.posX + carWidth > canvas.width) {
-  //   this.posX = canvas.width - carWidth;
-  // }
-  // if (this.posY + carHeight > canvas.height) {
-  //   this.posY = canvas.height - carHeight;
-  // }
 
   /**
    * Render the car

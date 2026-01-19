@@ -121,11 +121,11 @@ export default class KeyListener {
 
   public static readonly KEY_Z: string = 'KeyZ';
 
-  public static readonly Key_Period: string = 'Period';
+  public static readonly KEY_PERIOD: string = 'Period';
 
-  public static readonly Key_Comma: string = 'Comma';
+  public static readonly KEY_COMMA: string = 'Comma';
 
-  public static readonly Key_Slash: string = 'Slash';
+  public static readonly KEY_SLASH: string = 'Slash';
 
   public static readonly KEY_BACKSPACE: string = 'Backspace';
 

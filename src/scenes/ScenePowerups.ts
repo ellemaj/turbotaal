@@ -1,9 +1,8 @@
 import CanvasRenderer from '../CanvasRenderer.js';
 import Vector2 from '../Vector2.js';
-import MouseListener, { MouseCoordinates } from '../MouseListener.js';
+import MouseListener from '../MouseListener.js';
 import KeyListener from '../KeyListener.js';
 import Scene from './Scene.js';
-import PlayerData from '../data/PlayerData.js';
 import SceneShop from './SceneShop.js';
 
 export default class ScenePowerups extends Scene {
@@ -20,7 +19,7 @@ export default class ScenePowerups extends Scene {
   /**
    * Update function
    */
-  public override update(delta: number): void {
+  public override update(): void {
     if (this.backClicked) {
       this.goBack = true;
       this.backClicked = false;
