@@ -92,9 +92,9 @@ export default class BaseGame extends Game {
         if (car.getCollisionBox1()) {
           const correct: boolean = question.checkAnswerAt(0);
           this.lastMessage = correct ? 'Correct!' : 'Fout';
-          this.lastMessageTTL = 3;
+          this.lastMessageTTL = 1;
           this.answerLocked = true;
-          this.effectTimer = 3;
+          this.effectTimer = 1;
           this.savedMaxSpeed = car.maxSpeed;
           this.savedTurnSpeed = car.turnSpeed;
           if (correct) {
@@ -108,9 +108,9 @@ export default class BaseGame extends Game {
         if (car.getCollisionBox2()) {
           const correct: boolean = question.checkAnswerAt(1);
           this.lastMessage = correct ? 'Correct!' : 'Fout';
-          this.lastMessageTTL = 3;
+          this.lastMessageTTL = 1;
           this.answerLocked = true;
-          this.effectTimer = 3;
+          this.effectTimer = 1;
           this.savedMaxSpeed = car.maxSpeed;
           this.savedTurnSpeed = car.turnSpeed;
           if (correct) {
@@ -124,9 +124,9 @@ export default class BaseGame extends Game {
         if (car.getCollisionBox3()) {
           const correct: boolean = question.checkAnswerAt(2);
           this.lastMessage = correct ? 'Correct!' : 'Fout';
-          this.lastMessageTTL = 3;
+          this.lastMessageTTL = 1;
           this.answerLocked = true;
-          this.effectTimer = 3;
+          this.effectTimer = 1;
           this.savedMaxSpeed = car.maxSpeed;
           this.savedTurnSpeed = car.turnSpeed;
           if (correct) {
