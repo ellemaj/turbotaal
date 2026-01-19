@@ -6,10 +6,10 @@ import ScenePause from './ScenePause.js';
 import SceneStart from './SceneStart.js';
 
 /**
- * A tutorial section with an own dialog, background and sprite
+ * A tutorial section with an own dialogue, background and sprite
  */
 type TutorialSection = {
-  dialog: string[];
+  dialogue: string[];
   background: HTMLImageElement;
   sprite: HTMLImageElement;
 };
@@ -17,7 +17,7 @@ type TutorialSection = {
 export default class SceneTutorial extends Scene {
   private pause: boolean = false;
 
-  private currentDialogIndex: number = 0;
+  private currentDialogueIndex: number = 0;
 
   private goToStart: boolean = false;
 
@@ -28,14 +28,14 @@ export default class SceneTutorial extends Scene {
     TutorialSection
   >;
 
-  public constructor(boardSize: Vector2, canvas: HTMLCanvasElement,) {
+  public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
     super(boardSize, canvas);
 
-    // All the dialogs for the game, per state of the tutorial
+    // All the dialogues for the game, per state of the tutorial
     // The background and sprite also can be changed for every state
     this.sections = {
       welcome: {
-        dialog: [
+        dialogue: [
           'Hoi! Ik ben Cheetah de cheetah!',
           'Ik ga je stap voor stap uitleggen hoe TurboTaal werkt!',
         ],
@@ -44,7 +44,7 @@ export default class SceneTutorial extends Scene {
       },
 
       menu: {
-        dialog: [
+        dialogue: [
           'In het beginmenu kun je kiezen waar je naartoe wilt.',
           'Als je wilt racen, dan klik je op start.',
           'Je komt dan in het keuzemenu van de racebanen!',
@@ -58,7 +58,7 @@ export default class SceneTutorial extends Scene {
       },
 
       racing: {
-        dialog: [
+        dialogue: [
 
           'Je kunt met de auto rijden door de WASD, of de pijltjestoetsen te gebruiken.',
           'Als je op ESC drukt, gaat TurboTaal even op pauze, en loopt de tijd niet meer.',
@@ -75,7 +75,7 @@ export default class SceneTutorial extends Scene {
       },
 
       pitstop: {
-        dialog: [
+        dialogue: [
           'Hoi! Ik ben Walter de Wasbeer, de baas van de pitstop!',
           'In de pitstop zorg ik ervoor dat je auto weer volledig gerepareerd wordt!',
           'Beantwoord de vragen zo snel mogelijk, zodat je weer verder kan racen.',
@@ -87,7 +87,7 @@ export default class SceneTutorial extends Scene {
       },
 
       preshop: {
-        dialog: [
+        dialogue: [
           'Zo, nu weet je hoe het spel werkt! Maar, hoe zit het nou met de shop?',
           'Dat gaan Walter en ik je ook uitleggen!',
           'Als je in het beginmenu op shop klikt, kom je in de shop terecht.'
@@ -97,7 +97,7 @@ export default class SceneTutorial extends Scene {
       },
 
       shop: {
-        dialog: [
+        dialogue: [
           'Je kunt hier skins kopen, en racen met degene die je het leukst vindt!',
           'Wil je weten welke skins er zijn?',
           'Dan kun je in de garage kijken welke je kunt kopen!',
@@ -107,7 +107,7 @@ export default class SceneTutorial extends Scene {
       },
 
       postshop: {
-        dialog: [
+        dialogue: [
           'Om dingen te kopen in de shop, moet je TurboTokens verdienen. Die verdien je... door te racen!',
           'TurboTokens verdien je door zo snel mogelijk te racen! Hoe sneller, hoe meer tokens.',
           'De tokens gebruik je om skins te kopen in de shop!'
@@ -117,7 +117,7 @@ export default class SceneTutorial extends Scene {
       },
 
       finished: {
-        dialog: [
+        dialogue: [
           'Dat was de uitleg! Nu weet je hoe alles werkt.',
           'Je kunt deze tutorial altijd opnieuw bekijken via het vraagteken-knopje in het startmenu.',
           'Veel plezier met het spelen van TurboTaal!',
@@ -143,13 +143,13 @@ export default class SceneTutorial extends Scene {
       this.pause = true;
     }
 
-    // Go to the next dialog when SPACE is pressed
+    // Go to the next dialogue when SPACE is pressed
     if (keyListener.keyPressed(KeyListener.KEY_SPACE)) {
-      this.currentDialogIndex += 1;
+      this.currentDialogueIndex += 1;
 
-      // Go to the next state when there arent any dialogs in the current state
+      // Go to the next state when there arent any dialogues in the current state
       const section: TutorialSection = this.sections[this.state];
-      if (this.currentDialogIndex >= section.dialog.length) {
+      if (this.currentDialogueIndex >= section.dialogue.length) {
         this.nextState();
       }
     }
@@ -177,7 +177,7 @@ export default class SceneTutorial extends Scene {
   }
 
   private nextState(): void {
-    this.currentDialogIndex = 0;
+    this.currentDialogueIndex = 0;
 
     // Switch to the right state when nextState() is called
     switch (this.state) {
@@ -245,8 +245,8 @@ export default class SceneTutorial extends Scene {
     ctx.fillRect(rectangleX, rectangleY, rectWidth, rectHeight);
 
 
-    // Render the dialog
-    const text: string = section.dialog[this.currentDialogIndex] ?? '';
+    // Render the dialogue
+    const text: string = section.dialogue[this.currentDialogueIndex] ?? '';
 
     CanvasRenderer.writeText(canvas, text, rectangleX * 2, rectangleY * 1.1, 'center', 'Arial', 24, '#AEE6E6');
     if (this.state == 'welcome'){

@@ -16,7 +16,7 @@ export default class ScenePitstop extends Scene {
 
   private resumeRace: boolean = false;
 
-  private dialog: string[] = [
+  private dialogue: string[] = [
     'Hoi! Ik ben Walter de wasbeer.',
     'Je auto is kapot:(',
     'Beantwoord 3 vragen juist om je auto te maken!',
@@ -30,9 +30,9 @@ export default class ScenePitstop extends Scene {
 
   private maxQuestions: number = 3;
 
-  private state: 'dialog' | 'questions' | 'finished' = 'dialog';
+  private state: 'dialogue' | 'questions' | 'finished' = 'dialogue';
 
-  private currentDialogIndex: number = 0;
+  private currentDialogueIndex: number = 0;
 
   public constructor(
     boardSize: Vector2,
@@ -59,14 +59,14 @@ export default class ScenePitstop extends Scene {
       this.pause = true;
     }
 
-    // Go to the next dialog when SPACE is pressed
-    if (this.state === 'dialog') {
+    // Go to the next dialogue when SPACE is pressed
+    if (this.state === 'dialogue') {
       if (keyListener.keyPressed(KeyListener.KEY_SPACE)) {
-        this.currentDialogIndex += 1;
+        this.currentDialogueIndex += 1;
       }
     }
 
-    // Resume the stopwatch when the dialog is over
+    // Resume the stopwatch when the dialogue is over
     if (this.state === 'questions') {
       this.previousScene.resumeTimer();
       const currentQuestion:
@@ -100,9 +100,9 @@ export default class ScenePitstop extends Scene {
    * @param delta time elapsed
    */
   public override update(delta: number): void {
-    if (this.currentDialogIndex >= this.dialog.length) {
-      this.state = 'questions'; // Change the state to questions when the dialog is done
-      this.previousScene.update(delta); // Only update racetrack when the dialog is done
+    if (this.currentDialogueIndex >= this.dialogue.length) {
+      this.state = 'questions'; // Change the state to questions when the dialogue is done
+      this.previousScene.update(delta); // Only update racetrack when the dialogue is done
     }
     if (this.state == 'questions') {
       this.previousScene.getCar().getHealth().heal(100);
@@ -164,11 +164,11 @@ export default class ScenePitstop extends Scene {
     ctx.textAlign = 'right';
     ctx.fillText(this.previousScene.getFormattedTime(), canvas.width - 20, 40);
 
-    // Render dialog and questions
-    if (this.state == 'dialog') {
+    // Render dialogue and questions
+    if (this.state == 'dialogue') {
       ctx.font = '24px Arial';
       ctx.textAlign = 'left';
-      const text: string = this.dialog[this.currentDialogIndex] ?? '';
+      const text: string = this.dialogue[this.currentDialogueIndex] ?? '';
       ctx.fillStyle = 'White';
       CanvasRenderer.writeText(canvas, text, this.boardSize.x / 2, this.boardSize.y / 2 - 350, 'center', 'Arial', 24, 'white');
       CanvasRenderer.writeText(canvas, 'Druk op SPATIE om verder te gaan...', this.boardSize.x / 2, this.boardSize.y / 2 - 300, 'center', 'Arial', 24, 'white');
