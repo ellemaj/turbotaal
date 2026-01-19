@@ -99,9 +99,8 @@ export default class SceneTutorial extends Scene {
       shop: {
         dialog: [
           'Je kunt hier skins kopen, en racen met degene die je het leukst vindt!',
-          'Als je geen skin wilt kopen, maar wel een powerup, kan dat ook hier!',
-          'Powerups kunnen je auto verbeteren, bijvoorbeeld versnellen of meer gezondheid geven',
-          'Super handig dus, maar.. hoe koop je skins of powerups dan?'
+          'Wil je weten welke skins er zijn?',
+          'Dan kun je in de garage kijken welke je kunt kopen!',
         ],
         background: CanvasRenderer.loadNewImage('./assets/backgrounds/shop.png'),
         sprite: CanvasRenderer.loadNewImage('./assets/sprites/wasbeer1.png'),
@@ -109,9 +108,9 @@ export default class SceneTutorial extends Scene {
 
       postshop: {
         dialog: [
-          'Om dingen te kopen in de shop, moet je TurboMedals verdienen. Die verdien je... door te racen!',
-          'TurboMedals verdien je door zo snel mogelijk te racen! Hoe sneller, hoe meer medals.',
-          'De medals gebruik je om skins of powerups te kopen in de shop!'
+          'Om dingen te kopen in de shop, moet je TurboTokens verdienen. Die verdien je... door te racen!',
+          'TurboTokens verdien je door zo snel mogelijk te racen! Hoe sneller, hoe meer tokens.',
+          'De tokens gebruik je om skins te kopen in de shop!'
         ],
         background: CanvasRenderer.loadNewImage('./assets/backgrounds/shop.png'),
         sprite: CanvasRenderer.loadNewImage('./assets/sprites/cheetah1.png'),
