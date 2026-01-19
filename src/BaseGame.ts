@@ -95,9 +95,9 @@ export default class BaseGame extends Game {
         if (car.getCollisionBox1()) {
           const correct: boolean = question.checkAnswerAt(0);
           this.lastMessage = correct ? 'Correct!' : 'Fout';
-          this.lastMessageTTL = 1;
+          this.lastMessageTTL = 2;
           this.answerLocked = true;
-          this.effectTimer = 1;
+          this.effectTimer = 1.75;
           if (correct) {
             car.maxSpeed = this.savedMaxSpeed + 0.075;
             car.turnSpeed = this.savedTurnSpeed - 0.5;
@@ -111,9 +111,9 @@ export default class BaseGame extends Game {
         if (car.getCollisionBox2()) {
           const correct: boolean = question.checkAnswerAt(1);
           this.lastMessage = correct ? 'Correct!' : 'Fout';
-          this.lastMessageTTL = 1;
+          this.lastMessageTTL = 2;
           this.answerLocked = true;
-          this.effectTimer = 1;
+          this.effectTimer = 1.75;
           if (correct) {
             car.maxSpeed = this.savedMaxSpeed + 0.075;
             car.turnSpeed = this.savedTurnSpeed - 0.5;
@@ -127,9 +127,9 @@ export default class BaseGame extends Game {
         if (car.getCollisionBox3()) {
           const correct: boolean = question.checkAnswerAt(2);
           this.lastMessage = correct ? 'Correct!' : 'Fout';
-          this.lastMessageTTL = 1;
+          this.lastMessageTTL = 2;
           this.answerLocked = true;
-          this.effectTimer = 1;
+          this.effectTimer = 1.75;
           if (correct) {
             car.maxSpeed = this.savedMaxSpeed + 0.075;
             car.turnSpeed = this.savedTurnSpeed - 0.5;
@@ -224,10 +224,6 @@ export default class BaseGame extends Game {
     }
     return true;
   }
-
-  /**
-   *slow the car down if low health
-   */
 
   /**
    * Render all the elements in the screen.
