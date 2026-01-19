@@ -33,6 +33,8 @@ export default abstract class RacetrackScene extends Scene {
   private laps: number = 0;
 
   private get maxLaps(): number {
+    void this.boardSize; // Dummy to fix ES-Lint error
+
     return PlayerData.getMaxLaps();
   }
 

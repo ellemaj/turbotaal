@@ -260,6 +260,8 @@ export default class SceneFinish extends Scene {
   }
 
   private formatTime(ms: number): string {
+    void this.boardSize; // Dummy to fix ES-Lint error
+
     const totalSeconds: number = ms / 1000;
     const minutes: number = Math.floor(totalSeconds / 60);
     const seconds: number = Math.floor(totalSeconds % 60);

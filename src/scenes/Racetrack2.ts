@@ -1,6 +1,7 @@
 import CanvasRenderer from '../CanvasRenderer.js';
 import Vector2 from '../Vector2.js';
 import KeyListener from '../KeyListener.js';
+import MouseListener from '../MouseListener.js';
 import Scene from './Scene.js';
 import RacetrackScene, { AnswerBoxSpawn } from './RacetrackScene.js';
 import ScenePause from './ScenePause.js';
@@ -9,7 +10,7 @@ import SceneFinish from './SceneFinish.js';
 import RaceResult from '../data/RaceResult.js';
 import Grid from '../Grid.js';
 import { werkwoordspelling } from '../questions/werkwoordspelling.js';
-import MouseListener from '../MouseListener.js';
+
 
 export default class Racetrack2 extends RacetrackScene {
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement, grid: Grid) {
@@ -25,7 +26,7 @@ export default class Racetrack2 extends RacetrackScene {
   }
 
   private loadTriggers(): void {
-    // Hardcoded from race2UPDATED.json
+    // Hardcoded from race2.json
     this.checkpoints = [
       { x: 1664, y: 512, width: 192, height: 64, index: 0 },
       { x: 1088, y: 1024, width: 64, height: 192, index: 1 },
@@ -55,7 +56,7 @@ export default class Racetrack2 extends RacetrackScene {
       this.pause = true;
     }
 
-
+    // Update the pausebutton
     this.updatePauseButton(
       mouseListener.getMousePosition(),
       mouseListener.buttonPressed(MouseListener.BUTTON_LEFT)
@@ -68,6 +69,10 @@ export default class Racetrack2 extends RacetrackScene {
    * @returns time elapsed
    */
   public override update(delta: number): void {
+    if (this.finished) {
+      return;
+    }
+
     this.car.update(delta, this.canvas, this.grid, this.answerBoxes);
 
     this.checkTriggers(); //for the lapcount
@@ -100,13 +105,16 @@ export default class Racetrack2 extends RacetrackScene {
       this.pitstops += 1;
       return new ScenePitstop(this.boardSize, this.canvas, this);
     }
+
     if (this.car.pitstopTriggered) {
       this.car.pitstopTriggered = false;
       this.pitstop = true;
     }
+
     if (this.car.getHealth().carIsLow()) {
       this.pitstop = true;
     }
+
     if (this.finished) {
       const raceResult: RaceResult = {
         totalTime: this.totalTime,
@@ -136,6 +144,7 @@ export default class Racetrack2 extends RacetrackScene {
     if (!ctx) {
       return;
     }
+
     // Renders the background
     ctx.drawImage(this.background, 0, 0);
 
@@ -152,9 +161,6 @@ export default class Racetrack2 extends RacetrackScene {
         '20px Arial'
       );
     }
-
-    // Renders the car
-    this.car.render(canvas);
   }
 
   /**
@@ -188,6 +194,8 @@ export default class Racetrack2 extends RacetrackScene {
   }
 
   protected override getAnswerBoxSpawns(): AnswerBoxSpawn[] {
+    void this.boardSize; // Dummy to fix ES-Lint error
+
     return [
       { x: 70, y: 900, direction: 'horizontal' },
       { x: 1222, y: 950, direction: 'horizontal' },

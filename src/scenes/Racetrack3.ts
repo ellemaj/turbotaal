@@ -1,6 +1,7 @@
 import CanvasRenderer from '../CanvasRenderer.js';
 import Vector2 from '../Vector2.js';
 import KeyListener from '../KeyListener.js';
+import MouseListener from '../MouseListener.js';
 import Scene from './Scene.js';
 import RacetrackScene, { AnswerBoxSpawn } from './RacetrackScene.js';
 import ScenePause from './ScenePause.js';
@@ -8,13 +9,12 @@ import ScenePitstop from './ScenePitstop.js';
 import SceneFinish from './SceneFinish.js';
 import RaceResult from '../data/RaceResult.js';
 import Grid from '../Grid.js';
-import { verkleinwoorden } from '../questions/verkleinwoorden.js';
-import MouseListener from '../MouseListener.js';
+import { spelling } from '../questions/spelling.js';
+
 
 export default class Racetrack3 extends RacetrackScene {
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement, grid: Grid) {
     super(boardSize, canvas, grid);
-
 
     this.trackBackground = CanvasRenderer.loadNewImage('./assets/racetracks/race3.png');
     this.background = this.trackBackground;
@@ -22,7 +22,21 @@ export default class Racetrack3 extends RacetrackScene {
     this.setCarStart(400, 1000, -1.57);
     this.loadTriggers();
 
-    this.setQuestionData(verkleinwoorden.normal);
+    this.setQuestionData(spelling.normal);
+  }
+
+  private loadTriggers(): void {
+    // Hardcoded from race3.json
+    this.checkpoints = [
+      { x: 64, y: 896, width: 192, height: 64, index: 0 },
+      { x: 256, y: 64, width: 64, height: 192, index: 1 },
+      { x: 384, y: 640, width: 192, height: 64, index: 2 },
+      { x: 1280, y: 576, width: 192, height: 64, index: 3 },
+      { x: 1024, y: 192, width: 192, height: 64, index: 4 },
+      { x: 1408, y: 0, width: 64, height: 192, index: 5 },
+      { x: 1664, y: 512, width: 192, height: 64, index: 6 }
+    ];
+    this.finish = { x: 896, y: 960, width: 64, height: 320 };
   }
 
   /**
@@ -44,7 +58,7 @@ export default class Racetrack3 extends RacetrackScene {
       this.pause = true;
     }
 
-
+    // Update the pausebutton
     this.updatePauseButton(
       mouseListener.getMousePosition(),
       mouseListener.buttonPressed(MouseListener.BUTTON_LEFT)
@@ -93,13 +107,16 @@ export default class Racetrack3 extends RacetrackScene {
       this.pitstops += 1;
       return new ScenePitstop(this.boardSize, this.canvas, this);
     }
+
     if (this.car.pitstopTriggered) {
       this.car.pitstopTriggered = false;
       this.pitstop = true;
     }
+
     if (this.car.getHealth().carIsLow()) {
       this.pitstop = true;
     }
+
     if (this.finished) {
       const raceResult: RaceResult = {
         totalTime: this.totalTime,
@@ -120,7 +137,7 @@ export default class Racetrack3 extends RacetrackScene {
   }
 
   /**
-   * Renders everything in Racetrack1
+   * Renders everything in Racetrack3
    *
    * @param canvas the canvas it needs to be rendered on
    */
@@ -129,6 +146,7 @@ export default class Racetrack3 extends RacetrackScene {
     if (!ctx) {
       return;
     }
+
     // Renders the background
     ctx.drawImage(this.background, 0, 0);
 
@@ -178,24 +196,12 @@ export default class Racetrack3 extends RacetrackScene {
   }
 
   protected override getAnswerBoxSpawns(): AnswerBoxSpawn[] {
+    void this.boardSize; // Dummy to fix ES-Lint error
+
     return [
       { x: 70, y: 600, direction: 'horizontal' },
       { x: 1670, y: 375, direction: 'horizontal' },
       { x: 900, y: 710, direction: 'vertical' },
     ];
-  }
-
-  private loadTriggers(): void {
-    // Hardcoded from race1UPDATEDtest.json
-    this.checkpoints = [
-      { x: 64, y: 896, width: 192, height: 64, index: 0 },
-      { x: 256, y: 64, width: 64, height: 192, index: 1 },
-      { x: 384, y: 640, width: 192, height: 64, index: 2 },
-      { x: 1280, y: 576, width: 192, height: 64, index: 3 },
-      { x: 1024, y: 192, width: 192, height: 64, index: 4 },
-      { x: 1408, y: 0, width: 64, height: 192, index: 5 },
-      { x: 1664, y: 512, width: 192, height: 64, index: 6 }
-    ];
-    this.finish = { x: 896, y: 960, width: 64, height: 320 };
   }
 }
