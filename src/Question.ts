@@ -92,4 +92,8 @@ export default class Question extends CanvasItem {
   public checkAnswerAt(index: number): boolean {
     return this.answers[index]?.isCorrectAnswer() ?? false;
   }
+
+  public getCorrectAnswerIndex(): number {
+    return this.answers.findIndex((a: Answer) => a.isCorrectAnswer());
+  }
 }

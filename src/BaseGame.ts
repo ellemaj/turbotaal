@@ -17,6 +17,7 @@ import Racetrack1 from './scenes/Racetrack1.js';
 import Racetrack2 from './scenes/Racetrack2.js';
 import Racetrack3 from './scenes/Racetrack3.js';
 import { AnswerBox } from './data/Answerbox.js';
+import Answer from './Answer.js';
 
 export default class BaseGame extends Game {
   private canvas: HTMLCanvasElement;
@@ -46,6 +47,10 @@ export default class BaseGame extends Game {
   private camera: Camera;
 
   protected answerBoxes: AnswerBox[] = [];
+
+  private showCorrectAnswer: boolean = false;
+
+  private correctAnswerIndex: number = -1;
 
   public constructor(canvas: HTMLCanvasElement) {
     super();
@@ -97,6 +102,8 @@ export default class BaseGame extends Game {
             car.maxSpeed = this.savedMaxSpeed + 0.075;
             car.turnSpeed = this.savedTurnSpeed - 0.5;
           } else {
+            this.showCorrectAnswer = true;
+            this.correctAnswerIndex = question.getCorrectAnswerIndex();
             car.maxSpeed = this.savedMaxSpeed - 0.075;
             car.turnSpeed = this.savedTurnSpeed + 0.5;
           }
@@ -111,6 +118,8 @@ export default class BaseGame extends Game {
             car.maxSpeed = this.savedMaxSpeed + 0.075;
             car.turnSpeed = this.savedTurnSpeed - 0.5;
           } else {
+            this.showCorrectAnswer = true;
+            this.correctAnswerIndex = question.getCorrectAnswerIndex();
             car.maxSpeed = this.savedMaxSpeed - 0.075;
             car.turnSpeed = this.savedTurnSpeed + 0.5;
           }
@@ -125,6 +134,8 @@ export default class BaseGame extends Game {
             car.maxSpeed = this.savedMaxSpeed + 0.075;
             car.turnSpeed = this.savedTurnSpeed - 0.5;
           } else {
+            this.showCorrectAnswer = true;
+            this.correctAnswerIndex = question.getCorrectAnswerIndex();
             car.maxSpeed = this.savedMaxSpeed - 0.075;
             car.turnSpeed = this.savedTurnSpeed + 0.5;
           }
@@ -167,6 +178,8 @@ export default class BaseGame extends Game {
       this.effectTimer -= delta / 1000;
       if (this.effectTimer <= 0) {
         // revert car stats if we saved them
+        this.showCorrectAnswer = false;
+        this.correctAnswerIndex = -1;
         if (this.currentScene instanceof RacetrackScene) {
           const scene: RacetrackScene = this.currentScene;
           const car: Car = this.currentScene.getCar();
@@ -262,6 +275,28 @@ export default class BaseGame extends Game {
         : null
       )?.draw(this.canvas);
 
+      // Show the correct answer when a wrong one is chosen
+      if (this.showCorrectAnswer && this.correctAnswerIndex !== -1) {
+        const answer: Answer | null | undefined = this.currentScene
+          instanceof RacetrackScene
+          ? this.currentScene.getQuestion().getAnswerIndex(this.correctAnswerIndex)
+          : null;
+
+        if (answer) {
+          CanvasRenderer.writeText(
+            this.canvas,
+            `Juiste antwoord: ${answer.getText()}`,
+            this.canvas.width / 2,
+            220,
+            'center',
+            'Arial',
+            22,
+            '#4CAF50'
+          );
+        }
+      }
+
+      // Show correct or false when a question is answered
       if (this.lastMessage) {
         CanvasRenderer.writeText(
           this.canvas,
@@ -279,7 +314,8 @@ export default class BaseGame extends Game {
       const track1: Racetrack1 = this.currentScene as Racetrack1;
       track1.renderLapcount();
       track1.renderTimer();
-      //rendering the healthbar
+
+      // Rendering the healthbar
       const currentHealth: number = car.getHealth().getHealth();
       const maxHealth: number = 100;
       const healthWidth: number = 0.1 * (this.canvas.width);
@@ -288,6 +324,7 @@ export default class BaseGame extends Game {
       const posY: number = 0.10 * (this.canvas.height);
       ctx.fillStyle = '#f2f2f2';
       ctx.fillRect(posX, posY, healthWidth, healthHeight);
+
       // if statements to check which healthbar and text
       if (currentHealth > 70) {
         ctx.fillStyle = '#4caf50';
