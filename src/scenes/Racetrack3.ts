@@ -10,6 +10,7 @@ import SceneFinish from './SceneFinish.js';
 import RaceResult from '../data/RaceResult.js';
 import Grid from '../Grid.js';
 import { spelling } from '../questions/spelling.js';
+import PlayerData from '../data/PlayerData.js';
 
 
 export default class Racetrack3 extends RacetrackScene {
@@ -92,6 +93,7 @@ export default class Racetrack3 extends RacetrackScene {
       this.stopwatch.stop();
 
       this.totalTime = this.stopwatch.getTime();
+      PlayerData.submitTime(this.getTrackId(), this.totalTime);
     }
   }
 
@@ -129,7 +131,8 @@ export default class Racetrack3 extends RacetrackScene {
         this.canvas,
         raceResult,
         () => new Racetrack3(this.boardSize, this.canvas, this.grid),
-        this.trackBackground
+        this.trackBackground,
+        this.getTrackId()
       );
     }
 
@@ -203,5 +206,16 @@ export default class Racetrack3 extends RacetrackScene {
       { x: 1670, y: 375, direction: 'horizontal' },
       { x: 900, y: 710, direction: 'vertical' },
     ];
+  }
+
+  /**
+   * Return the trackId for the highscores
+   *
+   * @returns race3
+   */
+  protected override getTrackId(): string {
+    void this.boardSize; // Dummy to fix ES-Lint error
+
+    return 'race3';
   }
 }

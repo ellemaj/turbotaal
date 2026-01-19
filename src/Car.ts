@@ -75,8 +75,6 @@ export default class Car extends CanvasItem {
     answerBoxes: AnswerBox[]): void {
     const skin: CarSkin = getCarSkin(PlayerData.getSkinIndex());
 
-    console.log(this.speed);
-
     // Change skins when steering
     if (this.movingLeft && !this.movingRight) {
       this.image = skin.left;

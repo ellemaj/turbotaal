@@ -6,7 +6,7 @@ type PlayerSaveData = {
   selectedSkinIndex: number,
   turboTokens: number,
   turboCups: number,
-  bestTimeMs: number | null,
+  bestTimes: Record<string, number>,
   skinsUnlocked: boolean[],
 };
 
@@ -25,26 +25,18 @@ export default class PlayerData {
 
   private static turboCups: number = 0;
 
-  private static bestTimeMs: number | null = null;
+  private static bestTimes: Record<string, number> = {};
 
   private static readonly STORAGE_KEY: string = 'playerData';
 
   private static save(): void {
-    const data: {
-      maxLaps: number,
-      skinIndex: number,
-      selectedSkinIndex: number,
-      turboTokens: number,
-      turboCups: number,
-      bestTimeMs: number | null,
-      skinsUnlocked: boolean[],
-    } = {
+    const data: PlayerSaveData = {
       maxLaps: this.maxLaps,
       skinIndex: this.skinIndex,
       selectedSkinIndex: this.selectedSkinIndex,
       turboTokens: this.turboTokens,
       turboCups: this.turboCups,
-      bestTimeMs: this.bestTimeMs,
+      bestTimes: this.bestTimes,
       skinsUnlocked: CarSkins.map((s: CarSkin) => s.unlocked),
     };
 
@@ -136,8 +128,8 @@ export default class PlayerData {
     this.selectedSkinIndex = index;
   }
 
-  public static getBestTime(): number | null {
-    return this.bestTimeMs;
+  public static getBestTime(trackId: string): number | null {
+    return this.bestTimes[trackId] ?? null;
   }
 
   /**
@@ -145,9 +137,11 @@ export default class PlayerData {
    *
    * @param timeMs racetime in ms
    */
-  public static submitTime(timeMs: number): void {
-    if (this.bestTimeMs === null || timeMs < this.bestTimeMs) {
-      this.bestTimeMs = timeMs;
+  public static submitTime(trackId: string, timeMs: number): void {
+    const current: number | undefined = this.bestTimes[trackId];
+
+    if (current === undefined || timeMs < current) {
+      this.bestTimes[trackId] = timeMs;
       this.save();
     }
   }
@@ -171,7 +165,7 @@ export default class PlayerData {
       this.selectedSkinIndex = data.selectedSkinIndex ?? this.selectedSkinIndex;
       this.turboTokens = data.turboTokens ?? this.turboTokens;
       this.turboCups = data.turboCups ?? this.turboCups;
-      this.bestTimeMs = data.bestTimeMs ?? this.bestTimeMs;
+      this.bestTimes = data.bestTimes ?? this.bestTimes;
 
       if (Array.isArray(data.skinsUnlocked)) {
         data.skinsUnlocked.forEach((unlocked: boolean, i: number) => {

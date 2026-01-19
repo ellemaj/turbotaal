@@ -25,6 +25,8 @@ export default class SceneFinish extends Scene {
 
   private isNewRecord: boolean = false;
 
+  private trackId: string;
+
   private confetti: {
     x: number;
     y: number;
@@ -37,18 +39,19 @@ export default class SceneFinish extends Scene {
     canvas: HTMLCanvasElement,
     raceResult: RaceResult,
     restartRace: SceneFactory,
-    trackBackground: HTMLImageElement
+    trackBackground: HTMLImageElement,
+    trackId: string
   ) {
     super(boardSize, canvas);
     this.background = trackBackground;
     this.raceResult = raceResult;
     this.restartRace = restartRace;
+    this.trackId = trackId;
 
     this.calculateRewards();
     this.saveRewards();
 
-    const oldBest: number | null = PlayerData.getBestTime();
-    PlayerData.submitTime(this.raceResult.totalTime);
+    const oldBest: number | null = PlayerData.getBestTime(this.trackId);
 
     this.isNewRecord =
       oldBest === null || this.raceResult.totalTime < oldBest;
@@ -165,7 +168,7 @@ export default class SceneFinish extends Scene {
     y += 40;
 
     // Highscore
-    const bestTime: number | null = PlayerData.getBestTime();
+    const bestTime: number | null = PlayerData.getBestTime(this.trackId);
     if (bestTime !== null) {
       ctx.fillStyle = '#FFD700';
       ctx.fillText(
