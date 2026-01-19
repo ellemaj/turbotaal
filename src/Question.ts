@@ -44,7 +44,7 @@ export default class Question extends CanvasItem {
     const rectWidth: number = canvas.width / 3;
     const rectHeight: number = canvas.height / 5;
     const rectangleX: number = (canvas.width - rectWidth) / 2;
-    const rectangleY: number = canvas.height * 0.1;
+    const rectangleY: number = questionY - 30;
     ctx.fillStyle = 'rgba(30, 37, 43, 0.85)';
     ctx.fillRect(rectangleX, rectangleY, rectWidth, rectHeight);
 
