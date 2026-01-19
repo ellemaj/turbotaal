@@ -1,6 +1,4 @@
-import CanvasRenderer from '../CanvasRenderer.js';
 import Vector2 from '../Vector2.js';
-import MouseListener, { MouseCoordinates } from '../MouseListener.js';
 import KeyListener from '../KeyListener.js';
 import Scene from './Scene.js';
 import PlayerData from '../data/PlayerData.js';
@@ -25,6 +23,8 @@ export default class SceneFinish extends Scene {
 
   private restartRace: SceneFactory;
 
+  private isNewRecord: boolean = false;
+
   private confetti: {
     x: number;
     y: number;
@@ -46,6 +46,12 @@ export default class SceneFinish extends Scene {
 
     this.calculateRewards();
     this.saveRewards();
+
+    const oldBest: number | null = PlayerData.getBestTime();
+    PlayerData.submitTime(this.raceResult.totalTime);
+
+    this.isNewRecord =
+      oldBest === null || this.raceResult.totalTime < oldBest;
 
     this.goToTrackselection = false;
     this.goToStart = false;
@@ -69,7 +75,7 @@ export default class SceneFinish extends Scene {
   /**
    * Update function
    */
-  public override update(delta: number): void {
+  public override update(): void {
     for (const piece of this.confetti) {
       piece.y += piece.speed;
 
@@ -144,11 +150,12 @@ export default class SceneFinish extends Scene {
     ctx.fillText('FINISH!', centerX, canvas.height * 0.18);
 
     // Stats
-    let y: number = canvas.height * 0.35;
+    let y: number = canvas.height * 0.30;
 
     ctx.font = '28px Arial';
     ctx.fillStyle = 'white';
 
+    // Total racetime
     ctx.fillText(
       `Totale tijd: ${this.formatTime(this.raceResult.totalTime)}`,
       centerX,
@@ -156,17 +163,33 @@ export default class SceneFinish extends Scene {
     );
 
     y += 40;
+
+    // Highscore
+    const bestTime: number | null = PlayerData.getBestTime();
+    if (bestTime !== null) {
+      ctx.fillStyle = '#FFD700';
+      ctx.fillText(
+        `Beste tijd: ${this.formatTime(bestTime)}`,
+        centerX,
+        y
+      );
+    }
+
+    // New record if its an new record
+    if (this.isNewRecord) {
+      y += 50;
+      ctx.font = 'bold 42px Arial';
+      ctx.fillStyle = '#69F0AE';
+      ctx.fillText('🏆 NEW RECORD!', centerX, y);
+    }
+
+    // Pitstopcount
+    y += 40;
+    ctx.font = '28px Arial';
+    ctx.fillStyle = 'white';
     ctx.fillText(`Aantal pitstops: ${this.raceResult.pitstopCount}`, centerX, y);
 
-    // y += 40;
-    // ctx.fillText(
-    //   `Pitstop-tijd: +${this.formatTime(this.raceResult.pitstopPenaltyTime)}`,
-    //   centerX,
-    //   y
-    // );
-
     y += 60;
-
     ctx.font = 'bold 36px Arial';
     ctx.fillStyle = 'white';
 

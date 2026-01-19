@@ -8,7 +8,6 @@ import ScenePitstop from './ScenePitstop.js';
 import SceneFinish from './SceneFinish.js';
 import RaceResult from '../data/RaceResult.js';
 import Grid from '../Grid.js';
-import Camera from '../Camera.js';
 import { werkwoordspelling } from '../questions/werkwoordspelling.js';
 import MouseListener from '../MouseListener.js';
 
