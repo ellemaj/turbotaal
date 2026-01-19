@@ -14,7 +14,7 @@ export default class Car extends CanvasItem {
 
   private scale: number = 0.28; // Scaling for the car (0.28 is standard)
 
-  public maxSpeed: number = 0.2;
+  public maxSpeed: number = 0.16;
 
   public movingLeft: boolean = false;
 
@@ -99,7 +99,7 @@ export default class Car extends CanvasItem {
     if (this.movingUp && !this.movingDown) {
       this.speed += 0.005 * delta;
     } else {
-      this.speed -= 0.01 * delta;
+      this.speed -= 0.0001 * delta;
       if (this.speed < 0) {
         this.speed = 0;
       }
