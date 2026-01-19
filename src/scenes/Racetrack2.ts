@@ -59,11 +59,6 @@ export default class Racetrack2 extends RacetrackScene {
       this.pause = true;
     }
 
-    // Changes the scene to ScenePitstop when P is pressed
-    // (needs to activate with collision in next version)
-    if (keyListener.keyPressed(KeyListener.KEY_P)) {
-      this.pitstop = true;
-    }
 
     this.updatePauseButton(
       mouseListener.getMousePosition(),

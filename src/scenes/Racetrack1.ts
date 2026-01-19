@@ -49,21 +49,12 @@ export default class Racetrack1 extends RacetrackScene {
     // Timer start
     this.startRaceIfMoving(keyListener);
 
-    // Reset race with R
-    if (keyListener.keyPressed(KeyListener.KEY_R)) {
-      this.resetRace();
-    }
 
     // Pause the race with ESC
     if (keyListener.keyPressed(KeyListener.KEY_ESC)) {
       this.pause = true;
     }
 
-    // Changes the scene to ScenePitstop when P is pressed
-    // (needs to activate with collision in next version)
-    if (keyListener.keyPressed(KeyListener.KEY_P)) {
-      this.pitstop = true;
-    }
 
     this.updatePauseButton(
       mouseListener.getMousePosition(),
