@@ -201,7 +201,6 @@ export default class Racetrack1 extends RacetrackScene {
     return [
       { x: 160, y: 600, direction: 'horizontal' },
       { x: 1630, y: 375, direction: 'horizontal' },
-      { x: 940, y: 360, direction: 'vertical' },
     ];
   }
 
