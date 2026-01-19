@@ -30,7 +30,6 @@ export default class Question extends CanvasItem {
 
   /**
    * Render the question and answers
-   *
    * @param canvas: the canvas it needs to render on
    */
   public draw(canvas: HTMLCanvasElement): void {
