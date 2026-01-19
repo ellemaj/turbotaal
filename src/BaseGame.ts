@@ -41,7 +41,7 @@ export default class BaseGame extends Game {
 
   private savedMaxSpeed: number = 0.16;
 
-  private savedTurnSpeed: number | null = null;
+  private savedTurnSpeed: number = 4;
 
   private camera: Camera;
 
@@ -93,7 +93,6 @@ export default class BaseGame extends Game {
           this.lastMessageTTL = 1;
           this.answerLocked = true;
           this.effectTimer = 1;
-          this.savedTurnSpeed = car.turnSpeed;
           if (correct) {
             car.maxSpeed = this.savedMaxSpeed + 0.075;
             car.turnSpeed = this.savedTurnSpeed - 0.5;
@@ -108,7 +107,6 @@ export default class BaseGame extends Game {
           this.lastMessageTTL = 1;
           this.answerLocked = true;
           this.effectTimer = 1;
-          this.savedTurnSpeed = car.turnSpeed;
           if (correct) {
             car.maxSpeed = this.savedMaxSpeed + 0.075;
             car.turnSpeed = this.savedTurnSpeed - 0.5;
@@ -123,7 +121,6 @@ export default class BaseGame extends Game {
           this.lastMessageTTL = 1;
           this.answerLocked = true;
           this.effectTimer = 1;
-          this.savedTurnSpeed = car.turnSpeed;
           if (correct) {
             car.maxSpeed = this.savedMaxSpeed + 0.075;
             car.turnSpeed = this.savedTurnSpeed - 0.5;
@@ -192,7 +189,6 @@ export default class BaseGame extends Game {
             }
           }
         }
-        this.savedTurnSpeed = null;
         this.effectTimer = 0;
         this.answerLocked = false;
         this.lastMessage = null;
