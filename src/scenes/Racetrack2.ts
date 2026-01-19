@@ -10,6 +10,7 @@ import RaceResult from '../data/RaceResult.js';
 import Grid from '../Grid.js';
 import Camera from '../Camera.js';
 import { werkwoordspelling } from '../questions/werkwoordspelling.js';
+import MouseListener from '../MouseListener.js';
 
 export default class Racetrack2 extends RacetrackScene {
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement, grid: Grid) {
@@ -41,7 +42,9 @@ export default class Racetrack2 extends RacetrackScene {
    *
    * @param keyListener The keylistener which is being used
    */
-  public override processInput(keyListener: KeyListener): void {
+  public override processInput(keyListener: KeyListener,
+    mouseListener: MouseListener
+  ): void {
     this.processCarInput(keyListener);
 
     // Timer start
@@ -62,6 +65,11 @@ export default class Racetrack2 extends RacetrackScene {
     if (keyListener.keyPressed(KeyListener.KEY_P)) {
       this.pitstop = true;
     }
+
+    this.updatePauseButton(
+      mouseListener.getMousePosition(),
+      mouseListener.buttonPressed(MouseListener.BUTTON_LEFT)
+    );
   }
 
   /**
@@ -75,6 +83,11 @@ export default class Racetrack2 extends RacetrackScene {
     this.checkTriggers(); //for the lapcount
 
     this.stopwatch.update(delta);
+
+    if (this.pauseClicked) {
+      this.pause = true;
+      this.pauseClicked = false;
+    }
 
     // Stopwatch stops when LapCount = 5
     if (this.isFinished() && !this.finished) {

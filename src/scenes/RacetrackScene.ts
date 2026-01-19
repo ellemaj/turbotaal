@@ -8,6 +8,7 @@ import Question from '../Question.js';
 import PlayerData from '../data/PlayerData.js';
 import { AnswerBox } from '../data/Answerbox.js';
 import Camera from '../Camera.js';
+import CanvasRenderer from '../CanvasRenderer.js';
 
 export type AnswerBoxSpawn = {
   x: number,
@@ -19,6 +20,13 @@ export type QuestionData = {
   question: string,
   answers: string[];
   correct: number
+};
+
+type Rect = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
 };
 
 export default abstract class RacetrackScene extends Scene {
@@ -71,6 +79,16 @@ export default abstract class RacetrackScene extends Scene {
 
   protected answerBoxes: AnswerBox[] = [];
 
+  protected pauseButton: HTMLImageElement;
+
+  protected pauseScale: number;
+
+  protected showPauseButton: boolean = true;
+
+  protected isPauseHover: boolean = false;
+
+  protected pauseClicked: boolean = false;
+
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement, grid: Grid) {
     super(boardSize, canvas);
 
@@ -83,6 +101,9 @@ export default abstract class RacetrackScene extends Scene {
     this.camera = new Camera(canvas.width, canvas.height, this.worldWidth, this.worldHeight);
     this.totalTime = 0;
     this.pitstopPenaltyTime = 0;
+
+    this.pauseButton = CanvasRenderer.loadNewImage('./assets/buttons/pause.png');
+    this.pauseScale = 0.8;
 
     this.createAnswerBoxes();
   }
@@ -282,5 +303,80 @@ export default abstract class RacetrackScene extends Scene {
         this.question.loadFromData(randomQuestion);
       }
     }
+  }
+
+  /**
+   ****** Pause button ******
+   * Use and render the pause button in any scene
+   ***
+   * To scale the button: (this.pauseScale = ...)
+   ***
+   * In processInput: this.updatePauseButton(
+   * mouseListener.getMousePosition(),
+   * mouseListener.buttonPressed(MouseListener.BUTTON_LEFT)
+   * );
+   ***
+   * In render: this.renderPauseButton(ctx);
+   ***
+   * In update:
+   * if (this.pauseClicked) { this.pause = true; this.pauseClicked = false; }
+   ***
+   * @returns Rect
+   */
+  protected getPauseButtonRect(): Rect {
+    const padding: number = 20;
+    const width: number = this.pauseButton.width * this.pauseScale;
+    const height: number = this.pauseButton.height * this.pauseScale;
+
+    return {
+      x: padding,
+      y: this.canvas.height - height - padding,
+      width,
+      height,
+    };
+  }
+
+  protected updatePauseButton(mouse: { x: number; y: number }, mousePressed: boolean): void {
+    if (!this.showPauseButton) {
+      return;
+    }
+
+    const rect: Rect = this.getPauseButtonRect();
+
+    this.isPauseHover =
+      mouse.x >= rect.x &&
+      mouse.x <= rect.x + rect.width &&
+      mouse.y >= rect.y &&
+      mouse.y <= rect.y + rect.height;
+
+    if (mousePressed && this.isPauseHover) {
+      this.pauseClicked = true;
+    }
+  }
+
+  /**
+   * Render the pausebutton
+   *
+   * @param ctx canvasrenderingcontext2d
+   * @returns /
+   */
+  public renderPauseButton(ctx: CanvasRenderingContext2D): void {
+    if (!this.showPauseButton) {
+      return;
+    }
+
+    const rect: Rect = this.getPauseButtonRect();
+    const scale: number = this.isPauseHover ? 1.1 : 1;
+
+    const w: number = rect.width * scale;
+    const h: number = rect.height * scale;
+
+    ctx.drawImage(
+      this.pauseButton,
+      rect.x - (w - rect.width) / 2,
+      rect.y - (h - rect.height) / 2,
+      w,
+      h
+    );
   }
 }
