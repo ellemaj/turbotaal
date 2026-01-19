@@ -3,7 +3,6 @@ import KeyListener from '../KeyListener.js';
 import Vector2 from '../Vector2.js';
 import PlayerData from '../data/PlayerData.js';
 import SceneStart from './SceneStart.js';
-import MouseListener from '../MouseListener.js';
 
 // Admin function for debugging
 export default class SceneAdmin extends Scene {
@@ -26,7 +25,7 @@ export default class SceneAdmin extends Scene {
    * @param keyListener keylistener that is used
    * @param mouseListener mouselistener that is used
    */
-  public override processInput(keyListener: KeyListener, mouseListener: MouseListener): void {
+  public override processInput(keyListener: KeyListener): void {
     // Letters and numbers
     if (!this.loggedIn) {
       for (const key of [
@@ -95,7 +94,9 @@ export default class SceneAdmin extends Scene {
    * Update
    * @param _ yes
    */
-  public override update(_: number): void { }
+  public override update(delta: number): void {
+    this.update(delta);
+  }
 
   public override getNextScene(): Scene | null {
     if (this.goToStart) {

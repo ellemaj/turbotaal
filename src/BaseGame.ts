@@ -8,7 +8,6 @@ import MouseListener from './MouseListener.js';
 import CanvasRenderer from './CanvasRenderer.js';
 import Car from './Car.js';
 import Question from './Question.js';
-import { verkleinwoorden } from './questions/verkleinwoorden.js';
 import Camera from './Camera.js';
 import Grid from './Grid.js';
 import { COLUMNS1, ROWS1, COLLISIONS1 } from './scenes/CollisionDataTrack1.js';
@@ -85,7 +84,6 @@ export default class BaseGame extends Game {
 
     if (this.currentScene instanceof RacetrackScene) {
       const car: Car = this.currentScene.getCar();
-      const currentHealth: number = car.getHealth().getHealth();
       const question: Question = this.currentScene.getQuestion();
       // only accept answers when not locked
       if (!this.answerLocked) {

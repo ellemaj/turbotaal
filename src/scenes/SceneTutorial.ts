@@ -1,6 +1,5 @@
 import Scene from './Scene.js';
 import KeyListener from '../KeyListener.js';
-import MouseListener from '../MouseListener.js';
 import Vector2 from '../Vector2.js';
 import CanvasRenderer from '../CanvasRenderer.js';
 import ScenePause from './ScenePause.js';
@@ -139,7 +138,7 @@ export default class SceneTutorial extends Scene {
    * @param keyListener keylistener that is being used
    * @param mouseListener mouselistener that is being used
    */
-  public override processInput(keyListener: KeyListener, mouseListener: MouseListener): void {
+  public override processInput(keyListener: KeyListener): void {
     // Pause when ESC is pressed
     if (keyListener.keyPressed(KeyListener.KEY_ESC)) {
       this.pause = true;
@@ -162,7 +161,7 @@ export default class SceneTutorial extends Scene {
    *
    * @param delta time elapsed
    */
-  public override update(delta: number): void {
+  public override update(): void {
     // Nothing to update
   }
 

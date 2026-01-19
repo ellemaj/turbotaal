@@ -36,7 +36,7 @@ export default class ScenePause extends Scene {
    * @param keyListener keylistener that is used
    * @param mouseListener mouselistener that is used
    */
-  public override processInput(keyListener: KeyListener, mouseListener: MouseListener): void {
+  public override processInput(keyListener: KeyListener): void {
     if (keyListener.keyPressed(KeyListener.KEY_ESC)) {
       this.resume = true;
     }
@@ -55,7 +55,7 @@ export default class ScenePause extends Scene {
    *
    * @param delta time elapsed
    */
-  public override update(delta: number): void {
+  public override update(): void {
     this.isTutotialButtonPressed();
   }
 
