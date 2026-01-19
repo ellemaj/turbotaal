@@ -13,7 +13,7 @@ export default class Health {
    *checks if carhealth should change */
   public updateHealth(): void {
     if (this.isColliding) {
-      this.carHealth = (this.carHealth - 0.05);
+      this.carHealth = (this.carHealth - 0.1);
     }
   }
 
