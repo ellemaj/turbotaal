@@ -255,8 +255,8 @@ export default class Car extends CanvasItem {
 
   // position for car to get after taking a pitstop for the 3 races different positions
   public setPitstopPosition1(canvas: HTMLCanvasElement): void {
-    this.position.x = canvas.width * 0.5;
-    this.position.y = canvas.height * 1.18;
+    this.position.x = window.innerWidth * 0.20;
+    this.position.y = window.innerHeight;
     this.rotation = -1.55;
     this.speed = 0;
   }
@@ -269,8 +269,8 @@ export default class Car extends CanvasItem {
   }
 
   public setPitstopPosition3(canvas: HTMLCanvasElement): void {
-    this.position.x = canvas.width * 0.75;
-    this.position.y = canvas.height * 1.22;
+    this.position.x = window.innerWidth * 0.20;
+    this.position.y = window.innerHeight;
     this.rotation = -1.55;
     this.speed = 0;
   }

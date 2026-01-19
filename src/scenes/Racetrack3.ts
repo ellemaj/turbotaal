@@ -8,42 +8,21 @@ import ScenePitstop from './ScenePitstop.js';
 import SceneFinish from './SceneFinish.js';
 import RaceResult from '../data/RaceResult.js';
 import Grid from '../Grid.js';
-import Camera from '../Camera.js';
-import { spelling } from '../questions/spelling.js';
+import { verkleinwoorden } from '../questions/verkleinwoorden.js';
 import MouseListener from '../MouseListener.js';
 
 export default class Racetrack3 extends RacetrackScene {
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement, grid: Grid) {
     super(boardSize, canvas, grid);
-    this.camera = new Camera(canvas.width, canvas.height, this.worldWidth, this.worldHeight);
-    this.pause = false;
-    this.pitstop = false;
+
 
     this.trackBackground = CanvasRenderer.loadNewImage('./assets/racetracks/race3.png');
     this.background = this.trackBackground;
 
-    this.totalTime = 0;
-    this.pitstops = 0;
-    this.pitstopPenaltyTime = 0;
-
-    this.setCarStart(980, 1020, -1.58);
+    this.setCarStart(400, 1000, -1.57);
     this.loadTriggers();
 
-    this.setQuestionData(spelling.normal);
-  }
-
-  private loadTriggers(): void {
-    // Hardcoded from race1UPDATEDtest.json
-    this.checkpoints = [
-      { x: 64, y: 896, width: 192, height: 64, index: 0 },
-      { x: 256, y: 64, width: 64, height: 192, index: 1 },
-      { x: 384, y: 640, width: 192, height: 64, index: 2 },
-      { x: 1280, y: 576, width: 192, height: 64, index: 3 },
-      { x: 1024, y: 192, width: 192, height: 64, index: 4 },
-      { x: 1408, y: 0, width: 64, height: 192, index: 5 },
-      { x: 1664, y: 512, width: 192, height: 64, index: 6 }
-    ];
-    this.finish = { x: 896, y: 960, width: 64, height: 320 };
+    this.setQuestionData(verkleinwoorden.normal);
   }
 
   /**
@@ -78,6 +57,10 @@ export default class Racetrack3 extends RacetrackScene {
    * @returns time elapsed
    */
   public override update(delta: number): void {
+    if (this.finished) {
+      return;
+    }
+
     this.car.update(delta, this.canvas, this.grid, this.answerBoxes);
 
     this.checkTriggers(); //for the lapcount
@@ -162,9 +145,6 @@ export default class Racetrack3 extends RacetrackScene {
         '20px Arial'
       );
     }
-
-    // Renders the car
-    this.car.render(canvas);
   }
 
   /**
@@ -203,5 +183,19 @@ export default class Racetrack3 extends RacetrackScene {
       { x: 1670, y: 375, direction: 'horizontal' },
       { x: 900, y: 710, direction: 'vertical' },
     ];
+  }
+
+  private loadTriggers(): void {
+    // Hardcoded from race1UPDATEDtest.json
+    this.checkpoints = [
+      { x: 64, y: 896, width: 192, height: 64, index: 0 },
+      { x: 256, y: 64, width: 64, height: 192, index: 1 },
+      { x: 384, y: 640, width: 192, height: 64, index: 2 },
+      { x: 1280, y: 576, width: 192, height: 64, index: 3 },
+      { x: 1024, y: 192, width: 192, height: 64, index: 4 },
+      { x: 1408, y: 0, width: 64, height: 192, index: 5 },
+      { x: 1664, y: 512, width: 192, height: 64, index: 6 }
+    ];
+    this.finish = { x: 896, y: 960, width: 64, height: 320 };
   }
 }

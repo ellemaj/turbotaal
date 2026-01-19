@@ -49,10 +49,6 @@ export default class Racetrack2 extends RacetrackScene {
     // Timer start
     this.startRaceIfMoving(keyListener);
 
-    // Reset race with R
-    if (keyListener.keyPressed(KeyListener.KEY_R)) {
-      this.resetRace();
-    }
 
     // Pause the race with ESC
     if (keyListener.keyPressed(KeyListener.KEY_ESC)) {
