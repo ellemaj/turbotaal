@@ -39,7 +39,7 @@ export default class BaseGame extends Game {
 
   private effectTimer: number = 0; // seconds remaining for temporary effect
 
-  private savedMaxSpeed: number | null = null;
+  private savedMaxSpeed: number = 0.16;
 
   private savedTurnSpeed: number | null = null;
 
@@ -93,7 +93,6 @@ export default class BaseGame extends Game {
           this.lastMessageTTL = 1;
           this.answerLocked = true;
           this.effectTimer = 1;
-          this.savedMaxSpeed = car.maxSpeed;
           this.savedTurnSpeed = car.turnSpeed;
           if (correct) {
             car.maxSpeed = this.savedMaxSpeed + 0.075;
@@ -109,7 +108,6 @@ export default class BaseGame extends Game {
           this.lastMessageTTL = 1;
           this.answerLocked = true;
           this.effectTimer = 1;
-          this.savedMaxSpeed = car.maxSpeed;
           this.savedTurnSpeed = car.turnSpeed;
           if (correct) {
             car.maxSpeed = this.savedMaxSpeed + 0.075;
@@ -125,7 +123,6 @@ export default class BaseGame extends Game {
           this.lastMessageTTL = 1;
           this.answerLocked = true;
           this.effectTimer = 1;
-          this.savedMaxSpeed = car.maxSpeed;
           this.savedTurnSpeed = car.turnSpeed;
           if (correct) {
             car.maxSpeed = this.savedMaxSpeed + 0.075;
@@ -195,7 +192,6 @@ export default class BaseGame extends Game {
             }
           }
         }
-        this.savedMaxSpeed = null;
         this.savedTurnSpeed = null;
         this.effectTimer = 0;
         this.answerLocked = false;
