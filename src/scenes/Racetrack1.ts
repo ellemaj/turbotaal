@@ -110,6 +110,7 @@ export default class Racetrack1 extends RacetrackScene {
     if (this.pitstop) {
       this.pitstop = false;
       this.pauseTimer();
+      this.pitstops += 1;
       return new ScenePitstop(this.boardSize, this.canvas, this);
     }
     if (this.car.pitstopTriggered) {
