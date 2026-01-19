@@ -268,6 +268,8 @@ export default abstract class RacetrackScene extends Scene {
     return this.trackBackground;
   }
 
+  protected abstract getTrackId(): string;
+
   protected abstract getAnswerBoxSpawns(): AnswerBoxSpawn[];
 
   protected createAnswerBoxes(): void {
