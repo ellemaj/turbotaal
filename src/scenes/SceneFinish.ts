@@ -5,6 +5,7 @@ import PlayerData from '../data/PlayerData.js';
 import SceneTrackSelection from './SceneTrackSelection.js';
 import SceneStart from './SceneStart.js';
 import RaceResult from '../data/RaceResult.js';
+import { TRACK_REWARDS, RewardConfig } from '../data/RewardConfig.js';
 
 type SceneFactory = () => Scene;
 
@@ -229,37 +230,48 @@ export default class SceneFinish extends Scene {
 
   private calculateRewards(): void {
     const time: number = this.raceResult.totalTime;
+    const config: RewardConfig | undefined = TRACK_REWARDS[this.trackId];
 
-    // Number of TurboTokens earned based on the racetime
-    if (time < 20_000) {
-      this.earnedTurboTokens = 120;
-    } else if (time < 40_000) {
-      this.earnedTurboTokens = 75;
-    } else if (time < 50_000) {
-      this.earnedTurboTokens = 45;
-    } else if (time < 60_000) {
-      this.earnedTurboTokens = 25;
-    } else if (time < 70_000) {
-      this.earnedTurboTokens = 10;
-    } else {
-      this.earnedTurboTokens = 2;
-    }
-
-    // Number of TurboCups earned based on the racetime
-    if (time < 45_000) {
-      this.earnedTurboCups = 3;
-    } else if (time < 60_000) {
-      this.earnedTurboCups = 2;
-    } else if (time < 75_000) {
-      this.earnedTurboCups = 1;
-    } else {
+    // Fallback
+    if (!config) {
+      this.earnedTurboTokens = 0;
       this.earnedTurboCups = 0;
+      return;
     }
+
+    this.earnedTurboTokens = this.calculateFromThresholds(
+      time,
+      config.tokenTresholds,
+      'tokens'
+    );
+
+    this.earnedTurboCups = this.calculateFromThresholds(
+      time,
+      config.cupTresholds,
+      'cups'
+    );
   }
 
   private saveRewards(): void {
     PlayerData.addTurboTokens(this.earnedTurboTokens);
     PlayerData.addTurboCups(this.earnedTurboCups);
+  }
+
+  private calculateFromThresholds<
+    T extends 'tokens' | 'cups'
+  >(
+    time: number,
+    thresholds: { time: number }[] & Record<T, number>[],
+    key: T
+  ): number {
+    void this.boardSize; // Dummy to fix ES-Lint error
+
+    for (const t of thresholds) {
+      if (time < t.time) {
+        return t[key];
+      }
+    }
+    return 0;
   }
 
   private formatTime(ms: number): string {

@@ -16,7 +16,7 @@ const carSkins: CarSkin[] = [
     id: 1,
     name: 'Green Gobliner',
     unlocked: false,
-    price: 10,
+    price: 30,
     straight: CanvasRenderer.loadNewImage('./assets/cars/car2_straight.png'),
     left: CanvasRenderer.loadNewImage('./assets/cars/car2_left.png'),
     right: CanvasRenderer.loadNewImage('./assets/cars/car2_right.png'),
