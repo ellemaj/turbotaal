@@ -83,7 +83,7 @@ export const spelling: QuizCategory = {
     {
       question: 'Welke spelling is correct?',
       answers: ['automatis', 'automatisch', 'automaatisch'],
-      correct: 2
+      correct: 1
     },
     {
       question: 'Welke spelling is correct?',
@@ -208,11 +208,11 @@ export const spelling: QuizCategory = {
     {
       question: 'Welke spelling is correct?',
       answers: ['flatgebauw', 'fletgebouw', 'flatgebouw'],
-      correct: 1
+      correct: 2
     },
     {
       question: 'Welke spelling is correct?',
-      answers: ['paketje', 'pakketje', 'pakketje'],
+      answers: ['paketje', 'pakketje', 'pakkeetjee'],
       correct: 1
     },
     {
