@@ -27,7 +27,7 @@ export default class Racetrack3 extends RacetrackScene {
   }
 
   private loadTriggers(): void {
-    // Hardcoded from race3.json
+    // Hardcoded from ./assets/racetracks/race1.json
     this.checkpoints = [
       { x: 64, y: 896, width: 192, height: 64, index: 0 },
       { x: 256, y: 64, width: 64, height: 192, index: 1 },

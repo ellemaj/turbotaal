@@ -10,7 +10,8 @@ export default class Health {
   }
 
   /**
-   *checks if carhealth should change */
+   *checks if carhealth should change
+   */
   public updateHealth(): void {
     if (this.isColliding) {
       this.carHealth = (this.carHealth - 0.1);
@@ -22,7 +23,7 @@ export default class Health {
   }
 
   /**
-   *heals the car
+   * Heals the car to full HP
    */
   public heal(healing: number): void {
     this.carHealth += healing;
@@ -43,7 +44,7 @@ export default class Health {
 
 
   /** if car is below 20 pitstop will become true
-   *@returns if car is low
+   *@returns true when HP<20, sending you to the pitstop. otherwise false
    */
   public carIsLow(): boolean{
     if (this.carHealth < 20) {

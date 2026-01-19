@@ -4,7 +4,6 @@ import Grid from './Grid.js';
 import PlayerData from './data/PlayerData.js';
 import type { CarSkin } from './data/CarSkin.js';
 import { getCarSkin } from './data/CarSkins.js';
-
 import Health from './Health.js';
 import { AnswerBox } from './data/Answerbox.js';
 export default class Car extends CanvasItem {
@@ -84,7 +83,7 @@ export default class Car extends CanvasItem {
       this.image = skin.straight;
     }
 
-    // Movement
+    // Handles movement for the car
     if (this.movingLeft && this.speed != 0) {
       this.rotation -= (Math.PI * (delta / this.turnSpeed) / 180);
       this.movingLeft = false;
@@ -117,24 +116,25 @@ export default class Car extends CanvasItem {
     this.position.y -= Math.sin(this.rotation + Math.PI / 2) * this.speed * delta;
 
 
-    // car hitbox accurate maker tm
+    // car hitbox and tilesize consts.
+    // These next lines are all to make the hitbox of the car more accurate
     const tileSize: number = grid.getTileSize();
     const carWidth: number = this.image.width * this.scale;
     const carHeight: number = this.image.height * this.scale;
 
-    // edging auto
+    // gets the sides of the car
     const left: number = this.position.x;
     const right: number = this.position.x + carWidth;
     const top: number = this.position.y;
     const bottom: number = this.position.y + carHeight;
 
-    // look where the edges are
+    // gets the sides of the tiles
     const leftTile: number = Math.floor(left / tileSize);
     const rightTile: number = Math.floor(right / tileSize);
     const topTile: number = Math.floor(top / tileSize);
     const bottomTile: number = Math.floor(bottom / tileSize);
 
-    // check all tiles of which the car is currently colliding with for grass tiles (holy engels)
+    // check all tiles of which the car is currently colliding with for grass tiles
     let collision: boolean = false;
     for (let col: number = leftTile; col <= rightTile; col++) {
       for (let row: number = topTile; row <= bottomTile; row++) {
@@ -144,7 +144,7 @@ export default class Car extends CanvasItem {
         }
       }
 
-      //health boogaboo
+      // Health calculations when collision is detected
       if (collision) {
         this.health.setColliding(true);
         this.health.updateHealth();
@@ -176,7 +176,7 @@ export default class Car extends CanvasItem {
       this.pitstopCollisionHandled = false;
     }
 
-    // Check collisions
+    // Check collisions for the answerboxes
     for (const box of answerBoxes) {
       const boxLeft: number = box.x;
       const boxRight: number = box.x + box.width;
@@ -285,7 +285,7 @@ export default class Car extends CanvasItem {
     return this.health;
   }
 
-  //Tile position for collision (oh bars)
+  // Tile position for collision
   public getTilePosition(tileSize: number): { col: number; row: number } {
     return {
       col: Math.floor(this.position.x / tileSize),

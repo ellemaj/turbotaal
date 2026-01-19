@@ -128,6 +128,7 @@ export default abstract class RacetrackScene extends Scene {
     }
   }
 
+  // Processes the inputs for the car
   protected processCarInput(keyListener: KeyListener): void {
     this.car.movingLeft =
       keyListener.isKeyDown(KeyListener.KEY_LEFT) ||
@@ -272,6 +273,7 @@ export default abstract class RacetrackScene extends Scene {
 
   protected abstract getAnswerBoxSpawns(): AnswerBoxSpawn[];
 
+  // Creates and renders the answerboxes
   protected createAnswerBoxes(): void {
     const boxWidth: number = 40;
     const boxHeight: number = 40;
@@ -296,6 +298,7 @@ export default abstract class RacetrackScene extends Scene {
     }
   }
 
+  // Gets questiondata to ask said question
   public setQuestionData(data: QuestionData[]): void {
     this.questionData = data;
 
