@@ -6,24 +6,17 @@ import Scene from './Scene.js';
 import PlayerData from '../data/PlayerData.js';
 import SceneStart from './SceneStart.js';
 import SceneGarage from './SceneGarage.js';
-import ScenePowerups from './ScenePowerups.js';
 
 export default class SceneShop extends Scene {
   private goBack: boolean;
 
   private goToSkins: boolean;
 
-  private goToPowerups: boolean;
-
   private skinsButton: HTMLImageElement;
-
-  private powerupButton: HTMLImageElement;
 
   private logoLoaded: boolean = false;
 
   private skinsButtonLoaded: boolean = false;
-
-  private powerupButtonLoaded: boolean = false;
 
   private logoScale: number;
 
@@ -31,20 +24,14 @@ export default class SceneShop extends Scene {
 
   private skinsButtonY: number = 0;
 
-  private powerupButtonX: number = 0;
-
-  private powerupButtonY: number = 0;
-
   public constructor(boardSize: Vector2, canvas: HTMLCanvasElement) {
     super(boardSize, canvas);
     this.goBack = false;
     this.goToSkins = false;
-    this.goToPowerups = false;
 
     this.background = CanvasRenderer.loadNewImage('./assets/backgrounds/shop.png');
     this.logo = CanvasRenderer.loadNewImage('./assets/shoplogo.png');
     this.skinsButton = CanvasRenderer.loadNewImage('./assets/buttons/skins.png');
-    this.powerupButton = CanvasRenderer.loadNewImage('./assets/buttons/powerup.png');
 
     this.showBackButton = true;
 
@@ -57,10 +44,6 @@ export default class SceneShop extends Scene {
 
     this.skinsButton.onload = (): void => {
       this.skinsButtonLoaded = true;
-    };
-
-    this.powerupButton.onload = (): void => {
-      this.powerupButtonLoaded = true;
     };
   }
 
@@ -87,36 +70,12 @@ export default class SceneShop extends Scene {
     return false;
   }
 
-  // Looks if the powerup button is clicked
-  private isPowerupButtonClicked(): boolean {
-    if (!this.powerupButtonLoaded) {
-      return false;
-    }
-
-    const mousePos: MouseCoordinates = this.mouseListener.getMousePosition();
-    const width: number = this.powerupButton.width * this.scale;
-    const height: number = this.powerupButton.height * this.scale;
-
-    const isClicked: boolean =
-    mousePos.x >= this.powerupButtonX &&
-    mousePos.x <= this.powerupButtonX + width &&
-    mousePos.y >= this.powerupButtonY &&
-    mousePos.y <= this.powerupButtonY + height;
-
-    if (isClicked && this.mouseListener.buttonPressed(MouseListener.BUTTON_LEFT)) {
-      this.goToPowerups = true;
-      return true;
-    }
-    return false;
-  }
-
   /**
    * Update function
    */
   public override update(): void {
-    if (this.skinsButtonLoaded || this.powerupButtonLoaded) {
+    if (this.skinsButtonLoaded) {
       this.isSkinsButtonClicked();
-      this.isPowerupButtonClicked();
     }
 
     if (this.backClicked) {
@@ -139,8 +98,6 @@ export default class SceneShop extends Scene {
       this.goBack = true;
     } else if (keyListener.keyPressed(KeyListener.KEY_S)) {
       this.goToSkins = true;
-    } else if (keyListener.keyPressed(KeyListener.KEY_P)) {
-      this.goToPowerups = true;
     }
 
     this.updateBackButton(
@@ -156,9 +113,6 @@ export default class SceneShop extends Scene {
     } else if (this.goToSkins) {
       this.goToSkins = false;
       return new SceneGarage(this.boardSize, this.canvas, this);
-    } else if (this.goToPowerups) {
-      this.goToPowerups = false;
-      return new ScenePowerups(this.boardSize, this.canvas);
     }
     return null;
   }
@@ -199,16 +153,13 @@ export default class SceneShop extends Scene {
       currentY += 100 + spacing;
     }
 
-    const buttonY: number = currentY + 30;
-    const gap: number = 75; // room between the buttons
-
     // Render skins button
     if (this.skinsButtonLoaded) {
       const width: number = this.skinsButton.width * this.scale;
       const height: number = this.skinsButton.height * this.scale;
 
-      this.skinsButtonX = centerX - gap / 2 - width;
-      this.skinsButtonY = buttonY;
+      this.skinsButtonX = (canvas.width - width) / 2;
+      this.skinsButtonY = currentY;
 
       ctx.drawImage(
         this.skinsButton,
@@ -221,33 +172,9 @@ export default class SceneShop extends Scene {
       currentY += height + spacing;
     } else {
       ctx.font = 'bold 25px Arial';
-      ctx.fillText('Press S to go to skins', centerX, currentY + 25);
+      ctx.fillText('Press S to go to skins', canvas.width / 2, currentY + 25);
       currentY += 40 + spacing;
     }
-
-    // Render powerup button
-    if (this.powerupButtonLoaded) {
-      const width: number = this.powerupButton.width * this.scale;
-      const height: number = this.powerupButton.height * this.scale;
-
-      this.powerupButtonX = centerX + gap / 2;
-      this.powerupButtonY = buttonY;
-
-      ctx.drawImage(
-        this.powerupButton,
-        this.powerupButtonX,
-        this.powerupButtonY,
-        width,
-        height
-      );
-
-      currentY += height + spacing;
-    } else {
-      ctx.font = 'bold 25px Arial';
-      ctx.fillText('Press P to go to powerup', centerX, currentY + 25);
-      currentY += 40 + spacing;
-    }
-
 
     // Render the turboTokens
     const padding: number = 20;
