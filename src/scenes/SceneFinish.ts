@@ -228,22 +228,26 @@ export default class SceneFinish extends Scene {
     const time: number = this.raceResult.totalTime;
 
     // Number of TurboTokens earned based on the racetime
-    if (time < 60_000) {
+    if (time < 20_000) {
       this.earnedTurboTokens = 120;
-    } else if (time < 75_000) {
-      this.earnedTurboTokens = 90;
-    } else if (time < 95_000) {
-      this.earnedTurboTokens = 60;
+    } else if (time < 40_000) {
+      this.earnedTurboTokens = 75;
+    } else if (time < 50_000) {
+      this.earnedTurboTokens = 45;
+    } else if (time < 60_000) {
+      this.earnedTurboTokens = 25;
+    } else if (time < 70_000) {
+      this.earnedTurboTokens = 10;
     } else {
-      this.earnedTurboTokens = 20;
+      this.earnedTurboTokens = 2;
     }
 
     // Number of TurboCups earned based on the racetime
-    if (time < 65_000) {
+    if (time < 45_000) {
       this.earnedTurboCups = 3;
-    } else if (time < 80_000) {
+    } else if (time < 60_000) {
       this.earnedTurboCups = 2;
-    } else if (time < 95_000) {
+    } else if (time < 75_000) {
       this.earnedTurboCups = 1;
     } else {
       this.earnedTurboCups = 0;
