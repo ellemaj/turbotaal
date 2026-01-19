@@ -158,12 +158,12 @@ export default class SceneFinish extends Scene {
     y += 40;
     ctx.fillText(`Aantal pitstops: ${this.raceResult.pitstopCount}`, centerX, y);
 
-    y += 40;
-    ctx.fillText(
-      `Pitstop-tijd: +${this.formatTime(this.raceResult.pitstopPenaltyTime)}`,
-      centerX,
-      y
-    );
+    // y += 40;
+    // ctx.fillText(
+    //   `Pitstop-tijd: +${this.formatTime(this.raceResult.pitstopPenaltyTime)}`,
+    //   centerX,
+    //   y
+    // );
 
     y += 60;
 
