@@ -58,11 +58,11 @@ export const werkwoordspelling: QuizCategory = {
     {
       question: 'Wat is de verleden tijd van schoppen?',
       answers: ['schopden', 'schopten', 'schoepen'],
-      correct: 2
+      correct: 1
     },
     {
       question: 'Wat is de verleden tijd van stelen?',
-      answers: ['stalen', 'steelden', 'staalden'],
+      answers: ['stalen', 'steelden', 'stolen'],
       correct: 0
     },
     {
@@ -103,12 +103,12 @@ export const werkwoordspelling: QuizCategory = {
     {
       question: 'Wat is de verleden tijd van kopen?',
       answers: ['koopten', 'kochten', 'koopden'],
-      correct: 2
+      correct: 1
     },
     {
       question: 'Wat is de verleden tijd van maken?',
       answers: ['maakdten', 'maakten', 'maakden'],
-      correct: 0
+      correct: 1
     },
     {
       question: 'Wat is de verleden tijd van lezen?',
@@ -183,7 +183,7 @@ export const werkwoordspelling: QuizCategory = {
     {
       question: 'Wat is de verleden tijd van reizen?',
       answers: ['reisden', 'reisten', 'reisdten'],
-      correct: 1
+      correct: 0
     },
     {
       question: 'Wat is de verleden tijd van springen?',
