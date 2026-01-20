@@ -232,7 +232,7 @@ export const spelling: QuizCategory = {
     },
     {
       question: 'Welke spelling is correct?',
-      answers: ['reizen', 'rijzen', 'reisen'],
+      answers: ['reizen', 'reizzen', 'reisen'],
       correct: 0
     },
     {

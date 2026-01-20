@@ -46,6 +46,8 @@ export default class Car extends CanvasItem {
 
   private collisionBox3: boolean = false;
 
+  private hitBoxShrink: number = 19.04;
+
   public constructor() {
     super();
 
@@ -125,15 +127,15 @@ export default class Car extends CanvasItem {
     // gets the sides of the car
     const left: number = this.position.x;
     const right: number = this.position.x + carWidth;
-    const top: number = this.position.y;
-    const bottom: number = this.position.y + carHeight;
+    const top: number = this.position.y + this.hitBoxShrink;
+    const bottom: number = this.position.y + carHeight - this.hitBoxShrink;
 
     // gets the sides of the tiles
     const leftTile: number = Math.floor(left / tileSize);
     const rightTile: number = Math.floor(right / tileSize);
     const topTile: number = Math.floor(top / tileSize);
     const bottomTile: number = Math.floor(bottom / tileSize);
-
+   
     // check all tiles of which the car is currently colliding with for grass tiles
     let collision: boolean = false;
     for (let col: number = leftTile; col <= rightTile; col++) {
