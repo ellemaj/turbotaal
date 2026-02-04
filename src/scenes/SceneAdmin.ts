@@ -3,6 +3,7 @@ import KeyListener from '../KeyListener.js';
 import Vector2 from '../Vector2.js';
 import PlayerData from '../data/PlayerData.js';
 import SceneStart from './SceneStart.js';
+import CanvasRenderer from '../CanvasRenderer.js';
 
 // Admin function for debugging
 export default class SceneAdmin extends Scene {
@@ -13,6 +14,8 @@ export default class SceneAdmin extends Scene {
   private loggedIn: boolean = false;
 
   private goToStart: boolean = false;
+
+  private printAlert: boolean = false;
 
   private readonly ADMIN_CODE: string = 'turboadmin123';
 
@@ -46,8 +49,6 @@ export default class SceneAdmin extends Scene {
       // Enter = login check
       if (keyListener.keyPressed(KeyListener.KEY_ENTER)) {
         if (this.input === this.ADMIN_CODE) {
-          PlayerData.addTurboCups(999);
-          PlayerData.addTurboTokens(999);
           this.loggedIn = true;
         }
       }
@@ -76,6 +77,12 @@ export default class SceneAdmin extends Scene {
       if (keyListener.keyPressed(KeyListener.KEY_BACKSPACE)) {
         this.lapInput = this.lapInput.slice(0, -1);
       }
+    }
+
+    if (this.loggedIn && keyListener.keyPressed(KeyListener.KEY_T)) {
+      PlayerData.addTurboCups(999);
+      PlayerData.addTurboTokens(999);
+      this.printAlert = true;
     }
 
     // Enter = save laps
@@ -122,31 +129,63 @@ export default class SceneAdmin extends Scene {
     ctx.font = '40px Arial';
     ctx.textAlign = 'center';
 
-    ctx.fillText('ADMIN LOGIN', canvas.width / 2, 150);
-    ctx.fillText('Code:', canvas.width / 2, 250);
-    ctx.fillText(this.input.replace(/./g, '*'), canvas.width / 2, 320);
+    const scale: number = 0.3;
+    CanvasRenderer.drawImage(this.canvas, this.logo,
+      0 + this.logo.width * 0.15,
+      this.canvas.height - this.logo.height * 0.18,
+      0, scale
+    );
 
-    ctx.font = '24px Arial';
-    ctx.fillText('Druk ENTER om in te loggen', canvas.width / 2, 400);
+    if (!this.loggedIn) {
+      ctx.fillText('ADMIN LOGIN', canvas.width / 2, 150);
+      ctx.fillText('Code:', canvas.width / 2, 250);
+      ctx.fillText(this.input.replace(/./g, '*'), canvas.width / 2, 320);
 
+      ctx.font = '24px Arial';
+      ctx.fillText('Druk ENTER om in te loggen', canvas.width / 2, 400);
+    }
+
+
+    if (this.printAlert) {
+      ctx.fillStyle = 'green';
+      ctx.font = '30px Arial';
+      ctx.fillText(
+        'Added TT & TC',
+        canvas.width / 2,
+        550
+      );
+    }
+
+    ctx.fillStyle = 'white';
     if (this.loggedIn) {
+      ctx.fillStyle = 'white';
+      ctx.font = '40px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('TurboAdmin', canvas.width / 2, 150);
+
       ctx.font = '26px Arial';
       ctx.fillText(
         `Max laps: ${PlayerData.getMaxLaps()}`,
         canvas.width / 2,
-        480
+        300
       );
 
       ctx.fillText(
         'Type nieuw aantal laps + ENTER',
         canvas.width / 2,
-        520
+        350
       );
 
       ctx.fillText(
         this.lapInput,
         canvas.width / 2,
-        560
+        390
+      );
+
+      ctx.fillText(
+        'Druk op T voor TurboCups & TurboTokens',
+        canvas.width / 2,
+        500
       );
     }
   }
