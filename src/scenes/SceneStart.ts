@@ -8,6 +8,7 @@ import SceneShop from './SceneShop.js';
 import SceneTutorial from './SceneTutorial.js';
 import SceneGarage from './SceneGarage.js';
 import SceneAdmin from './SceneAdmin.js';
+import PlayerData from '../data/PlayerData.js';
 
 export default class SceneStart extends Scene {
   private goToTrackSelection: boolean;
@@ -264,11 +265,14 @@ export default class SceneStart extends Scene {
 
     // Render the logo
     if (this.logoLoaded) {
+      const activeLogo: HTMLImageElement =
+        PlayerData.is67SkinActive() ? this.logo67 : this.logo;
+
       const logoWidth: number = this.logo.width * this.logoScale;
       const logoHeight: number = this.logo.height * this.logoScale;
 
       ctx.drawImage(
-        this.logo,
+        activeLogo,
         centerX - logoWidth / 2,
         currentY,
         logoWidth, logoHeight
