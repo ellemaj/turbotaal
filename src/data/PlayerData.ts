@@ -178,4 +178,8 @@ export default class PlayerData {
       console.warn('PlayerData load failed');
     }
   }
+
+  public static is67SkinActive(): boolean {
+    return this.selectedSkinIndex === 3;
+  }
 }

@@ -139,11 +139,14 @@ export default class SceneTrackSelection extends Scene {
     ctx.fillStyle = 'black';
 
     // Render the logo
+    const activeLogo: HTMLImageElement =
+      PlayerData.is67SkinActive() ? this.logo67 : this.logo;
+
     const logoWidth: number = this.logo.width * this.logoScale;
     const logoHeight: number = this.logo.height * this.logoScale;
 
     ctx.drawImage(
-      this.logo,
+      activeLogo,
       centerX - logoWidth / 2,
       currentY,
       logoWidth, logoHeight

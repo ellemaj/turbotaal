@@ -35,6 +35,8 @@ export default abstract class Scene{
 
   protected logo: HTMLImageElement;
 
+  protected logo67: HTMLImageElement;
+
   protected backButton: HTMLImageElement;
 
   protected tutorialButton: HTMLImageElement;
@@ -60,6 +62,7 @@ export default abstract class Scene{
     this.turboToken = CanvasRenderer.loadNewImage('./assets/sprites/turbotoken.png');
     this.turboCup = CanvasRenderer.loadNewImage('./assets/sprites/turbocup.png');
     this.logo = CanvasRenderer.loadNewImage('./assets/logo.png');
+    this.logo67 = CanvasRenderer.loadNewImage('./assets/logo67.png');
     this.backButton = CanvasRenderer.loadNewImage('./assets/buttons/back.png');
     this.tutorialButton = CanvasRenderer.loadNewImage('./assets/buttons/tutorial.png');
     this.backScale = 1;

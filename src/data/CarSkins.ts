@@ -30,6 +30,15 @@ const carSkins: CarSkin[] = [
     left: CanvasRenderer.loadNewImage('./assets/cars/car3_left.png'),
     right: CanvasRenderer.loadNewImage('./assets/cars/car3_right.png'),
   },
+  {
+    id: 3,
+    name: '67 raket - DOUBLE 67!!!',
+    unlocked: false,
+    price: 67,
+    straight: CanvasRenderer.loadNewImage('./assets/cars/car4_straight.png'),
+    left: CanvasRenderer.loadNewImage('./assets/cars/car4_straight.png'),
+    right: CanvasRenderer.loadNewImage('./assets/cars/car4_straight.png'),
+  },
 ];
 
 /**
