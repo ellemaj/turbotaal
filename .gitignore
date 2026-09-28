@@ -188,3 +188,5 @@ build/
 # drawio temp files
 *.drawio.bkp
 *.drawio.dtmp
+
+.claude/
