@@ -1,12 +1,15 @@
 # TurboTaal
 
-This is the official repo of TurboTaal.
+This is the official repository of TurboTaal; the racing game to learn Dutch.
+
+## About
+
+TurboTaal started as a first-year school project: an educational game to help primary school children practice the Dutch language in a playful way. The repository has been made public again to continue development.
 
 ## Github Projects
 
-The Github projects of this repo is `TurboTaal Development Board`.
-You can find it on https://github.com/orgs/HZ-ICT1-2526/projects/17.
+The board we use for issue-tracking is the [`TurboTaal Development Board`](https://github.com/users/ellemaj/projects/4).
 
-## Github Wiki
+## Documentation
 
-You can find the Github wiki of this repo on https://github.com/HZ-ICT1-2526/oop-team02/wiki.
+You can find our documentation on [this Github Wiki](https://github.com/ellemaj/turbotaal/wiki).
